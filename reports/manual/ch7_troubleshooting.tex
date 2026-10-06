@@ -52,6 +52,10 @@ Figure legend hides data; 13 cycled colours & Too many series; default colour cy
 Predictive p-values never below 0.016 & Monte Carlo floor $1/(R+1)$ & Use the analytic F or $\chi^2$ tail when the null is exact; increase $R$\\
 FDR hides real rejections & Rows that cannot fail (by construction, echoes) dilute the family & Restrict the FDR family to substantive tests\\
 A fitted parameter looks like a prediction & Tuned to a threshold or after viewing the target & Calibrate on an independent study; test that fitting code never reads the target\\
+Trait standing SD 0.03--0.09, not the intended 0.15 & Infinite-sites formula $V=4NU\sigma^2$ ignores finite-sites saturation (one-way mutation; mean derived frequency $\approx0.2$) & Neutral burn-in: rescale the effects to the target SD in the ancestor; keep the raw run as a sensitivity case\\
+Faster-clearing genotypes had a higher early cost & Cost anchored at 96\,h and extrapolated backwards with $e^{c(96-t)}$ & Model load decaying from infection, $e^{-ct}$; normalise the ancestor at 96\,h; test monotonicity\\
+Male-expressed trait mean drifts to 1.15 & Reference mean taken over both sexes; the X counts once in males & Normalise each trait in the sex that expresses it\\
+Model predicting a large F passes as ``consistent'' & One-sided upper-tail predictive p & Use two-sided tails when the model can miss in either direction\\
 X-linked invasion condition off by 2 & Scan of Parsons' ``note added in proof'' & Derive it yourself; trust internal consistency over the scan\\\bottomrule
 \end{longtable}
 

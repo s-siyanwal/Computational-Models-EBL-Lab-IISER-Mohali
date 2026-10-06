@@ -104,3 +104,13 @@
 - The LH mutation architecture: no measurement exists.
 
 These remain **not identified** or **rejected**, and are reported as such.
+
+## 7.6 Coupled model (docs/09)
+
+The coupled model (genetic layer → genotype record → assay layer) leaves every label above in place.
+- **Still by construction:** the courtship nulls when κ = 0 is set by hand (scenario `kappa0`).
+- **Stay rejected or in tension:** H8b, H10, H4 and H14.
+- **Male recombination:** audited. All Drosophila runs have it off; the True rows replicate the preprint's own
+  SLiM setting.
+
+Row-by-row evidence types are in `outputs/coupled_comparison.csv`.

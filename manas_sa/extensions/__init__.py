@@ -13,9 +13,12 @@ untouched (tests B3 and A5).
             courts-most (CM), copulation duration; Khan-type group mating assay
   harm      mate harm as a pleiotropic side effect (Morrow et al. 2003 response)
   telegony  compartmentalisation switch for first-male (stepfather) effects
+  coupling  read a genetic-layer genotype record (iasc/ibm/regime.py) and
+            give kappa, beta and survival per genotype (coupler.py,
+            docs/09_coupling.md); off = the global constants of the regime
 """
 
-MODULES = ("quality", "choice", "harm", "telegony")
+MODULES = ("quality", "choice", "harm", "telegony", "coupling")
 DEFAULT_FLAGS = {m: False for m in MODULES}
 
 

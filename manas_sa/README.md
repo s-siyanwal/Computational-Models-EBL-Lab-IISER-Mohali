@@ -77,6 +77,32 @@ NUMBA_NUM_THREADS=2 python -m pytest -q tests/   # 25 tests (8 core + 17 extensi
 1. **Fecundity of the exact females used in the choice vials,** measured from 12–14 h post-infection. With the male sensitivity calibrated independently on Byrne & Rice 2006, the thesis's pooled courts-first data exclude a perceived cost above about **44%**. A Khan-sized 40% cost would have been detected in 73% of simulated studies, so it is unlikely but not excluded. An earlier "10%" figure was circular and is withdrawn (docs/07).
 2. **A replicated telegony block.** The thesis ran one block. Four blocks detect a stepfather effect of about a 1.2× hazard ratio with 80% power.
 
+## Coupled model: genetic layer → genotype record → assay layer (`docs/09_coupling.md`)
+
+The Manas genetic layer and the Chinmay assay layer stay separate programs. The genetic layer
+(`iasc/ibm/regime.py`) evolves IUS populations and writes a genotype record every generation:
+- clearance and fecundity cost κ(G, dose, hours);
+- male preference slope β(G);
+- sex-specific survival hazard;
+- sex-specific adult fitness.
+
+The coupler (`extensions/coupler.py`, flag `coupling`, off by default) reads the record. It never writes back.
+
+```bash
+python scripts/run_coupled.py                                         # outputs/coupled_comparison.csv
+python scripts/run_coupled.py --no-sd-scaling --tag sens_sd_realised_  # prior-sensitivity run
+NUMBA_NUM_THREADS=2 python -m pytest -q tests/test_coupling.py          # coupling regression tests
+```
+
+**Findings**
+- **Chinmay's courtship null is never explained by IUS evolution.** U is unselected on κ and β, so U genotypes keep
+  the ancestral κ(13 h). The null is either by construction (κ = 0 set by hand) or reflects the small calibrated β:
+  costs of 0.1–0.3 at 12–14 h stay consistent with the thesis.
+- **Excluded.** A load-driven cost that is still about 0.97 at 13 h is rejected (courts-first 0.64 vs 0.52).
+- **New derived predictions.** If the cost tracks load, I females should show a weaker courts-first bias than U
+  females. Male genotype × infection should be null.
+- **Unchanged.** H8b, H10, H4 and H14 keep their status. Male recombination is 0 in every Drosophila run.
+
 ## Biology in the model
 
 **Genome and transmission**
@@ -168,6 +194,9 @@ results/                   CSV tables, figures, logs; pops/ = saved evolved popu
 extensions/                optional Chinmay modules (quality, choice, harm, telegony); off by default
 config/ius.yaml, khan.yaml regime parameters for the extensions, each with provenance
 outputs/                   Chinmay comparison, sources, parameters, power, figures
+iasc/ibm/regime.py         IUS regimes + genotype record (genetic layer of the coupled model)
+extensions/coupler.py      genotype record -> assay inputs (one direction; flag 'coupling', off)
+config/coupling.toml       coupled-run settings with provenance; results/coupled/ = records
 ```
 
 **Zero leakage.** The IBM never imports the analytical layer (enforced by a test). Paper numbers appear only in `scripts/make_comparison.py`, `analysis/recompute_bmc2022.py`, `scripts/run_emulator.py` (published r values for inversion) and `docs/`. Calibration uses variances only.

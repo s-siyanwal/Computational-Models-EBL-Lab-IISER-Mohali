@@ -74,7 +74,9 @@ def mag_word(model, lo, hi, label="paper CI"):
     return "within " + label if lo <= model <= hi else ("misses magnitude (model above)" if model > hi else "misses magnitude (model below)")
 
 
-def main():
+def build_table():
+    """Comparison table from the result files, with no side effects.
+    Returns (table, inputs needed by the plots)."""
     rows = []
     # ---------------- target 1 / thesis Ch 3-4: recomputed from raw data (B) and LH-model predictions
     rec = load("bmc2022_recomputed.csv")
@@ -236,7 +238,11 @@ def main():
                              paper=f"median ~{PAPER_HRI_MEDIAN.get(R)}", model_HRI=f"mean {d.r_mf.mean():+.3f} (n={len(d)})",
                              verdict_HRI="rescaling artefact: neo-Y-like haplotype classes",
                              driving_assumption="N*V_g and Muller's-ratchet rate not invariant under rescaling"))
-    comp = pd.DataFrame(rows)
+    return pd.DataFrame(rows), (rec, lha, hri, hri_all)
+
+
+def main():
+    comp, (rec, lha, hri, hri_all) = build_table()
     comp.to_csv(os.path.join(RES, "comparison_table.csv"), index=False)
     coverage(comp)
     print(comp.to_string(max_colwidth=60))

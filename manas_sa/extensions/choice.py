@@ -60,13 +60,15 @@ def copulation_duration(rng, n, infected, P):
 
 
 def simulate_two_choice(rng, n, q_sham, q_inf, b, P, lat_mult=1.0):
-    """Vectorised over n vials. Returns dict of arrays: cf_sham (bool),
+    """Vectorised over n vials. q_sham, q_inf and b are scalars, or arrays of
+    length n (one female pair and one male per vial, from a genotype record
+    via extensions/coupler.py). Returns dict of arrays: cf_sham (bool),
     lat_sham, lat_inf (minutes; nan = never courted), cm_sham (nan if no
     courtship)."""
     T = int(P["observation_min"] / P["interval_min"])
     dt = P["interval_min"]
-    p_sham = float(p_first(q_sham, q_inf, b))
-    mean_lat = P["latency_mean_min"] * np.exp(-P["latency_quality_slope"] * (max(q_sham, q_inf) - 1.0)) * lat_mult
+    p_sham = np.asarray(p_first(q_sham, q_inf, b), float)
+    mean_lat = P["latency_mean_min"] * np.exp(-P["latency_quality_slope"] * (np.maximum(q_sham, q_inf) - 1.0)) * lat_mult
     onset = rng.exponential(mean_lat, n)
     target = np.where(rng.random(n) < p_sham, 0, 1)          # 0 = sham, 1 = infected
     cf_sham = target == 0

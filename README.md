@@ -9,6 +9,7 @@ Lab (N.G. Prasad), IISER Mohali.
 | [`sexconflict/`](sexconflict/), `scripts/`, `tests/`, `results/` | Project 1: poster two-locus model, Parsons/Owen, mother's curse. Deterministic oracle vs zero-leakage IBM (this README, below) |
 | [`manas_sa/`](manas_sa/) | Project 2: hybrid analytic / IBM / emulator model of Manas Geeta Arun's sexual-antagonism results, plus the optional Chinmay (2019) mate-choice, harm and telegony modules ([`manas_sa/README.md`](manas_sa/README.md)) |
 | [`manas_sa/docs/07_leakage_audit.md`](manas_sa/docs/07_leakage_audit.md), [`08_hypothesis_tests.md`](manas_sa/docs/08_hypothesis_tests.md) | Leakage and circularity audit; formal tests of whether the model predicts each result |
+| [`manas_sa/docs/09_coupling.md`](manas_sa/docs/09_coupling.md) | Coupled model: evolved IUS genotypes (genetic layer) feed the courtship assays (assay layer) in one direction; `outputs/coupled_comparison.csv` |
 | [`SOURCES.md`](SOURCES.md) | **Credits and licences** for every paper, dataset and tool used. Only openly licensed papers are redistributed |
 
 Quick start: `python -m venv .venv`, then `pip install -r requirements.txt`, then `python -m pytest -q tests manas_sa/tests`.

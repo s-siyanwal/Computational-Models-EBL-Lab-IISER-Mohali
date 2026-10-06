@@ -1,0 +1,61 @@
+# Coupled model (docs/09_coupling.md): genetic-layer settings of the IUS evolutionary run.
+# [input] = taken from a source; [derived] = computed from inputs; [ours] = modelling choice;
+# MISSING = no source gives it, so it is a scenario parameter and never fitted.
+
+[architecture]
+sites_A = 32768                      # [ours] as config/default.toml [rescale]
+sites_X = 8192
+mix = "mix_shared"                   # [ours] Manas fitness background with SA sites (default.toml [lh])
+trait_sites_A = 256                  # [ours] per trait (clearance, tolerance, preference)
+trait_sites_X = 64
+# per-copy N(0, sd) effects on the log trait; sd chosen BEFORE any run so the neutral equilibrium
+# SD of the log trait in the ancestor is about 0.15 (V = 4 N_ref U_t sd^2, U_t = 0.0068/gamete):
+trait_sd = 0.018                     # [ours] MISSING: no mutational variance measured for these traits
+trait_sd_ancestor = 0.15             # [ours, fixed before any run] SD of each log trait in the ancestor; the
+                                     # effects above are rescaled to give exactly this (neutral burn-in), because
+                                     # finite-sites saturation left the first run at SD 0.03-0.09 (docs/09 9.6)
+
+[burnin]                             # BRB-like ancestor
+N_ref = 2500                         # [input] Gupta 2016 PDF p.27: 'Each population contains about 2500 adults per generation'
+lam = 2                              # [ours] rescale N/2, mu*2, r*2, s*2 (lambda = 2 validated for LH runs)
+generations_ref = 10000              # [ours] 4 N_ref, for the neutral trait variance to equilibrate
+
+[selection]
+n_per_sex = 150                      # [input] Chinmay 2019 p.7 (PDF p.25): 150 flies of each sex infected per generation (I)
+                                     # [ours] the U census is not stated; the same number is used
+generations = 60                     # [input, lower bound] Gupta 2016: 'more than 60 generations'; the generation
+                                     # of Chinmay's 2019 assays is MISSING
+blocks = 4                           # [input] I1-4 / U1-4
+
+[environment]
+H1 = 0.6931471805599453              # [input] Gupta 2016: about 50 % mortality at OD 1.0 when selection started
+nu = 2.08                            # [derived] ln(ln(1/0.2)/ln 2)/ln 1.5 from 50 % at OD 1.0 and 80 % at OD 1.5
+                                     # (Chinmay p.23: 70-90 % U mortality at OD 1.5)
+target_survival = 0.5                # [input] Gupta 2016: dose raised to keep mortality near 50 %
+t_lay = 105.0                        # [input] eggs laid in the 18 h window after the 96 h census
+assay_dose = 1.5                     # [input] Chinmay OD600 1.5
+assay_hours = 13.0                   # [input] Chinmay: females used 12-14 h post infection
+sex_factor_f = 1.0                   # [ours] no independent data give a genetic sex difference (H10)
+sex_factor_m = 1.0
+
+# Fecundity cost kappa(G, D, t) = 1 - exp(-a0 * tol_rel * D^nu * exp(-cost_decay * clear_rel * t)): cost tracks
+# pathogen load, which decays at a rate proportional to clearance.
+# a0 is set from kappa_anc_96h, the ancestral cost at 96 h and OD 1.5 (the time Gupta measured:
+# n.s., p = 0.27, effect size MISSING). cost_decay (per hour) sets how much larger the cost is at
+# 12-14 h than at 96 h: MISSING. Scenario 'kappa0' is the hand-set kappa = 0 (by construction).
+[[scenario]]
+name = "kappa0"
+kappa_anc_96h = 0.0
+cost_decay = 0.0
+[[scenario]]
+name = "k96_0.1_flat"
+kappa_anc_96h = 0.1
+cost_decay = 0.0
+[[scenario]]
+name = "k96_0.1_decay24h"
+kappa_anc_96h = 0.1
+cost_decay = 0.041666666666666664
+[[scenario]]
+name = "k96_0.3_flat"
+kappa_anc_96h = 0.3
+cost_decay = 0.0

@@ -77,3 +77,11 @@ Where the model's null distribution is known exactly (F for ANOVA terms, χ² fo
 | Consistent but uninformative or by construction | most of the remaining rows |
 | Audit validations | HRI collapse filter justified (0/12 collapse at λ = 1) |
 | Hypothesis comparisons | no fecundity cost over Khan-sized cost (LR 3.4); calibrated sensitivity over spec-frozen (6.8); over no choice (2.8) |
+
+## 8.4 Coupled model (docs/09)
+
+The tests above score the assay layer with global constants. The coupled model (`scripts/run_coupled.py` →
+`outputs/coupled_comparison.csv`) re-scores Chinmay A1 and Khan A2 with genotype-specific κ and β taken from an
+evolved IUS population. Its verdicts carry their own `evidence_type`. Hand-set κ = 0 stays **by construction**,
+and a prior-dependent scenario is never relabelled as an out-of-sample genetic prediction. The H8b, H10, H4 and H14
+verdicts above are unchanged.
