@@ -103,6 +103,8 @@ NUMBA_NUM_THREADS=2 python -m pytest -q tests/test_coupling.py          # coupli
   females. Male genotype × infection should be null.
 - **Unchanged.** H8b, H10, H4 and H14 keep their status. Male recombination is 0 in every Drosophila run.
 
+A plain-language summary of the hypothesis tests and the coupled model is in [`docs/10_plain_language_summary.md`](docs/10_plain_language_summary.md).
+
 ## Biology in the model
 
 **Genome and transmission**
