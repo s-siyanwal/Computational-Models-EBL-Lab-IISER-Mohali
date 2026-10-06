@@ -4,6 +4,9 @@ All code, configurations, documentation, figures, results and the manual in this
 The models are built to reproduce and test results published by the authors below. All credit for the
 experiments, data and original theory belongs to them.
 
+**Licence scope.** The MIT licence in [`LICENSE`](LICENSE) covers our own code, documentation and generated
+results only. The third-party papers and data listed in section 1 stay under their own licences, as stated there.
+
 **Rule we followed.** A third-party file is redistributed here only if its own licence allows it (Creative
 Commons). Each one is listed with its licence and canonical source. Everything else is cited with a link, and
 you must get it from the publisher or the authors.
