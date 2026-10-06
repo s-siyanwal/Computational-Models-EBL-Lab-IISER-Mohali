@@ -1,0 +1,76 @@
+\chapter{How to use this manual}
+
+\section{What you will build}
+\begin{center}
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+ & \textbf{Project 1: \texttt{sexconflict/}} & \textbf{Project 2: \texttt{manas\_sa/}}\\
+\midrule
+Question & Do the patterns of classical sex-differential selection models emerge from populations of individuals that never see the equations? & Can a mechanistic simulator explain and predict Manas Geeta Arun's sexual-antagonism results, and reconcile them with conflicting earlier studies?\\
+Sources & IISER poster, Parsons 1961, Owen 1953, Havird 2019; Kidwell, Rice, Fry, Kimura & BMC Ecol Evol 2022, thesis 2022, Am Nat 2025, bioRxiv 2025 (HRI), bioRxiv 2023 (modifiers); contrast set\\
+Engines & Deterministic oracle + zero-leakage \IBM\ (numba CPU, OpenCL GPU) & Analytic recursions + finite-sites multilocus \IBM\ with X/Y + hemiclone-assay emulator + GP emulator\\
+Size & $\sim$5k lines of Python, 36 tests & $\sim$4k lines of Python, 8 tests, SLiM 5.2 scripts\\
+Compute & minutes (quick) to $\sim$1 h (full) & $\sim$30 min (quick) to $\sim$8 h (default) on a 4-core laptop\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Reading paths}
+\begin{itemize}
+\item \textbf{For the big picture first:} read Chapter~\ref{ch:summary} (plain language, no equations), then Chapter~\ref{ch:examples} (every model and algorithm worked with small numbers).
+\item \textbf{To rebuild everything:} read the chapters in order. Chapter~\ref{ch:background} gives the theory you must understand before coding. Chapters~\ref{ch:build1} and~\ref{ch:build2} are the build instructions. Keep Chapter~\ref{ch:trouble} open while you work.
+\item \textbf{To use the results only:} read Chapter~\ref{ch:sources} (what the papers claim), Chapter~\ref{ch:results} (what the models say) and Chapter~\ref{ch:heur} (what cannot be concluded).
+\item \textbf{To extend the simulator:} read Chapter~\ref{ch:design} (the rules that keep the work honest) and Chapter~\ref{ch:heur} (nuances that bit us).
+\end{itemize}
+
+\section{Conventions}
+\begin{keybox}[Claim types and verdict words]
+\begin{itemize}
+\item \claimA\ means the value is reported in the paper.
+\item \claimB\ means we reproduced it, for example by recomputing from raw data or re-running the authors' code.
+\item \claimC\ means it is our extrapolation or a model prediction.
+\end{itemize}
+Comparisons between model and paper use only these verdicts: \emph{matches sign}, \emph{matches ordering}, \emph{misses magnitude}, \emph{not identified}. Designed null checks use \emph{null holds} or \emph{null fails}.
+
+Never write ``the model confirms'' or ``validates''. A simulator can only be \emph{consistent with}, or \emph{inconsistent with}, a result under stated assumptions.
+\end{keybox}
+\begin{itemize}
+\item Code listings are taken from the working repository, sometimes shortened. File paths are relative to the project folder.
+\item Notation:
+  \begin{itemize}
+  \item $\rmf$ is the intersexual genetic correlation for fitness computed on genotypes, as in the HRI preprint.
+  \item $\rwg$ is the same quantity computed from hemiclone line means (BMC 2022).
+  \item $\lambda$ is the population rescaling factor.
+  \item MB / E / FB are the male-biased, equal and female-biased adult sex ratios.
+  \end{itemize}
+\end{itemize}
+
+\section{Prerequisites}
+\begin{itemize}
+\item \textbf{Knowledge.}
+  \begin{itemize}
+  \item Population genetics at the level of Hartl \& Clark: selection recursions, drift, linkage disequilibrium and recombination.
+  \item Basic quantitative genetics: breeding values, genetic covariance, $h^2$.
+  \item Python with numpy.
+  \end{itemize}
+  The specialised material (hemiclonal analysis, Hill--Robertson interference, the Robertson/FTNS decomposition, rescaling, numba bit tricks) is explained here.
+\item \textbf{Software.} Python 3.14 with the pinned packages of Appendix~\ref{app:env}. Optionally:
+  \begin{itemize}
+  \item pyopencl for AMD/other GPUs;
+  \item SLiM 5.2 for cross-checks;
+  \item MiKTeX or TeX Live for this document.
+  \end{itemize}
+\item \textbf{Hardware.} Anything with 4+ cores and 8\,GB RAM. The reference machine was a Ryzen 5 2500U (4C/8T), 32\,GB, with a Radeon RX 560X, shared with other workloads.
+\end{itemize}
+
+\section{The shortest path to a working system}
+\begin{lstlisting}[style=sh]
+python -m venv .venv
+.venv/Scripts/pip install -r requirements.txt            # project 1
+.venv/Scripts/pip install -r manas_sa/requirements.txt   # project 2
+.venv/Scripts/python -m pytest -q tests manas_sa/tests
+.venv/Scripts/python scripts/run_all.py --profile quick               # project 1, minutes
+cd manas_sa && ../.venv/Scripts/python scripts/run_all.py --profile quick  # project 2, ~30 min
+../.venv/Scripts/python scripts/make_comparison.py        # comparison table from cached results
+\end{lstlisting}
+On Linux or macOS, replace \code{.venv/Scripts/} with \code{.venv/bin/}.

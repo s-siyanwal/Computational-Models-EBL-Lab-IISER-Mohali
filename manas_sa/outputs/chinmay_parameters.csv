@@ -1,0 +1,44 @@
+regime,parameter,value,grade,provenance
+IUS,kappa,0.0,promising-but-limited,"Fecundity cost of infection. thesis p.23-24 (PDF p.41-42) citing Gupta 2016; Gupta PhD thesis 2016 Table 8.1(e) p.135: infection effect on fecundity F=1.83, p=0.27 (I/U/S, OD 1.5) but measured 96 h post-infection on survivors, not on the 12-14 h choice females. Switch, not a measurement."
+IUS,dose,1.0,ours,Unit dose standing for OD600 1.5 P. entomophila (thesis p.16). No dose-response curve is used or invented.
+IUS,mortality_96h_U,0.8,input,"thesis p.23 (PDF p.41): 'around 70-90 % of the individuals of this population undergoes mortality' at OD600 1.5; midpoint used. Input, not fitted."
+IUS,survival_advantage_I,0.375,input,Gupta 2016 p.82 ('a difference of about 35% in the survivorship ... I regime as compared to controls') and p.95 ('an increase of 40% in survivorship'); midpoint. Gupta p.95 also: I females carry about 30% fewer CFUs than S females.
+IUS,mortality_96h_sham,0.02,ours,thesis p.23: 'almost no mortality at OD600 1.5 on receiving sham-infection'; 0.02 is our stand-in for 'almost no'.
+IUS,F0,1.0,ours,Fecundity unit (relative). Quality q = F/F0.
+IUS,cue_on,True,ours,Male can perceive fecundity. A4 turns it off to separate perception failure from absent fecundity variance (spec section 4.3).
+IUS,couple_quality_to_survival,False,ours,"Spec 4.1: perceived quality is fecundity, not survival, unless coupling is switched on explicitly."
+IUS,decapitated,True,input,"thesis p.16 (PDF p.34): females decapitated 12-14 h post-infection to remove receptivity (Spieth 1966). Removes receptivity, not q (spec 4.1)."
+IUS,beta0,0.59,calibrated-independent,"Softmax sensitivity of a sperm-depleted male, calibrated ONLY on Byrne & Rice 2006 (Proc R Soc B 273:917; measured fecundity 69.30 vs 25.06 offspring, dq = 0.638; 57 of 72 vials with more large females mated by depleted males) via scripts/calibrate_byrne_rice.py; 95% range 0.30-0.88. Replaces the spec-A2-frozen 2.5 (audit docs/07: fitted to a threshold, then adjusted after seeing Khan). The spec value is kept in config/spec_a2.yaml for the A2 compliance check only."
+IUS,male_depleted,True,input,thesis p.15-16 (PDF p.33-34): males held 12 h with BRB4 sperm-limiter females (Byrne & Rice 2006).
+IUS,depletion_depleted,1.0,ours,Spec 4.2: depletion = 1 after the 12 h treatment.
+IUS,depletion_nondepleted,0.54,calibrated-independent,"Ratio of non-depleted to depleted sensitivity from the same Byrne & Rice 2006 calibration (0.32 / 0.59; non-depleted: 22 of 32 vials). Non-depleted beta 95% range 0.00-0.76, so weakly identified."
+IUS,observation_min,30,input,thesis p.16: each vial observed for a maximum of 30 min.
+IUS,interval_min,1.0,ours,"Courtship scored per 1-min interval, as in Wittman & Fedorka 2015 (J Insect Behav 28:37) methods; Chinmay's scoring resolution is not stated."
+IUS,latency_mean_min,2.5,ours,Mean latency to first courtship. Chinmay's CL values are shown only in Figs 3.2-3.3 (MISSING as numbers); Wittman & Fedorka 2015 Table 1 LAT 1.8-3.1 min used for scale.
+IUS,latency_quality_slope,0.5,ours,"Spec 4.2: latency declines with max(q1,q2) (no infection interaction). Magnitude not identified."
+IUS,courting_prob,0.8,ours,Probability a minute is spent courting once courtship has begun; Wittman & Fedorka 2015 report ~16 of 20 min courting.
+IUS,persistence,0.94,calibrated-heldout,Probability the next courtship minute targets the same female. Calibrated on the per-vial courts-most SD of thesis Table 3.4 BLOCKS 1-2 ONLY (mean SD 0.407); blocks 3-4 (mean SD 0.423) are held out for testing (audit fix: no calibration on scored data).
+IUS,male_genotype_latency_effect,0.0,ours,"thesis Table 3.3 (p.21): male genotype F=6.49, p=0.011 but no means or direction given in text (MISSING). Set to 0: allowed intercept, not identified."
+IUS,female_genotype_latency_effect,0.0,ours,"thesis Table 3.3 (p.21): female genotype F=6.93, p=0.0087; direction/means MISSING. Set to 0: allowed intercept, not identified."
+IUS,postcopulatory_flag,False,ours,Spec 4.2: copulation duration independent of infection; flag stays off for Chinmay and Khan (Khan & Prasad 2013 p.1019: CD not affected by infection).
+IUS,compartmentalization,True,speculative,"thesis p.32 (PDF p.50) Discussion: Drosophila female tract compartmentalisation stops seminal fluid acting on immature ovules. Author hypothesis, implemented as a flag; not a measured anatomical result."
+IUS,semen_effect_sd,0.5,strongly-supported,"Only used when compartmentalization is false (Telostylinus template): Crean, Kopps & Bonduriansky 2014 Ecol Lett 17:1545, offspring ~0.5 SD larger after a high-condition first male (Table 1, P=0.013)."
+IUS,p2_second_male,0.87,strongly-supported,"Crean et al. 2014: 87% of offspring sired by the second male (Telostylinus). In Chinmay's design scarlet-eyed progeny are second-male (LHst) by eye-colour marker, so paternity does not enter his analysis."
+IUS,sex_hazard_ratio_male,2.0,ours,"Sign from thesis Table 4.2 (p.31, PDF p.49): Gender Wald chi2=108.16, p<0.0001, daughters survive better (p.32). Magnitude not reported numerically (Figs 4.1-4.2 only): MISSING; 2.0 is ours."
+IUS,mortality_96h_daughters,0.5,ours,Baseline LHst stepdaughter mortality at OD600 1.5; survival curves only in Figs 4.1-4.2 (MISSING as numbers). 0.5 is ours.
+IUS,n_infected_per_cell,50,input,thesis p.29 (PDF p.47): 50 infected individuals per sex per stepfather genotype per treatment.
+IUS,n_sham_per_cell,30,input,thesis p.29: 30 sham-infected per sex per stepfather genotype per treatment.
+IUS,rho,0.5,established,"Remating hazard multiplier (1 + rho*eta). Sign rho >= 0 from Morrow, Arnqvist & Pitnick 2003 Behav Ecol 14:802 (harmed D. melanogaster did not delay remating; leg-ablated females remated sooner). Magnitude ours."
+IUS,lam,0.2,established,"Fecundity multiplier (1 - lambda*eta). Sign lambda >= 0 from Morrow et al. 2003 (no increase in egg laying; D. melanogaster treatment effect on eggs F5,144=2.66, p=0.025, wounded laid fewest). Magnitude ours."
+IUS,p2_drosophila,0.8,ours,Second-male share of later eggs used by the harm model. Ours; only the sign of harm's effect on the first male's share is scored.
+IUS,r0,1.0,ours,Baseline remating hazard (per mean female lifetime unit). Ours; only signs of the harm response are scored.
+IUS,mu_female,1.0,ours,Female death rate (time unit = mean lifetime). Ours.
+Khan,kappa,0.4,strongly-supported,"Khan & Prasad 2013 p.1019 section 3.1: 'infected females showed approximately 40% reduction in reproductive output' (Fig. 1c, Table 3)."
+Khan,decapitated,False,input,Khan & Prasad 2013 section 2.5: intact females in the mating-bias assay.
+Khan,male_depleted,False,input,Khan & Prasad 2013 section 2.5: males 'did not receive any treatment ... remained unhandled'; not sperm-depleted.
+Khan,cue_on,True,ours,Positive control: fecundity difference present and perceptible.
+Khan,group_males,10,input,Khan & Prasad 2013 section 2.5: 10 unhandled males per vial.
+Khan,group_females_each,10,input,Khan & Prasad 2013 section 2.5: 10 infected + 10 sham-infected females per vial.
+Khan,group_minutes,45,input,"Khan & Prasad 2013 section 2.5: 45 min, protocol ensures a single mating per fly."
+Khan,vials_per_experiment,6,input,Khan & Prasad 2013 section 2.5: two colour sets x three replicate vials per replicate experiment; four replicate experiments.
+Khan,receptivity_intact,0.9,ours,Probability a courted intact virgin female accepts within the assay; Khan Table 4 no-choice mating success 0.87-0.94 used for scale.

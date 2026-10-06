@@ -1,0 +1,15 @@
+Tue Oct  6 04:28:35 IST 2026
+evolved 6 LH-like populations in 437s
+  pop 0: V_f=0.137 r_pop=-0.267 r_hemi=+0.607
+  pop 1: V_f=0.123 r_pop=-0.055 r_hemi=+0.466
+  pop 2: V_f=0.142 r_pop=-0.212 r_hemi=+0.553
+  pop 3: V_f=0.113 r_pop=+0.005 r_hemi=+0.592
+  pop 4: V_f=0.125 r_pop=-0.407 r_hemi=+0.729
+  pop 5: V_f=0.124 r_pop=-0.383 r_hemi=+0.631
+power n_lines=39: mean diff +0.089, P(CI>0) 0.15, P(F lowest) 0.57
+power n_lines=80: mean diff +0.092, P(CI>0) 0.18, P(F lowest) 0.76
+power n_lines=160: mean diff +0.099, P(CI>0) 0.30, P(F lowest) 0.89
+power n_lines=320: mean diff +0.099, P(CI>0) 0.45, P(F lowest) 0.95
+done
+followup exit 0
+Tue Oct  6 04:40:44 IST 2026

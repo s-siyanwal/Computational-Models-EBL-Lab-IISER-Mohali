@@ -1,0 +1,7 @@
+item,result
+A3 with calibrated beta (depleted beta = 0.59),"sham-first share 0.561 [0.520, 0.603]; P(pooled 463-vial test p<0.05) = 0.73; P(any block p<0.05) = 0.68; P(latency infection p<0.05) = 0.37"
+"kappa bound from Chinmay courts-first, calibrated depleted beta (point = 0.59)",kappa <= 0.44
+"kappa bound from Chinmay courts-first, calibrated depleted beta (upper 95% beta = 0.88)",kappa <= 0.30
+"kappa bound from Chinmay courts-first, calibrated depleted beta (lower 95% beta = 0.30)",kappa <= 0.86
+Wittman & Fedorka CM 0.64 reachable? (non-depleted calibrated beta = 0.32),"kappa=0.4: CM 0.530, CF 0.532; kappa=1: CM 0.577, CF 0.578 -> CM 0.64 not reachable by any fecundity cost under the calibrated sensitivity"
+latency-quality slope (independent check),Byrne & Rice no-choice controls: no consistent effect of female fecundity on mating rate (86.7% vs 78.3% n.s.; reversed 34.6% vs 42.8%) -> slope ~0 is supported; with slope 0 the Khan latency ratio prediction is 1.00 vs observed 1.06 and 1.02 (but 'no effect' is also the trivial baseline)

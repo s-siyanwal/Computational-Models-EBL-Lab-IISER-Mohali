@@ -1,0 +1,155 @@
+\chapter{Building project 1: oracle vs zero-leakage IBM}\label{ch:build1}
+
+\section{Layout}
+\begin{lstlisting}[style=sh]
+sexconflict/
+  config.py                 # conditions, seeds (MASTER_SEED + seed_for(name)), threads
+  deterministic/            # ORACLES
+    poster_model.py         #   3-D map, sympy Jacobian, closed-form B, fate(), fate_fast()
+    owen_parsons.py         #   recursions, latent roots, equilibria
+    mothers_curse.py        #   cytonuclear recursion
+    sa_classics.py          #   Kidwell/Rice/Fry, Kimura, full diffusion, Kolmogorov, Rice 1987
+  ibm/                      # SIMULATORS (zero leakage)
+    kernels.py              #   numba: haploid 2-locus, diploid+mito, X-linked, XY
+    opencl_backend.py       #   same primitives on GPU
+    runners.py              #   founders, burn-in, measurement
+  analysis/stats.py, ml.py  # Wilson CI, ratio tests, KS, logistic fits; GP/MLP/SBI
+  experiments/*.py          # one module per suite -> figures, Parquet
+scripts/run_all.py, make_report.py
+tests/                      # 36 tests incl. zero-leakage
+\end{lstlisting}
+
+\section{Step 1: the poster oracle}\label{sec:poster}
+\begin{stepbox}[Reconstruct an under-specified model]
+The poster gives the fitness table and $\pstar$ but not the life cycle. Write down candidate life cycles, derive $\pstar$ for each symbolically, and keep the one that reproduces the published formula exactly. Here that is: haploid selection in each sex, then random union, then meiosis with recombination $r$.
+\end{stepbox}
+
+Haplotypes are $x=(A_1M_1,A_1M_2,A_2M_1,A_2M_2)$. Fitnesses: males $(1+a,1+a,1,1)$; females $(1+bk_1,1,1+bk_2,1+b)$.
+\begin{equation}
+x'_{ij}=\tfrac12(1-r)(f_{ij}+m_{ij})+\tfrac12 r\,(f_{A_i}m_{M_j}+m_{A_i}f_{M_j}),
+\end{equation}
+where $m_{ij}=x_{ij}w^m_{ij}/\bar w_m$, $f_{ij}=x_{ij}w^f_{ij}/\bar w_f$, and $f_{A_i}$, $m_{M_j}$ are allele marginals after selection.
+
+\textbf{Implementation steps}
+\begin{enumerate}
+\item Write the map vectorised over a leading batch axis (numpy broadcasting), so whole $(a,r)$ grids iterate at once.
+\item Derive the Jacobian with sympy. Check it against finite differences ($<10^{-10}$) and against the closed form ($10^{-12}$).
+\item \textbf{Invasion.} The face $x_{11}=x_{21}=0$ is invariant, so the Jacobian at $(0,\pstar,0)$ is block-triangular. M$_1$ invades iff $\rho(B)>1$, with $B$ the $2\times2$ block given in the expert report.
+\item \textbf{Global fate} (\code{fate}): iterate until convergence with per-element stopping. A numba version (\code{fate_fast}) is about 8$\times$ faster; regression-test it against a converged numpy reference.
+\item \textbf{Thresholds} by bisection on the initial M$_1$ dose; \textbf{basins} from Dirichlet(1,1,1,1) initial conditions.
+\end{enumerate}
+
+\section{Step 2: the IBM kernels}
+\textbf{One generation} of every kernel is built from events on individuals:
+\begin{enumerate}
+\item Assign sex: a fair coin, or the inherited Y in the XY kernel.
+\item Survival: individual $i$ survives with probability $w_{\text{sex},g_i}/\max_g w_{\text{sex},g}$.
+\item Each of $N$ offspring picks a uniformly random surviving mother and father.
+\item Transmission: Mendelian segregation, crossover with probability $r$, maternal cytoplasm, Y to sons.
+\end{enumerate}
+The haploid two-locus kernel, slightly shortened:
+\begin{lstlisting}
+@njit(cache=True)
+def _haploid_one(A, M, n_gen, wtab, r, stop_on_m_absorb, rec):
+    N = A.shape[0]
+    ...
+    for g in range(n_gen + 1):
+        for k in range(4):                       # measurement only: count
+            rec[g, k] = 0
+        for i in range(N):
+            rec[g, 2 * A[i] + M[i]] += 1
+        if g == n_gen:
+            break
+        _assign_sex(sex)                         # biology
+        for i in range(N):
+            cls[i] = 2 * A[i] + M[i]
+        nf, nm = _survivors(sex, cls, wtab, fem, mal)
+        for j in range(N):
+            mom = fem[np.random.randint(nf)]
+            dad = mal[np.random.randint(nm)]
+            if np.random.random() < 0.5:         # which parent gives locus A
+                p, q = mom, dad
+            else:
+                p, q = dad, mom
+            A2[j] = A[p]
+            M2[j] = M[q] if np.random.random() < r else M[p]   # crossover
+        A[:] = A2; M[:] = M2
+
+@njit(parallel=True, cache=True)
+def haploid_ensemble(init_counts, N, n_gen, wtab, r, n_rep, seed, stop_on_m_absorb):
+    out = np.zeros((n_rep, n_gen + 1, 4), np.int64)
+    for rep in prange(n_rep):
+        np.random.seed(seed + rep)               # per-replicate reseed (numba RNG)
+        ...
+\end{lstlisting}
+The other kernels are \code{diploid_ensemble} (with maternal mito), \code{xlinked_ensemble} and \code{xy_ensemble} (genetic sex determination: male iff the Y was inherited from the father).
+
+\section{Step 3: confrontation protocols}
+\begin{tabularx}{\textwidth}{lXX}\toprule
+ID & Oracle & \IBM\ and comparison\\\midrule
+P0 & $\pstar$ & burn-in from 50\%; time average; RMSE vs $N$\\
+P2 & $\rho(B)$ and trajectory from $(\pstar, 2\%)$ & burn-in, then mutate 2\% to M$_1$, then 300 generations; sign of mean change (95\% CI) vs oracle\\
+P4 & bisection threshold & $P(\text{resolution})$ vs dose at 3 $N$; logistic midpoint and width\\
+P5 & basin fractions & the same initial conditions as founders; per-condition agreement\\
+P6 & trajectory & between-population SD $\propto N^{-1/2}$\\
+O1--O4 & latent roots, equilibria, flow field & establishment maps, equilibria, basin agreement\\
+C1--C4 & cytonuclear recursion & KS on endpoints, thresholds, $P_\mathrm{fix}$, arms race\\
+E1--E5 & Kidwell/Fry/Rice, Kimura, Rice 1987, Kolmogorov & rare-invasion maps, fixation, XY kernel, persistence\\\bottomrule
+\end{tabularx}
+
+\noindent\textbf{Statistics helpers} (\code{analysis/stats.py}):
+\begin{itemize}
+\item Wilson intervals for proportions;
+\item a ratio test of early spread ($\log_2$ of mean frequency change);
+\item KS tests;
+\item logistic fits of $P(\text{event})$ against dose (midpoint and width);
+\item RMSE.
+\end{itemize}
+
+\section{Step 4: mother's curse model}\label{sec:curse}
+The state is the zygote distribution $Z[c,g]$: mito type $c$ (maternal) and restorer copies $g$. Viabilities are
+\[
+\text{females: }(1+s_fc)(1-\kappa d_g),\qquad \text{males: }(1-s_mc(1-\rho d_g))(1-\kappa d_g),\qquad d=(0,h,1).
+\]
+The \IBM\ kernel carries a maternal mito flag per individual. The tests are the strong form (growth $1+s_f$ independent of $s_m$), the twofold rule, the weak form ($P_\mathrm{fix}$ equals the initial frequency) and the restorer arms race.
+
+\section{Step 5: extended suite}
+\begin{itemize}
+\item \textbf{Protected-polymorphism maps.} Two rare-invasion experiments per $(s_f,s_m)$ cell, autosomal and X; polymorphism is protected iff both rare alleles invade.
+\item \textbf{Kimura vs full diffusion.} Compute $M(p)$ from the full sex-specific recursion and integrate $\psi$ numerically. The haploid form with $N_e=N/2$ applies to mito.
+\item \textbf{Rice 1987.} A new recursion tracks the SA allele on X in eggs, on X-sperm and on Y-sperm, with crossover $r$ to the sex-determining region; it reduces to the autosomal model at $r=\tfrac12$ (tested).
+\item \textbf{Persistence times.} Finite differences for $\tfrac12VT''+MT'=-1$ on 4,001 nodes.
+  \begin{itemize}
+  \item \textbf{$N_e$ tuner:} measure $N_e$ from the \IBM's own one-step variance, $\mathrm{Var}(\Delta p)=pq/(2N_e)$.
+  \item Random survival gives $N_e/N\approx0.9$, which cut the error from 11.5\% to 3.7\%.
+  \end{itemize}
+\end{itemize}
+
+\section{Step 6: GPU backend (OpenCL, optional)}
+\begin{itemize}
+\item On Windows with AMD Polaris (RX 560X), ROCm/HIP, CUDA, CuPy and JAX-GPU are unavailable. \textbf{pyopencl works} (OpenCL 2.0, int64 atomics, fp64).
+\item One work-item per individual draws its sex and survival; one per offspring draws its parents.
+\item Draw parents by \emph{rejection sampling among survivors}, which is exactly uniform.
+\item Use a counter-based hash RNG (splitmix64 of (seed, generation, individual, stream)), so results are reproducible without per-thread state.
+\item Validate statistically, not bit-for-bit: KS tests on 400 replicate populations per comparison (\code{tests/test_gpu.py}).
+\item Measured throughput: CPU (numba, 8 threads) $\approx3.8\times10^7$ individual-generations/s; RX 560X with large ensembles $2.7$--$3.8\times10^8$, i.e.\ 7--10$\times$.
+\item Small ensembles are limited by kernel-launch overhead (about $6\times10^7$).
+\end{itemize}
+
+\section{Step 7: ML layer (analysis only)}
+Nothing from this layer feeds back into the \IBM.
+\begin{description}
+\item[GP denoiser (M1).] Heteroscedastic GP on $\tanh(\tfrac12\log\text{ratio})$ of \IBM\ invasion outcomes. Three settings are required (\S\ref{tr:gp}):
+  \begin{itemize}
+  \item a variance floor;
+  \item a length-scale lower bound equal to the grid spacing;
+  \item the bounded tanh response.
+  \end{itemize}
+  The emergent region is compared with the oracle by intersection-over-union (IoU).
+\item[Neural emulator (M2).] An MLP trained on \IBM\ fixation data for $N\le600$, tested at $N=800$.
+  \begin{itemize}
+  \item Inputs $(\log N,s)$ do not extrapolate.
+  \item The diffusion scaling variable $Ns$ does (RMSE 0.010 vs Kimura): the data obey Kimura's $Ns$ collapse.
+  \end{itemize}
+\item[Inverse problem (M3).] Recover $(s_f,s_m)$ from one trajectory, with an amortised MLP or an oracle least-squares fit. The difference $s_f-s_m$ is better identified than either coefficient.
+\end{description}

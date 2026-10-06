@@ -1,0 +1,14 @@
+analysis,quantity,value
+choice bound,"sham courted first (pooled, thesis Table 3.2)","240/463 = 0.518, exact 95% CI [0.472, 0.565]"
+choice bound,identified product beta * kappa (upper 95%),0.260
+choice bound,implied kappa upper bound at frozen beta0 = 2.5,"0.104 (a fecundity cost above ~10% would have been seen, IF males are as sensitive as the Khan control requires)"
+telegony power,"1 block(s), stepfather log-hazard shift +-0.0",P(population Wald p<0.05) = 0.05
+telegony power,"1 block(s), stepfather log-hazard shift +-0.1",P(population Wald p<0.05) = 0.28
+telegony power,"1 block(s), stepfather log-hazard shift +-0.2",P(population Wald p<0.05) = 0.74
+telegony power,"1 block(s), stepfather log-hazard shift +-0.3",P(population Wald p<0.05) = 0.99
+telegony power,"1 block(s), stepfather log-hazard shift +-0.5",P(population Wald p<0.05) = 1.00
+telegony power,"4 block(s), stepfather log-hazard shift +-0.0",P(population Wald p<0.05) = 0.04
+telegony power,"4 block(s), stepfather log-hazard shift +-0.1",P(population Wald p<0.05) = 0.80
+telegony power,"4 block(s), stepfather log-hazard shift +-0.2",P(population Wald p<0.05) = 1.00
+telegony power,"4 block(s), stepfather log-hazard shift +-0.3",P(population Wald p<0.05) = 1.00
+telegony power,"4 block(s), stepfather log-hazard shift +-0.5",P(population Wald p<0.05) = 1.00

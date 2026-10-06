@@ -1,0 +1,144 @@
+\chapter{Results}\label{ch:results}
+
+\begin{warnbox}[Read with Chapter~\ref{ch:audit}]
+Several Project~2 ``matches'' below are not evidence:
+\begin{itemize}
+\item the sex-ratio ordering is an echo of the variance calibration;
+\item the SA proportion is the identity $(1-r)/2$;
+\item the LH-like architecture was selected from the sweep;
+\item HRI short-map values at $\lambda=2$ depend on a post-hoc collapse filter. The filter is now validated: no replicate collapses at $\lambda=1$ (0/18), and the unfiltered $\lambda=1$ means agree with the paper (H18, H19).
+\end{itemize}
+Chapter~\ref{ch:audit} gives the evidence type and formal test for each.
+\end{warnbox}
+
+\section{Project 1: theory vs emergent behaviour}
+\begin{tabularx}{\textwidth}{lX}\toprule
+Source & Outcome\\\midrule
+Poster & $\pstar$ reproduced exactly; invasion thresholds within 0.002 in $a$; all 5 summary results reproduced \claimB. \IBM\ direction of modifier spread agrees with the oracle in 99.0\% of decided cells; thresholds become $N$-sharpening sigmoids; drift erodes the weakly stable IaSC polymorphism ($\mu\in[0.992,0.99997]$)\\
+Parsons / Owen & Invasion verdicts 100\% in agreement (autosomal and X); worked example 0.4399 (oracle) vs 0.4402 (\IBM); Owen basins 100\%\\
+Mother's curse & Endpoints independent of $s_m$ (KS $p\ge0.56$); twofold rule 94\%; weak form $P_\mathrm{fix}=0.090/0.108/0.100$ (expected 0.1)\\
+Kidwell/Rice/Fry & Protected-polymorphism cells 98--100\% in agreement; emergent regions 5--18\% smaller (finite $N$); the Rice--Fry debate reproduced\\
+Kimura & Correct for concordant selection and mito; fails under antagonism (RMSE 0.083), corrected by the full diffusion (0.013)\\
+Rice 1987 & Polymorphism maintenance 95.8\% in agreement; Y--X differentiation RMSE 0.021\\
+Persistence & Diffusion error 11.5\% $\to$ 3.7\% after the $N_e$ tuner\\\bottomrule
+\end{tabularx}
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{P1_stability_heatmaps.png}
+\caption{Poster reproduction: fraction of the $(a,r)$ rectangle in which IaSC is stable.}\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{E1_E2_polymorphism_maps.png}
+\caption{Protected polymorphism: oracle region (shaded), GP-denoised \IBM\ boundary (dashed), \IBM\ cell verdicts.}\end{figure}
+
+\section{Project 2: target 1 recomputed from raw data}
+\begin{tabularx}{\textwidth}{lXX}\toprule
+Statistic (MB / E / FB) & Paper \claimA & Recomputed \claimB\\\midrule
+$\rwg$ & 0.3805 / 0.4027 / 0.2515 & identical\\
+SA proportion & 0.3097 / 0.2986 / 0.3742 & identical\\
+Across-SR $r$, males & 0.5567 / 0.6995 / 0.5415 & identical\\
+$r$(MB)$-r$(FB) & 0.129 [$-0.072$, 0.351] & 0.129 [$-0.090$, 0.330]\\\bottomrule
+\end{tabularx}
+
+\section{Project 2: LH-like populations and the emulated assay}
+\begin{tabularx}{\textwidth}{p{3.1cm}XlX}\toprule
+Regime & Assay $\rwg$ (MB/E/FB) & True hemigenome $r$ & Verdict\\\midrule
+shared (10\% SA) & +0.093 / +0.095 / +0.076 & +0.15 & matches sign, matches ordering, misses magnitude\\
+sex-limited null & $-0.049$ / $-0.058$ / $-0.046$ & $-0.05$ & null holds\\
+true SA (80\%) & $-0.79$ / $-0.75$ / $-0.58$ & $-1.00$ & null holds (collapsed)\\
+LH-like ($f_\mathrm{SA}$ 0.06, SC 0.93) & $\approx+0.45$ (E) & +0.47 \ldots\ +0.73 & matches sign and magnitude\\\bottomrule
+\end{tabularx}
+
+\begin{itemize}
+\item \textbf{Out-of-sample checks} (shared regime):
+  \begin{itemize}
+  \item male across-SR correlations: 0.51 / 0.68 / 0.49 against 0.557 / 0.700 / 0.542 (match);
+  \item female across-SR correlations: 0.87--0.89 against 0.75--0.84 (too high). There is no G$\times$SR in the model, which suggests real G$\times$SR in female fitness.
+  \end{itemize}
+\item \textbf{Power} (LH-like architecture). Attenuation alone predicts an MB$-$FB gap of $+0.09$ against the observed $+0.129$. It is significant with 39 lines in only 15\% of studies; 320 lines give 45\%; FB lowest in 57\% $\to$ 95\%.
+\end{itemize}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\textwidth]{fig_r_vs_sexratio_and_robertson.png}
+\caption{Left: $\rwg$ vs sex ratio, paper and model regimes. Right: Robertson/FTNS ratio of cross- to within-sex covariance of relative fitness, data vs model.}\end{figure}
+
+\section{Project 2: Robertson layer}\label{sec:res-robertson}
+The ratio of cross- to within-sex covariance of relative fitness, the cross-sex share of each sex's predicted response (sex-specific FTNS), is shown in the right panel above.
+\begin{itemize}
+\item \textbf{Data} \claimB: females 0.90 / 0.90 / 0.51 (MB / E / FB); males 0.15 / 0.18 / 0.12.
+\item \textbf{Model} (shared regime): females 0.23 / 0.22 / 0.15; males 0.04 / 0.04 / 0.04.
+\item \textbf{Verdict:} matches sign; matches ordering for females (FB lowest); misses magnitude, which scales with $r$.
+\item Trait-level covariances (Am Nat 2025) are \emph{not identified}.
+\end{itemize}
+
+\section{Project 2: contrast reconciliation \claimC}
+\begin{tabularx}{\textwidth}{XlX}\toprule
+Architecture & 39-line assay $r$ & Comparable published value\\\midrule
+$f_\mathrm{SA}$ 0.06, SC 0.93 & +0.45 & LH +0.40\\
+$f_\mathrm{SA}$ 0.02--0.08, SC 0.24--0.55 & +0.10 to +0.14 & Ruzicka +0.15; Collet UCL +0.21\\
+$f_\mathrm{SA}$ 0.10--0.14, SC 0.12--0.39 & $-0.24$ to $-0.27$ & Chippindale $-0.30$\\
+$f_\mathrm{SA}$ 0.19, SC 0.85 & $-0.35$ (populations $-0.79$, +0.09) & Innocenti \& Morrow $-0.52$; Collet UU $-0.41$\\
+$f_\mathrm{SA}\ge0.22$ & collapse, $r\to-1$ & --\\\bottomrule
+\end{tabularx}
+
+\noindent Which assumption moves the sign:
+\begin{enumerate}
+\item the SA share of mutational input, conditional on the concordant share;
+\item replicate history near the collapse boundary;
+\item \emph{not} sampling: the SD of $\hat r$ is 0.14 at 40 lines and 0.05 at 223;
+\item \emph{not} HRI alone, which gives only negative $r$ with population means $\le0.15$ in magnitude at 0.1--1\,M.
+\end{enumerate}
+
+\section{Project 2: HRI (target 4)}
+\begin{tabularx}{\textwidth}{l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X}\toprule
+Map length & Paper median & Model, $\lambda=1$, all 6 (no filter) & Model, $\lambda=2$, non-collapsed & Drosophila setting \claimC\\\midrule
+0.001\,M & $-0.115$ & $-0.184\pm0.052$ & $-0.26$ (2/6 left) & $-0.28$ (3/6)\\
+0.01\,M & $-0.125$ & $-0.071\pm0.061$ & $-0.15$ & $-0.01$ (4/6, unreliable)\\
+0.1\,M & $-0.07$ (mean $-0.078$) & $-0.042\pm0.041$ & $-0.086$ & $-0.133$\\
+1\,M & $-0.02$ & -- & $-0.038$ & $-0.049$\\
+10\,M & 0 & -- & +0.003 & +0.017\\\bottomrule
+\end{tabularx}
+\begin{itemize}
+\item \textbf{$\lambda=1$ (the paper's own scale).} None of the 18 replicates collapses ($V_f$ 0.014--0.037). The means agree with the paper's medians within sampling error (Welch $p=0.25$, 0.42, 0.44 at 0.001, 0.01, 0.1\,M), and keep its ordering. These are the headline values; the $\lambda=2$ column gives upper bounds.
+\item \textbf{Trend.} Spearman(log map, $r$) = +1. \emph{Matches ordering.}
+\item \textbf{$\mu$ sweep.} $r=-0.054$, $-0.086$, $-0.149$, $-0.183$ for $\mu=5,7,9,13\times10^{-7}$. \emph{Matches ordering.}
+\item \textbf{Variance.} $V_f$ rescaled back to $\lambda=1$ is 0.022 (paper about 0.02).
+\end{itemize}
+\begin{figure}[H]\centering
+\includegraphics[width=0.75\textwidth]{fig_r_vs_recombination.png}
+\caption{$\rmf$ vs map length: paper medians, model with both sexes recombining, model without male recombination.}\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.75\textwidth]{fig_ld_vs_distance.png}
+\caption{Signed LD between female-limited and male-limited derived alleles vs map distance.}\end{figure}
+
+\section{Project 2: modifiers (target 5)}
+The authors' code was re-executed on its exact grid \claimB.
+
+\noindent\begin{tabularx}{\textwidth}{XXl}\toprule
+Claim & Model & Verdict\\\midrule
+perfect modifier 95.7\% & 97.2\% & misses magnitude (+0.015)\\
+$k_2=1$: $>85\%$ & min 91.6\% & matches\\
+monotone in $k_2$ & 100\% of rows & matches ordering\\
+non-monotone in $k_1$ & minimum at $k_1=0.2$ & matches ordering\\
+X $>$ A overall & 0.492 vs 0.222 & matches ordering\\
+X resolves imperfect modifiers & $k_2$ 0.3--0.6: A 0.018, X 0.415 & matches ordering\\
+A $>$ X at very high $k_2$ & A$-$X $=-0.016$ & does not match\\\bottomrule
+\end{tabularx}
+\begin{figure}[H]\centering
+\includegraphics[width=0.85\textwidth]{fig_modifier_fraction.png}
+\caption{Fraction of parameter space resolved, autosome vs X.}\end{figure}
+
+\section{Project 2: the distinguishing experiments \claimC}
+\begin{tabularx}{\textwidth}{Xcccc}\toprule
+Population & $r(k{=}0)$ & $r(k{=}16)$ & $r_\mathrm{LE}$ & Power (200+200 lines)\\\midrule
+HRI 0.01\,M & $-0.20$ & $-0.16$ & $\approx0$ & 0.08\\
+HRI 0.1\,M & $-0.13$ & $-0.08$ & $\approx0$ & 0.08\\
+LH sex-limited & $-0.08$ & $-0.08$ & +0.01 & 0.10\\
+LH shared & +0.15 & +0.25 & +0.24 & 0.22\\
+LH true SA & $-1.00$ & $-1.00$ & $-0.75$ & 0.97\\\bottomrule
+\end{tabularx}
+\begin{itemize}
+\item \textbf{Recombination test.} All of the HRI-type $r$ is LD, yet feasible numbers of meioses do not break it.
+\item \textbf{N-dependence} (0.1\,M, $\lambda=1$ parameters). $r=-0.128/-0.144/-0.042$ at $N=625/1250/2500$. The direction is as HRI predicts but the trend is not monotone, and about 31 populations per $N$ would be needed for 80\% power.
+\end{itemize}
+\begin{figure}[H]\centering
+\includegraphics[width=0.8\textwidth]{fig_distinguish_default.png}
+\caption{$r$ after $k$ generations of female meiosis among hemigenomes; diamonds: all LD removed.}\end{figure}

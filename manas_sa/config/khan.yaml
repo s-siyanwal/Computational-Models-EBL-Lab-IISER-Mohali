@@ -1,0 +1,46 @@
+# Khan regime (positive control): I. Khan & N. G. Prasad 2013, J Insect Physiol
+# 59:1017-1023. Serratia marcescens, intact females, unhandled (non-depleted) males.
+# Parameters not listed here are taken from ius.yaml (same choice kernel, frozen beta0).
+regime: Khan
+modules:
+  quality: true
+  choice: true
+  harm: false
+  telegony: false
+parameters:
+  kappa:
+    value: 0.4
+    provenance: "Khan & Prasad 2013 p.1019 section 3.1: 'infected females showed approximately 40% reduction in reproductive output' (Fig. 1c, Table 3)."
+    grade: strongly-supported
+  decapitated:
+    value: false
+    provenance: "Khan & Prasad 2013 section 2.5: intact females in the mating-bias assay."
+    grade: input
+  male_depleted:
+    value: false
+    provenance: "Khan & Prasad 2013 section 2.5: males 'did not receive any treatment ... remained unhandled'; not sperm-depleted."
+    grade: input
+  cue_on:
+    value: true
+    provenance: "Positive control: fecundity difference present and perceptible."
+    grade: ours
+  group_males:
+    value: 10
+    provenance: "Khan & Prasad 2013 section 2.5: 10 unhandled males per vial."
+    grade: input
+  group_females_each:
+    value: 10
+    provenance: "Khan & Prasad 2013 section 2.5: 10 infected + 10 sham-infected females per vial."
+    grade: input
+  group_minutes:
+    value: 45
+    provenance: "Khan & Prasad 2013 section 2.5: 45 min, protocol ensures a single mating per fly."
+    grade: input
+  vials_per_experiment:
+    value: 6
+    provenance: "Khan & Prasad 2013 section 2.5: two colour sets x three replicate vials per replicate experiment; four replicate experiments."
+    grade: input
+  receptivity_intact:
+    value: 0.9
+    provenance: "Probability a courted intact virgin female accepts within the assay; Khan Table 4 no-choice mating success 0.87-0.94 used for scale."
+    grade: ours

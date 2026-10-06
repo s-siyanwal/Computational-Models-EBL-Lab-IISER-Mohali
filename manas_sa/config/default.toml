@@ -1,0 +1,84 @@
+# Single source of truth for all layers. Values marked [paper] come from the
+# cited primary source; [ours] are modelling choices (see docs/03_parameters.md).
+# Profiles: "quick" (smoke, minutes), "default" (laptop, ~1-2 h), "full" (overnight).
+
+[meta]
+python = "3.14.6"
+master_seed = 20251005
+slim_version_for_scripts = "5.2"          # SLiM scripts in slim/ are written for this version
+
+[reference_hri]                            # Geeta Arun 2025 bioRxiv 10.1101/2025.01.08.632022
+N = 2500                                   # [paper] diploids
+generations = 25000                        # [paper]
+L_bp = 1_000_000                           # [paper] one autosome
+mu_bp = 7e-7                               # [paper] primary mutation rate
+mu_sweep_bp = [5e-7, 7e-7, 9e-7, 1.1e-6, 1.3e-6]   # [paper]
+map_lengths_M = [0.001, 0.01, 0.1, 1.0, 10.0]       # [paper]
+map_length_for_mu_sweep_M = 0.1            # [paper]
+gamma_shape = 0.3                          # [paper] reflected gamma (deleterious)
+gamma_scale = 0.05                         # [paper]
+dominance = 0.5                            # [paper] additive
+noise_sd = 1.0                             # [paper] N(0,1) added to breeding value; w = exp(.)
+sample_f = 250                             # [paper]
+sample_m = 250                             # [paper]
+replicates = 50                            # [paper]
+
+[rescale]
+lam_quick = 10                             # [ours] N/lam, U*lam, R*lam, s*lam, gens/lam
+lam_default = 2                            # [ours] chosen after the lambda-sensitivity check (docs/03):
+                                           # lambda = 4 collapses into neo-Y-like haplotype classes (r ~ -1)
+lam_full = 1                               # the preprint's own parameters, no rescaling
+sites_autosome = 32768                     # [ours] finite-sites bitset size (>= 4x segregating sites)
+sites_X = 8192
+
+[drosophila]
+male_recombination = false                 # [biology] no crossing over in D. melanogaster males
+gene_conversion = false                    # [ours] not modelled (would only add short-range r in females)
+
+[profiles.quick]
+reps = 4
+map_lengths_M = [0.001, 0.1, 10.0]
+mu_sweep = false
+[profiles.default]
+reps = 6
+map_lengths_M = [0.001, 0.01, 0.1, 1.0, 10.0]
+mu_sweep = true
+mu_sweep_bp = [5e-7, 9e-7, 1.3e-6]           # 7e-7 is already in the map-length sweep
+[profiles.full]
+reps = 50
+map_lengths_M = [0.001, 0.01, 0.1, 1.0, 10.0]
+mu_sweep = true
+
+[lh]                                       # LH-like laboratory population (target 1 regime)
+N = 1920                                   # [paper] 960 F + 960 M adults (BMC 2022 Methods)
+generations_ref = 25000                    # [ours] long enough for mutation-selection-drift balance
+mu_bp = 7e-7                               # [ours] borrowed from target 4 (no LH value reported)
+L_bp_A = 1_000_000                         # [ours] one recombining autosome ...
+L_bp_X = 250_000                           # [ours] ... plus an X (about 1/5 of the euchromatic genome)
+R_A_M = 1.0                                # [ours] order of a D. melanogaster autosome arm (female map)
+R_X_M = 0.66                               # [ours] female X map length (cM scale of Comeron et al. 2012)
+gamma_shape = 0.3
+gamma_scale = 0.05
+noise_sd = 1.0
+# mixture of mutation classes (kinds): 1 female-limited, 2 male-limited, 3 concordant, 4/5 SA
+mix_shared = {3 = 0.6, 1 = 0.15, 2 = 0.15, 4 = 0.05, 5 = 0.05}   # [ours] "shared polymorphism" regime
+mix_sexlimited = {1 = 0.5, 2 = 0.5}                               # null: no SA, no shared effects
+mix_trueSA = {3 = 0.2, 4 = 0.4, 5 = 0.4}                          # true-SA-dominated regime
+sa_benefit_ratio = 0.5                     # [ours] SA allele: cost s in one sex, benefit 0.5*s in the other.
+                                           # With ratio 1 an additive SA allele is exactly neutral averaged over
+                                           # the sexes and, at U ~ 0.9/genome/gen, accumulates without bound.
+
+[assay]                                    # hemiclone assay, BMC 2022 Methods
+n_lines = 39                               # [paper]
+days_per_sex_ratio = 2                     # [paper]
+female_vials_per_day = 7                   # [paper] 2 focal females per vial measured
+male_vials_per_day = 5                     # [paper] 7 LHst females per vial scored
+females_scored_per_male_vial = 7           # [paper]
+focal_competitor_ratio = 3                 # [paper] 1:3 in every treatment
+sex_ratios = ["M", "E", "F"]               # [paper] 24:8, 16:16, 8:24 (males:females)
+males_per_vial = {M = 24, E = 16, F = 8}   # [paper]
+females_per_vial = {M = 8, E = 16, F = 24} # [paper]
+eggs_per_female_mean = 25.0                # [ours] order of the raw data (2 females lay ~50 in 18 h)
+offspring_per_female = 20.0                # [ours]
+day_sd = 0.10                              # [ours] multiplicative day effect sd
+vial_sd = 0.15                             # [ours] vial-level noise sd

@@ -1,0 +1,127 @@
+\chapter{The sources: what they claim, and their flaws}\label{ch:sources}
+\begin{keybox}[Rule]
+Work only from primary sources you can actually read. If a source is inaccessible, say so and quote nothing from it. Extract tables \emph{before} writing any model code, and keep a list of flags (errors, ambiguities, scan artefacts).
+\end{keybox}
+
+\section{Project 1 sources}
+\begin{tabularx}{\textwidth}{lX}\toprule
+Source & Content and issues\\\midrule
+IISER poster (Samant, Moitra, Sinha \& Prasad) & Two-locus haploid IaSC + modifier; stability heatmaps, bifurcations, basins.
+
+\emph{Issue:} the life cycle is not stated. We reconstructed it as the one cycle that reproduces the poster's $\pstar$ formula exactly (\S\ref{sec:poster}).
+
+Still open: the domain behind ``fraction of parameter space'', the initial condition of the ``away from fixed point'' panel, and the $r$ of the perturbation panel.\\
+Parsons (1961) (scan) & Latent-root invasion conditions.
+
+\emph{Issues:} the OCR loses the $\tfrac12$ in the recursion. The ``note added in proof'' lacks a factor 2 that consistency with eq.\ 3.6 requires; we treat it as a scan artefact.\\
+Owen (1953) & Two stable equilibria.\\
+Havird \emph{et al.}\ (2019) & A verbal review, which we formalised (\S\ref{sec:curse}).\\
+Morrow \emph{et al.}\ (2003) & Experimental harm data (ANOVA). Context only; there is no model to simulate.\\
+``Simulating Population Genetics Models'' & An AI-written blueprint. Its design rules were adopted, and its Mandel (1971) cubic was verified in 4,000/4,000 random parameter sets.\\\bottomrule
+\end{tabularx}
+
+\section{Project 2: access status}
+The author is Manas Geeta Arun, also published as M.\,A.\ Samant (ORCID 0000-0002-4433-4913); \emph{not} ``Manas Sawant''.
+
+\begin{tabularx}{\textwidth}{clX}\toprule
+\# & Target & Status / what was used\\\midrule
+1 & BMC Ecol Evol 2022, 22:38 & Full text \textbf{and raw data} (Additional file 2: 2,539 vial rows)\\
+2 & PhD thesis 2022 (IISER Mohali) & Full text. Ch.\ 3 = target 1; Ch.\ 4 = IeSC traits; Ch.\ 6 = the poster model\\
+3 & Am Nat 2025, 206(6) (Robertson covariances) & \textbf{Not accessible} (HTTP 403, no preprint). Thesis Ch.\ 4 is used as a marked substitute, and no Am Nat number is quoted\\
+4 & bioRxiv 2025.01.08.632022 (``Tie that binds'', HRI) & Full text (downloaded)\\
+5 & bioRxiv 2023.10.25.564090 (imperfect modifiers) & Full text + the authors' Python code in the supplement\\\bottomrule
+\end{tabularx}
+
+\noindent\textbf{Wrong-paper trap.} A file in the folder named \code{2022.08.04.502812v1.full.pdf} is Singh, Hasan \& Agrawal (2023), a DSPR study, not the Am Nat target. Always check titles and authors inside PDFs, not filenames.
+
+\section{Target 1: hemiclonal $\rwg$ at three adult sex ratios}
+\begin{itemize}
+\item \textbf{Lines and treatments.} 39 hemigenomes. Sex ratio is imposed on days 12--14 of the 14-day cycle, always 32 flies per vial: MB 24\male:8\female, E 16:16, FB 8:24. Focal:competitor ratio is 1:3.
+\item \textbf{Female fitness.} Eggs laid in 18\,h by 2 focal females; 7 vials $\times$ 2 days per line.
+\item \textbf{Male fitness.} Proportion of progeny sired against LHst males; 5 vials $\times$ 7 scored females $\times$ 2 days.
+\item \textbf{Estimator.}
+  \begin{enumerate}
+  \item Divide vial fitness by the day mean.
+  \item Average within line $\times$ day, then over days.
+  \item Scale and centre per sex $\times$ sex ratio.
+  \item Take Pearson $r$ across lines.
+  \end{enumerate}
+  The SA proportion comes from a 45\textdegree\ rotation (variance along the antagonistic axis). CIs come from 10,000 bootstrap resamples stratified by sex $\times$ line $\times$ day.
+\end{itemize}
+\begin{center}\small\begin{tabular}{lccc}\toprule
+\claimA & MB & E & FB\\\midrule
+$\rwg$ (line means) & 0.3805 [0.2992, 0.5283] & 0.4027 [0.3140, 0.5526] & 0.2515 [0.1198, 0.4502]\\
+SA proportion & 0.3097 & 0.2986 & 0.3742\\
+MCMCglmm $r$ & 0.5056 & 0.4999 & 0.4462\\
+$h^2$ females / males & 0.87 / 0.48 & 1.00 / 0.58 & 0.74 / 0.22\\\bottomrule\end{tabular}\end{center}
+\begin{itemize}
+\item \textbf{Differences between sex ratios.} The MB$-$FB difference in $r$ is 0.129, CI [$-0.0721$, 0.3507], n.s. The SA-proportion difference CI is [$-0.1753$, 0.0360].
+\item \textbf{Across-sex-ratio correlations.} Females: 0.7688 / 0.7493 / 0.8421; males: 0.5567 / 0.6995 / 0.5415 (pairs M--F, M--E, F--E).
+\item \textbf{Mixed-model tests.} line $p=0.024$; line$\times$sex $p<10^{-4}$; line$\times$SR $p=0.82$; line$\times$sex$\times$SR $p=0.0002$.
+\end{itemize}
+
+\section{Target 2: thesis Ch.\ 4 (substitute for target 3)}
+\begin{itemize}
+\item \textbf{Line variance of relative fitness.} Males 0.2926 / 0.1591 / 0.1010 (Levene $p=0.017$); females 0.0532 / 0.0321 / 0.0254 ($p=0.39$).
+\item \textbf{Male traits vs female fitness} (cross-sex genetic correlations, FB / E / MB):
+  \begin{itemize}
+  \item latency $-0.466$ / $-0.511$ / $-0.262$;
+  \item P1 0.362 / 0.306 / 0.177;
+  \item P2 0.423 / 0.314 / 0.265.
+  \end{itemize}
+  Male persistence correlates \emph{positively} with female fitness, more weakly at MB.
+\end{itemize}
+
+\section{Target 4: the HRI preprint}
+\begin{itemize}
+\item \textbf{Model.} SLiM 4.2, Wright--Fisher; one 1\,Mb autosome; $N=2{,}500$; 25,000 generations. Two mutation types, female-only and male-only deleterious, with $s\sim$ reflected $\Gamma(0.3,0.05)$, $h=0.5$. Fitness is $\exp(BV+N(0,1))$. Both sexes recombine (SLiM default).
+\item \textbf{Estimator.} The genotype matrix decomposition on 250\female+250\male.
+\item \textbf{Results.}
+  \begin{itemize}
+  \item Mean $\rmf=-0.078$ at 0.1\,M and $\mu=7\times10^{-7}$; replicate range $-0.30$ to $+0.125$.
+  \item Stronger at low recombination, absent at 10\,M.
+  \item Stronger at high $\mu$.
+  \item $V\approx0.02$; median interference about 10\%.
+  \end{itemize}
+  Figure 2 gives only boxplots. Medians read from it: $-0.115$, $-0.125$, $-0.07$, $-0.02$, $0$ at 0.001, 0.01, 0.1, 1, 10\,M.
+\end{itemize}
+
+\section{Target 5: imperfect modifiers}
+\begin{itemize}
+\item \textbf{Claims} \claimA:
+  \begin{itemize}
+  \item a perfect modifier ($k_1=0,k_2=1$) resolves the conflict in 95.7\% of parameter space;
+  \item $k_2=1$ gives more than 85\% for any $k_1$;
+  \item resolution increases with $k_2$ and is non-monotonic in $k_1$;
+  \item the X is more conducive overall, except at very high $k_2$;
+  \item $h$ hinders resolution;
+  \item recombination matters only when $r_m=r_f=0$.
+  \end{itemize}
+\item \textbf{Grids.} Taken from the authors' code: $s_f\in\{0.001,0.2,\dots,1\}$, $h\in\{0.1,\dots,0.4,0.49\}$, $r\in\{0.1,\dots,0.4\}$, $s_m$ over the Connallon--Clark window in steps of 0.1, B$_2$ starting at 0.05.
+\end{itemize}
+
+\section{Contrast set (reconcile, do not fit)}
+\begin{tabularx}{\textwidth}{lXl}\toprule
+Study (population, lines) & Fitness measures & $r_{\mathrm{mf}}$\\\midrule
+Chippindale \emph{et al.}\ 2001 (LH$_\mathrm{M}$, 40) & adult & $-0.30$ ($P=0.03$); juvenile $+0.49$\\
+Innocenti \& Morrow 2010 (LH$_\mathrm{M}$, 100) & competitive fertilisation / fecundity & $-0.52$ [$-0.86$, $-0.10$]\\
+Collet \emph{et al.}\ 2016 (LH$_\mathrm{M}$-UU, 100) & as above & $-0.41$ (SE 0.18)\\
+Collet \emph{et al.}\ 2016 (LH$_\mathrm{M}$-UCL, 113) & as above & $+0.21$ (SE 0.19)\\
+Ruzicka \emph{et al.}\ 2019 (LH$_\mathrm{M}$, 223) & lifetime reproductive success & $+0.15$ [$-0.21$, 0.46]\\\bottomrule
+\end{tabularx}
+
+\section{Flags}\label{sec:flags}
+\begin{longtable}{lp{13cm}}\toprule
+F1 & BMC 2022 Table 2B: the male MB--FB row duplicates the female row (copy error).\\
+F2 & Several bootstrap CIs barely contain their estimate, and the CI method is unstated. Our ``basic'' (reflected) interval reproduces the published lower bounds within about 0.01, but not the upper bounds.\\
+F3 & The data README says ``six days''; the data contain Day 1--12 (separate days per sex). Harmless.\\
+F4 & Thesis Tables 4.4/4.5, MB column: the text layer is garbled, so no MB gradients are used.\\
+F5 & The HRI preprint lets both sexes recombine (SLiM default), unlike \emph{D.\ melanogaster}.\\
+F6 & Target 5 Table 3 gives $D\in[-0.25,0.25]$; the code uses about $\pm0.02$.\\
+F7 & Target 5 captions say ``$k_1$ step 1''; the step is 0.1.\\
+F8 & Target 5 Table 3 gives $r\in[0,0.5]$; the code uses 0.1--0.4.\\
+F9 & Target 5 autosomal code, upper $s_m$ bound \code{sf*(1-h)/h*(1-sf)}: an operator-precedence slip. We replicate it to reproduce their grid.\\
+F10 & Target 5: $F_{22r}$ and $F_{23}$ use absolute values.\\
+F11 & Target 5 heatmaps have no deposited numbers; only the quoted percentages and orderings can be scored.\\
+F12 & \textbf{BMC 2022 Methods say male fitness was arcsine-square-root transformed, but all 12 Table 2A line-mean statistics are reproduced to 4 decimals only \emph{without} the transform.} With the transform, $r=0.382/0.419/0.236$. We score simulated assays without it.\\\bottomrule
+\end{longtable}

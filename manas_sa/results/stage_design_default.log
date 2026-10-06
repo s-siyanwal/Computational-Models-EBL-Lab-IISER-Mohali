@@ -1,0 +1,18 @@
+instrument beta: {('Female', 'E'): 0.248, ('Female', 'F'): 0.21, ('Female', 'M'): 0.318, ('Male', 'E'): 0.82, ('Male', 'F'): 0.461, ('Male', 'M'): 1.433}
+point 0: f_SA=0.19 sc=0.85 R=0.11 M | r_hemi -0.443 | r_assay_E -0.348 | 473s
+point 1: f_SA=0.03 sc=0.30 R=0.30 M | r_hemi +0.247 | r_assay_E +0.140 | 467s
+point 2: f_SA=0.08 sc=0.55 R=0.22 M | r_hemi +0.212 | r_assay_E +0.135 | 466s
+point 3: f_SA=0.09 sc=0.48 R=0.40 M | r_hemi +0.079 | r_assay_E +0.008 | 439s
+point 4: f_SA=0.12 sc=0.73 R=0.47 M | r_hemi +0.163 | r_assay_E +0.051 | 425s
+point 5: f_SA=0.10 sc=0.39 R=1.66 M | r_hemi -0.372 | r_assay_E -0.265 | 431s
+point 6: f_SA=0.14 sc=0.12 R=0.65 M | r_hemi -0.255 | r_assay_E -0.243 | 436s
+point 7: f_SA=0.16 sc=0.60 R=1.04 M | r_hemi +0.016 | r_assay_E +0.021 | 429s
+point 8: f_SA=0.06 sc=0.93 R=1.48 M | r_hemi +0.602 | r_assay_E +0.453 | 388s
+point 9: f_SA=0.18 sc=0.83 R=0.15 M | r_hemi +0.155 | r_assay_E +0.135 | 429s
+point 10: f_SA=0.04 sc=0.08 R=0.87 M | r_hemi -0.064 | r_assay_E -0.052 | 420s
+point 11: f_SA=0.02 sc=0.24 R=0.17 M | r_hemi +0.186 | r_assay_E +0.105 | 431s
+power n_lines=39: mean diff +0.015, P(CI>0) 0.10, P(F lowest) 0.43
+power n_lines=80: mean diff +0.025, P(CI>0) 0.05, P(F lowest) 0.49
+power n_lines=160: mean diff +0.012, P(CI>0) 0.04, P(F lowest) 0.43
+power n_lines=320: mean diff +0.019, P(CI>0) 0.11, P(F lowest) 0.51
+done

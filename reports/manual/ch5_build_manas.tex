@@ -1,0 +1,376 @@
+\chapter{Building project 2: the hybrid simulator (\texttt{manas\_sa/})}\label{ch:build2}
+
+\section{Architecture}
+\begin{lstlisting}[style=sh]
+manas_sa/
+  config/default.toml        # single source of truth, values tagged [paper]/[data]/[bio]/[ours]
+  iasc/params.py             # load config; NUMBA_NUM_THREADS = cpu-2; below_normal_priority()
+  iasc/estimators.py         # the papers' estimators (raw AND simulated data)
+  iasc/analytic/twolocus.py  # Layer 1: exact two-sex two-locus recursions, D*
+  iasc/analytic/modifier_cc.py  # Layer 1: authors' modifier model, compiled
+  iasc/ibm/engine.py         # Layer 2: numba bitset Wright-Fisher with sexes, X/Y
+  iasc/ibm/architecture.py   # mutation classes, effects, lambda-rescaling
+  iasc/ibm/stats.py          # r_mf,W decomposition; LD by distance
+  iasc/ibm/hemiclone.py      # hemigenome sampling + assay emulator
+  iasc/ibm/experiments.py    # recombination / linkage-equilibrium experiments
+  iasc/emulator/surrogate.py # Layer 3: GP / GBM with grouped CV
+  analysis/recompute_bmc2022.py
+  scripts/run_*.py, make_comparison.py, run_all.py
+  slim/hri_sexlimited.slim   # SLiM 5.2 equivalent (cross-check)
+  tests/test_core.py
+\end{lstlisting}
+The three layers are:
+\begin{enumerate}
+\item analytic recursions, which explain mechanisms;
+\item the \IBM, which produces the papers' statistics computed the papers' way;
+\item a thin emulator, used for design and sensitivity only.
+\end{enumerate}
+Build them in the order of this chapter. Each step ends with a check you must pass before moving on.
+
+\section{Step 0: environment and configuration}
+\begin{lstlisting}[style=sh]
+python -m venv .venv
+.venv/Scripts/pip install numpy==2.5.3 numba==0.68.0 scipy==1.18.1 scikit-learn==1.9.1 \
+    pandas==3.0.6 matplotlib==3.11.2 openpyxl==3.1.5 psutil==7.2.2 pytest==9.1.1
+\end{lstlisting}
+Configuration excerpt (\code{config/default.toml}):
+\begin{lstlisting}[style=sh]
+[reference_hri]          # target 4, all [paper]
+N = 2500
+generations = 25000
+L_bp = 1_000_000
+mu_bp = 7e-7
+map_lengths_M = [0.001, 0.01, 0.1, 1.0, 10.0]
+gamma_shape = 0.3
+gamma_scale = 0.05
+noise_sd = 1.0
+sample_f = 250
+sample_m = 250
+
+[rescale]
+lam_quick = 10
+lam_default = 2
+lam_full = 1
+sites_autosome = 32768
+sites_X = 8192
+
+[drosophila]
+male_recombination = false
+
+[lh]                     # LH-like population
+N = 1920
+R_A_M = 1.0
+R_X_M = 0.66
+sa_benefit_ratio = 0.5
+mix_shared = {3 = 0.6, 1 = 0.15, 2 = 0.15, 4 = 0.05, 5 = 0.05}
+
+[assay]                  # BMC 2022 Methods
+n_lines = 39
+days_per_sex_ratio = 2
+female_vials_per_day = 7
+male_vials_per_day = 5
+focal_competitor_ratio = 3
+males_per_vial = {M = 24, E = 16, F = 8}
+\end{lstlisting}
+TOML keys like \code{3 = 0.6} load as strings. Convert integer-looking keys to \code{int} in the loader (\code{_intkeys}).
+
+\section{Step 1: extract the data and implement the estimators}
+\begin{stepbox}[Do this before any modelling]
+Recompute every published statistic from the raw data with your own code. If you cannot reproduce a number, you do not yet know how it was computed, and every model comparison against it is meaningless.
+\end{stepbox}
+
+The raw file (Additional file 2) has columns Sex, SexRatio, Day, Line and Fitness, with one header row to skip. The estimator:
+\begin{lstlisting}
+ARCSINE_MALES = False        # flag F12: published numbers were computed WITHOUT it
+
+def line_means(d, transform=ARCSINE_MALES):
+    d = d.copy()
+    if transform:
+        m = d.Sex == "Male"
+        d.loc[m, "Fitness"] = np.arcsin(np.sqrt(np.clip(d.loc[m, "Fitness"], 0, 1)))
+    d["w"] = d.Fitness / d.groupby(["Sex", "SexRatio", "Day"]).Fitness.transform("mean")
+    per_day = d.groupby(["Sex", "SexRatio", "Day", "Line"]).w.mean().reset_index()
+    return per_day.groupby(["Sex", "SexRatio", "Line"]).w.mean().reset_index()
+
+def paper_stats(lm):
+    wide = lm.pivot_table(index="Line", columns=["Sex", "SexRatio"], values="w")
+    z = (wide - wide.mean()) / wide.std(ddof=1)          # scale and centre
+    out = {}
+    for s in ("M", "E", "F"):
+        f, m = z[("Female", s)], z[("Male", s)]
+        out[("r_wgmf", s)] = np.corrcoef(f, m)[0, 1]
+        wc, wa = (f + m) / np.sqrt(2), (-f + m) / np.sqrt(2)   # 45-degree rotation
+        out[("prop_SA", s)] = wa.var() / (wa.var() + wc.var())
+    ...                                                   # across-sex-ratio correlations
+    return out
+\end{lstlisting}
+\textbf{Check.} $\rwg=0.3805/0.4027/0.2515$ to 4 decimals. If you get $0.382/0.419/0.236$, you applied the arcsine transform (F12).
+
+\textbf{Bootstrap: vectorise it.} The stratified bootstrap (resample vials within sex$\times$SR$\times$day$\times$line cells) written as a pandas loop took about 8\,h for 10,000 resamples. Instead:
+\begin{enumerate}
+\item Sort rows by cell and record each cell's start and size.
+\item Each resample draws \code{src = start[cell] + floor(u * size[cell])}.
+\item Compute cell means, day means, line means and correlations with \code{np.bincount}.
+\end{enumerate}
+This gives 10,000 resamples in about 45\,s. Verify it by running the bootstrap with the identity resample: it must reproduce the pandas point estimates to $10^{-15}$.
+
+\textbf{Interval type.} Resampling vials attenuates correlations, so percentile CIs sit below the estimate. Report both the percentile and the ``basic'' interval $[2\hat\theta-q_{97.5},\,2\hat\theta-q_{2.5}]$, and say that the published CI method is not identified (F2).
+
+\section{Step 2: Layer 1, analytic recursions}
+\subsection{Two-sex two-locus recursion}
+Track egg ($x$) and sperm ($y$) haplotype frequencies separately, because sex-limited selection makes them differ. Use a recombination tensor $G[i,j,k]=P(\text{gamete }k\mid i,j)$ with sex-specific $r$:
+\begin{lstlisting}
+def step_autosomal(x, y, F, M, r_f, r_m, mu=None):
+    Gf, Gm = _recomb_tensor(r_f), _recomb_tensor(r_m)
+    Z = x[..., :, None] * y[..., None, :]              # zygote (egg i, sperm j)
+    Zs = 0.5 * (Z + np.swapaxes(Z, -1, -2))            # unordered genotypes
+    wf, wm = Zs * F, Zs * M                            # female / male weights
+    xn = np.einsum("...ij,...ijk->...k", wf, Gf) / wf.sum((-1, -2))[..., None]
+    yn = np.einsum("...ij,...ijk->...k", wm, Gm) / wm.sum((-1, -2))[..., None]
+    return xn, yn
+\end{lstlisting}
+\textbf{Checks.}
+\begin{itemize}
+\item From $D=0.25$, free recombination halves LD in one step.
+\item With sex-limited tables (\code{sex_limited_tables(0.1, 0.1)}) after 40 generations: $D<0$ for $(r_f,r_m)=(0.1,0)$, smaller in magnitude for $(0.5,0)$, and exactly 0 for $(0.5,0.5)$. This is the sex-differential LD of \S\ref{sec:sexdiffLD}.
+\end{itemize}
+
+\subsection{The authors' modifier model, compiled}
+Re-implement the authors' supplement code \emph{exactly}, including its quirks:
+\begin{itemize}
+\item the floating-point \code{arange} grids and rounding;
+\item the $s_m$ window with the precedence slip (F9);
+\item absolute values in two fitness entries (F10);
+\item the initial A$_2$ at the Connallon--Clark equilibrium clipped to [0.01, 0.99], B$_2=0.05$, and $D$ swept in steps of 0.01 within feasible bounds;
+\item the fixation rule (frequency rounds to 1.000) within 3,000 generations;
+\item early termination on negative frequencies or sums outside [0.98, 1.02).
+\end{itemize}
+Compile with numba and parallelise over $(k_1,k_2)$. There are 8,672 autosomal and 2,572 X-linked cases per $(k_1,k_2)$.
+
+\textbf{Check.} $k_2=1$ gives more than 85\% for any $k_1$; the perfect modifier gives about 0.957 (we get 0.972).
+
+\section{Step 3: Layer 2, the individual-based engine}
+\subsection{Genome representation}
+\begin{itemize}
+\item Each haplotype is a row of \code{uint64} words, one bit per finite site: 32,768 autosomal sites (512 words) plus 8,192 X sites (128 words).
+\item \code{genomes[2*i]} is the maternal haplotype and \code{genomes[2*i+1]} the paternal one.
+\item Individuals $0..N/2-1$ are female and $N/2..N-1$ male.
+\item A male's paternal X words are always zero: that slot is the Y.
+\item Sites have sorted uniform map positions in $[0,1)$ per chromosome, scaled by the map length $R$.
+\end{itemize}
+
+\subsection{Breeding values with bit tricks}
+\begin{lstlisting}
+@njit(cache=True)
+def _ctz(w):                                   # count trailing zeros (de Bruijn)
+    lsb = w & (~w + np.uint64(1))
+    return DEBRUIJN[np.int64((lsb * MAGIC) >> np.uint64(58))]
+
+@njit(cache=True)
+def _bv(genome, w0, w1, eff):                  # sum of effects of set bits
+    s = 0.0
+    for wi in range(w0, w1):
+        w = genome[wi]
+        while w != np.uint64(0):
+            s += eff[wi * 64 + _ctz(w)]
+            w &= w - np.uint64(1)              # clear lowest set bit
+    return s
+\end{lstlisting}
+
+\subsection{Meiosis, mutation, fitness}
+\begin{itemize}
+\item \textbf{Gametes.} Draw $k\sim\mathrm{Poisson}(R)$ crossovers at uniform positions (Haldane), binary-search the breakpoints into site indices, and copy alternating segments with bit masks. Start from a random parental haplotype. Males call it with \code{recombine=False} when \code{male_recombination = false}.
+\item \textbf{Mutation.} Poisson($U$) hits per gamete at uniformly chosen sites, using \code{|=}: finite sites, so a hit on an already-derived site is silent.
+\item \textbf{Fitness.} Females sum effects over both haplotypes. Males sum both autosomes but \emph{only the maternal X} (hemizygous). Absolute fitness is $\exp(BV+N(0,\sigma^2))$, the preprint's model.
+\end{itemize}
+\begin{lstlisting}
+if i < nf:   v = _bv(g0, 0, WA + WX, eff_f) + _bv(g1, 0, WA + WX, eff_f)
+else:        v = _bv(g0, 0, WA + WX, eff_m) + _bv(g1, 0, WA, eff_m)   # X once
+wabs[i] = np.exp(v + noise_sd * np.random.standard_normal())
+\end{lstlisting}
+
+\subsection{The generation loop (Wright--Fisher with sexes)}
+\begin{lstlisting}
+for gen in range(n_gen):
+    _fitness(G, N, WA, WX, eff_f, eff_m, noise_sd, bvf, bvm, wabs)
+    # cumulative sums within females and within males -> draw parents
+    for j in range(N):
+        mom = _draw(cumf, 0, nf); dad = _draw(cumf, nf, N - nf)
+        mat, pat = G2[2 * j], G2[2 * j + 1]
+        _gamete(G[2*mom], G[2*mom+1], mat, 0, WA, 0, posAll, RA, True)        # autosome
+        _gamete(G[2*mom], G[2*mom+1], mat, WA, W, WA*64, posAll, RX, True)    # X
+        _mutate(mat, 0, WA, UA); _mutate(mat, WA, W, UX)
+        _gamete(G[2*dad], G[2*dad+1], pat, 0, WA, 0, posAll, RA, male_recomb)
+        _mutate(pat, 0, WA, UA)
+        if j < nf:  pat[WA:W] = G[2*dad][WA:W]; _mutate(pat, WA, W, UX)  # daughter: his X
+        else:       pat[WA:W] = 0                                        # son: Y
+    G, G2 = G2, G
+\end{lstlisting}
+Replicates run in parallel with \code{prange}, each reseeding numba's RNG. Throughput: about 11\,min for 6 replicates of $N=1{,}250$ over 12,500 generations with 512 words on 6 threads.
+
+\subsection{Engine validation (must pass)}
+\begin{itemize}
+\item \textbf{Haldane.} The fraction of recombinant gametes between two sites at map distance $d$ equals $(1-e^{-2d})/2$ within 0.01.
+\item \textbf{Neutral diversity.} $\pi=4N_eU$ with $N_e/N=1$ when the noise is 0.
+\item With lognormal noise, the expectation is \emph{not} $e^{-\sigma^2}$ at small $N$. Use the exact finite-$N$ value:
+\begin{equation}
+\frac{N_e}{N}=\frac{1/n}{\mathbb E\big[\sum_i p_i^2\big]},\qquad p_i=\frac{w_i}{\sum_j w_j},\ w_i=e^{\sigma Z_i},\ n=N/2,
+\end{equation}
+estimated by Monte Carlo (0.399 for $n=75$, $\sigma=1$, against $e^{-1}=0.368$). Use 12 replicates and a $3\,$SE tolerance (\S\ref{tr:ne}).
+\item \textbf{Zero leakage.} An AST test checks that the \IBM\ never imports the analytic layer.
+\end{itemize}
+
+\section{Step 4: architectures and rescaling}
+\begin{lstlisting}
+def build(rng, n_sites_A, n_sites_X, mix, gamma_shape, gamma_scale, sa_benefit_ratio=1.0):
+    kind = rng.choice(kinds, size=S, p=probs)     # 1 F-limited, 2 M-limited, 3 SC, 4/5 SA
+    s = rng.gamma(gamma_shape, gamma_scale, size=S)
+    ef[kind == 1] = -s[kind == 1];  em[kind == 2] = -s[kind == 2]
+    ef[kind == 3] = em[kind == 3] = -s[kind == 3]
+    ef[kind == 4] = -s[kind == 4];  em[kind == 4] = +sa_benefit_ratio * s[kind == 4]
+    em[kind == 5] = -s[kind == 5];  ef[kind == 5] = +sa_benefit_ratio * s[kind == 5]
+
+def rescale(N_ref, gens_ref, mu_bp, L_bp_A, R_A_ref, gamma_scale_ref, lam, L_bp_X=0, R_X_ref=0):
+    return Rescaled(N=round(N_ref / lam), n_gen=round(gens_ref / lam),
+                    U_A=mu_bp * L_bp_A * lam, U_X=mu_bp * L_bp_X * lam,
+                    R_A=R_A_ref * lam, R_X=R_X_ref * lam, gamma_scale=gamma_scale_ref * lam)
+\end{lstlisting}
+\begin{warnbox}[Two choices that matter]
+\begin{itemize}
+\item \textbf{SA benefit ratio $b<1$.} With $b=1$ an additive SA allele is exactly neutral averaged over the sexes. At $U\approx0.9$ per genome per generation, such alleles accumulate without bound (V in the thousands). With $b=0.5$ they are net deleterious and reach balance.
+\item \textbf{Number of sites.} Keep at least 4$\times$ the number of segregating sites (about 4,000--8,000 here). Too few sites saturate and bias LD.
+\end{itemize}
+\end{warnbox}
+
+\section{Step 5: statistics computed the papers' way}
+\begin{lstlisting}
+def population_stats(genomes, arch, rng, n_f=None, n_m=None, autosome_only=True):
+    # sample n_f females and n_m males; genotype state g = (h0 + h1)/2 in {0, .5, 1}
+    g = 0.5 * (bits[0::2] + bits[1::2])
+    af, am = 2 * arch.eff_f, 2 * arch.eff_m      # average effects on the state scale
+    bvf, bvm = g @ af, g @ am
+    Vf, Vm, C = bvf.var(ddof=1), bvm.var(ddof=1), np.cov(bvf, bvm)[0, 1]
+    direct = np.sum(af * am * g.var(0, ddof=1))  # pleiotropic part
+    return dict(r_mf=C / np.sqrt(Vf * Vm), COV=C, direct=direct, indirect=C - direct,
+                interference_pct=100 * C / Vf, ...)
+\end{lstlisting}
+\begin{itemize}
+\item Keep the paper's sampling fraction under rescaling: 250 of 1,250 females becomes 125 of 625.
+\item \textbf{LD by distance.} Sample pairs (female-limited site, male-limited site), compute $D$ between derived alleles, and bin by female map distance. Derived--derived $D$ has the same sign as beneficial--beneficial $D$.
+\end{itemize}
+
+\section{Step 6: the hemiclone-assay emulator}
+\subsection{Sampling hemigenomes (clone-generator protocol)}
+\begin{lstlisting}
+def sample_hemigenomes(genomes, arch, rng, n_lines):
+    N = genomes.shape[0] // 2; nf = N // 2
+    males = nf + rng.choice(N - nf, n_lines, replace=n_lines > N - nf)
+    hapA = 2 * males + rng.integers(0, 2, n_lines)   # random one of his two autosomes
+    H = genomes[hapA].copy()
+    H[:, arch.WA:] = genomes[2 * males, arch.WA:]     # his X = maternal slot
+    return H
+\end{lstlisting}
+
+\subsection{The assay}
+For each sex ratio, day, line and vial:
+\begin{itemize}
+\item \textbf{Females.} Each of 2 focal females has genotype hemigenome + a random population haplotype and lays $\mathrm{Poisson}(\lambda_0\exp(\beta_f(SR)\,g+\epsilon_\mathrm{vial}+\epsilon_\mathrm{day}))$ eggs. Vial fitness is the sum.
+\item \textbf{Males.} $n_M/4$ focal males (hemigenome autosome + random autosome + hemigenome X) compete with $3n_M/4$ random competitors. The focal share is $\sum_\mathrm{focal}e^{\beta_m g+\epsilon}/\sum_\mathrm{all}e^{\beta_m g+\epsilon}$. Each of 7 scored females has Poisson(20) offspring, split binomially. Vial fitness is the proportion sired.
+\item Breeding values are standardised by the SD of whole-individual competitor BVs, so that $\beta$ is ``SD of log fitness per SD of BV'' and is comparable across $\lambda$.
+\end{itemize}
+
+\subsection{Calibration (variances only)}
+\begin{itemize}
+\item Separately for each sex $\times$ SR, fit $(\beta,\sigma_\mathrm{noise})$ by \code{scipy.optimize.least_squares} on log-ratios to two targets from the raw data: the line variance of relative fitness and the mean within line$\times$day CV$^2$.
+\item Use common random numbers, averaging 4 assay draws per evaluation, and bounds $[10^{-3},5]$. Start from $\log(0.3,0.4)$.
+\item The median $(\beta,\sigma)$ over the populations of the ``shared'' regime is the fixed \textbf{instrument} applied to every other architecture.
+\end{itemize}
+Typical calibrated values: female $\beta\approx0.32/0.25/0.21$ (MB/E/FB); male $\beta\approx1.43/0.82/0.46$; male noise $\approx2.4/1.5/1.3$.
+
+\section{Step 7: HRI runs (target 4) and the $\lambda$ decision}
+\begin{itemize}
+\item For each map length and setting (paper: both sexes recombine; Drosophila: male $r=0$) and for a $\mu$ sweep at 0.1\,M, evolve the replicates and compute the statistics. Save the populations.
+\item \textbf{Collapse diagnostic.} Flag a replicate as collapsed if $V_f/\lambda^2>0.1$ (stable populations sit near 0.02). Report collapsed replicates separately and exclude them from summaries.
+\item \textbf{$\lambda$ check.} Run the headline condition (0.1\,M) at $\lambda=1$, i.e.\ the paper's own parameters, and compare with the rescaled runs.
+  \begin{itemize}
+  \item $\lambda=4$ collapsed.
+  \item $\lambda=2$ was stable but about 2$\times$ too strong.
+  \item $\lambda=1$ gave $-0.042\pm0.041$, against the paper's $-0.078$.
+  \end{itemize}
+\end{itemize}
+
+\section{Step 8: LH regimes (target 1)}
+Evolve 6 populations for each of three regimes, with $N=1{,}920/\lambda$, X + autosome and no male crossing over:
+\begin{itemize}
+\item shared (60\% SC, 30\% sex-limited, 10\% SA);
+\item sex-limited only (null);
+\item true SA (80\% SA).
+\end{itemize}
+For each population:
+\begin{enumerate}
+\item compute $\rmf$ and the true hemigenome $r$ (300 lines, no noise);
+\item calibrate;
+\item run 40 assays of 39 lines and apply the paper's estimators.
+\end{enumerate}
+
+\section{Step 9: design sweep and emulator (Layer 3)}
+\begin{itemize}
+\item Latin hypercube over:
+  \begin{itemize}
+  \item $f_\mathrm{SA}\in[0,0.2]$ (above about 0.2 populations collapse);
+  \item the concordant share $\in[0,1]$;
+  \item $\log_{10}R_A\in[-1,0.3]$.
+  \end{itemize}
+\item 12 points $\times$ 2 populations. For each population: 20 instrument assays at 39 lines, plus assays at the contrast studies' line numbers (40, 100, 113, 223).
+\item Fit a GP (constant$\times$RBF + white noise, standardised inputs) and a GBM. Validate with \code{GroupKFold}, holding out whole design points, against the replicate-population SD.
+\item \textbf{Use the emulator only if CV RMSE $<1.5\times$ the replicate SD.} Ours failed (0.30 vs 0.15), so all inference uses the direct design table.
+\end{itemize}
+
+\section{Step 10: power analysis}
+For $n\in\{39,80,160,320\}$ lines, run assays on saved populations and bootstrap lines within each assay (400 resamples) for $r(MB)-r(FB)$. Power is $P(\text{CI excludes }0)$. Do it at an architecture whose $r$ matches the paper; at $r\approx0.1$ the attenuation-only gap is invisible.
+
+\section{Step 11: experiments that try to separate SA from HRI}
+\begin{lstlisting}
+@njit(cache=True)
+def _rounds(pool, k, WA, WX, pos, RA, RX, seed):    # k generations of FEMALE meiosis
+    np.random.seed(seed)
+    cur = pool.copy(); nxt = np.empty_like(pool); n = pool.shape[0]
+    for _ in range(k):
+        for i in range(n):
+            a = np.random.randint(n); b = np.random.randint(n - 1); b += b >= a
+            E._gamete(cur[a], cur[b], nxt[i], 0, WA, 0, pos, RA, True)
+            if WX > 0:
+                E._gamete(cur[a], cur[b], nxt[i], WA, WA + WX, WA * 64, pos, RX, True)
+        cur, nxt = nxt, cur
+    return cur
+
+def linkage_equilibrium(bits, rng):                 # k -> infinity limit
+    return rng.permuted(bits, axis=0)               # permute every site independently
+\end{lstlisting}
+Use map lengths \emph{per real meiosis} (not $\lambda$-rescaled): one lab generation is $1/\lambda$ model generations. The N-dependence test reruns the HRI condition at the paper's per-generation $\mu,s,c$ with only $N$ changed (\code{run_condition(..., N_override=N)}).
+
+\section{Step 12: comparison table, coverage and figures}
+\code{scripts/make_comparison.py} reads every result file that exists and writes three things:
+\begin{itemize}
+\item \code{comparison_table.csv}, one row per statistic: target, statistic, paper value, recomputed value, model value with range, verdict, and driving assumption;
+\item \code{coverage.csv}, with scored and unscoreable statistics per target;
+\item the figures.
+\end{itemize}
+Save figures through a temp file plus \code{os.replace} with retries (\S\ref{tr:errno22}).
+
+\section{Step 13: orchestration}
+\begin{itemize}
+\item \code{scripts/run_all.py --profile P [--only stage,...] [--force]} runs these stages, skipping any whose output exists:
+  \begin{enumerate}
+  \item recompute
+  \item modifier
+  \item lh
+  \item design
+  \item emulator
+  \item hri
+  \item distinguish
+  \item table
+  \end{enumerate}
+\item Long runs (hours) must be \emph{detached} from the controlling session. On Windows we used a bash chain script started with \code{Start-Process -WindowStyle Hidden}. Each stage writes \code{results/stage_<name>_<profile>.log}, and the chain writes \code{pipeline_<profile>.log}.
+\item Follow-up heavy jobs wait for the chain's ``chain exit'' line (\code{until grep -q ...; do sleep 60; done}), so only one heavy job runs at a time.
+\end{itemize}

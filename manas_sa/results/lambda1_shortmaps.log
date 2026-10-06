@@ -1,0 +1,4 @@
+[lambda1] R=0.001 M mu=7e-07 male_rec=True: r_mf mean -0.1842 (se 0.0518), 2806s
+[lambda1] R=0.01 M mu=7e-07 male_rec=True: r_mf mean -0.0708 (se 0.0607), 2635s
+wrote C:\Users\Windows\Downloads\antagonistic_alleles_manas\manas_sa\results\lambda_sensitivity.csv
+lambda1 exit 0

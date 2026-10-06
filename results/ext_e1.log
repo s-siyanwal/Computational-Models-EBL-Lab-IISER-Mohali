@@ -1,0 +1,26 @@
+17:20:32  INFO  environment: {'python': '3.14.6', 'platform': 'Windows-10-10.0.19045-SP0', 'numpy': '2.5.3', 'scipy': '1.18.1', 'numba': '0.68.0', 'sympy': '1.14.0', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'profile': 'full', 'master_seed': 20261005, 'cpu_count': 8, 'timestamp': '2026-10-05 17:20:32', 'ibm_backend': 'opencl_backend', 'gpu_device': 'Baffin'}
+17:20:35  INFO  [extended] E1/E2 polymorphism maps (+M1 GP) ...
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-08. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+17:21:20  INFO    E1/E2 autosomal | additive: {'oracle_area': 0.1865625, 'gp_area': 0.16984375, 'iou_gp': 0.8960931005818786, 'iou_raw': 0.6811475409836065, 'cell_agreement': 1.0, 'n_cells': 144, 'n_decided': 134, 'seconds': 45.5}
+17:22:40  INFO    E1/E2 X-linked | additive: {'oracle_area': 0.1034375, 'gp_area': 0.084375, 'iou_gp': 0.7940298507462686, 'iou_raw': 0.43007915567282323, 'cell_agreement': 1.0, 'n_cells': 64, 'n_decided': 60, 'seconds': 79.3}
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-08. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-08. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+17:23:25  INFO    E1/E2 autosomal | dominance reversal h=0.25: {'oracle_area': 0.7703125, 'gp_area': 0.735625, 'iou_gp': 0.9549695740365112, 'iou_raw': 0.8880778588807786, 'cell_agreement': 1.0, 'n_cells': 144, 'n_decided': 130, 'seconds': 45.2}
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 1 of parameter k1__k2__length_scale is close to the specified lower bound 0.039999999999999994. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-08. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+17:24:42  INFO    E1/E2 X-linked | dominance reversal h=0.25: {'oracle_area': 0.494375, 'gp_area': 0.4571875, 'iou_gp': 0.9126884422110553, 'iou_raw': 0.7219773299748111, 'cell_agreement': 0.9821428571428571, 'n_cells': 64, 'n_decided': 56, 'seconds': 76.6}
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-08. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+17:25:26  INFO    E1/E2 autosomal | male-benefit recessive (h_f=0.2, h_m=0.8): {'oracle_area': 0.1865625, 'gp_area': 0.17671875, 'iou_gp': 0.8933224755700325, 'iou_raw': 0.52046783625731, 'cell_agreement': 1.0, 'n_cells': 144, 'n_decided': 126, 'seconds': 44.4}
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 1 of parameter k1__k2__length_scale is close to the specified lower bound 0.039999999999999994. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-08. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+17:26:43  INFO    E1/E2 X-linked | male-benefit recessive (h_f=0.2, h_m=0.8): {'oracle_area': 0.5653125, 'gp_area': 0.5228125, 'iou_gp': 0.9237569060773481, 'iou_raw': 0.8106557377049181, 'cell_agreement': 0.9827586206896551, 'n_cells': 64, 'n_decided': 58, 'seconds': 77.0}
+17:26:45  INFO  [extended] E1/E2 polymorphism maps (+M1 GP) done in 369.7s
+17:26:45  INFO  all done

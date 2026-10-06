@@ -1,0 +1,48 @@
+rows: 2539; lines: 39; days: ['Day 1', 'Day 10', 'Day 11', 'Day 12', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7', 'Day 8', 'Day 9']
+  bootstrap 0/10000
+  bootstrap 2000/10000
+  bootstrap 4000/10000
+  bootstrap 6000/10000
+  bootstrap 8000/10000
+                 statistic level  recomputed  boot_lo  boot_hi  basic_lo  basic_hi  reported  reported_lo  reported_hi
+                    r_wgmf     M      0.3805   0.2014   0.4533    0.3078    0.5597    0.3805       0.2992       0.5283
+                   prop_SA     M      0.3097   0.2733   0.3993    0.2202    0.3461    0.3097       0.2358       0.3504
+                    r_wgmf     E      0.4027   0.2223   0.4887    0.3167    0.5831    0.4027       0.3140       0.5526
+                   prop_SA     E      0.2986   0.2556   0.3888    0.2084    0.3416    0.2986       0.2237       0.3430
+                    r_wgmf     F      0.2515   0.0406   0.3777    0.1253    0.4625    0.2515       0.1198       0.4502
+                   prop_SA     F      0.3742   0.3111   0.4797    0.2688    0.4373    0.3742       0.2749       0.4401
+           r_female_across   M-F      0.7688   0.6011   0.7929    0.7448    0.9366    0.7688       0.7442       0.8497
+           r_female_across   M-E      0.7493   0.6048   0.7753    0.7233    0.8938    0.7493       0.7213       0.8368
+           r_female_across   F-E      0.8422   0.6993   0.8445    0.8398    0.9850    0.8421       0.8403       0.8956
+             r_male_across   M-F      0.5567   0.2692   0.6094    0.5040    0.8442    0.5567       0.4997       0.7262
+             r_male_across   M-E      0.6995   0.4403   0.7188    0.6803    0.9588    0.6995       0.6755       0.8018
+             r_male_across   F-E      0.5415   0.2470   0.6102    0.4728    0.8359    0.5415       0.4664       0.7417
+        linevar_rel_female     M      0.0545   0.0477   0.0738    0.0352    0.0614    0.0532       0.0355       0.0884
+          linevar_rel_male     M      0.3265   0.3157   0.4837    0.1692    0.3372    0.2926       0.1954       0.4859
+            linecov_rel_mf     M      0.0490   0.0285   0.0694    0.0285    0.0694       NaN          NaN          NaN
+within_sex_response_female     M      0.0273   0.0238   0.0369    0.0176    0.0307       NaN          NaN          NaN
+ cross_sex_response_female     M      0.0245   0.0142   0.0347    0.0143    0.0347       NaN          NaN          NaN
+  within_sex_response_male     M      0.1632   0.1579   0.2419    0.0846    0.1686       NaN          NaN          NaN
+   cross_sex_response_male     M      0.0245   0.0142   0.0347    0.0143    0.0347       NaN          NaN          NaN
+  cross_over_within_female     M      0.8979   0.4944   1.1527    0.6431    1.3015       NaN          NaN          NaN
+    cross_over_within_male     M      0.1500   0.0719   0.1810    0.1190    0.2281       NaN          NaN          NaN
+        linevar_rel_female     E      0.0333   0.0300   0.0418    0.0248    0.0366    0.0321       0.0214       0.0533
+          linevar_rel_male     E      0.1674   0.1603   0.2427    0.0921    0.1745    0.1591       0.1062       0.2642
+            linecov_rel_mf     E      0.0298   0.0180   0.0420    0.0176    0.0416       NaN          NaN          NaN
+within_sex_response_female     E      0.0166   0.0150   0.0209    0.0124    0.0183       NaN          NaN          NaN
+ cross_sex_response_female     E      0.0149   0.0090   0.0210    0.0088    0.0208       NaN          NaN          NaN
+  within_sex_response_male     E      0.0837   0.0801   0.1214    0.0460    0.0872       NaN          NaN          NaN
+   cross_sex_response_male     E      0.0149   0.0090   0.0210    0.0088    0.0208       NaN          NaN          NaN
+  cross_over_within_female     E      0.8961   0.5034   1.2108    0.5815    1.2889       NaN          NaN          NaN
+    cross_over_within_male     E      0.1781   0.0942   0.2067    0.1495    0.2620       NaN          NaN          NaN
+        linevar_rel_female     F      0.0247   0.0224   0.0333    0.0162    0.0270    0.0254       0.0170       0.0422
+          linevar_rel_male     F      0.1052   0.1005   0.1831    0.0273    0.1100    0.1010       0.0674       0.1678
+            linecov_rel_mf     F      0.0125   0.0021   0.0229    0.0021    0.0229       NaN          NaN          NaN
+within_sex_response_female     F      0.0124   0.0112   0.0166    0.0081    0.0135       NaN          NaN          NaN
+ cross_sex_response_female     F      0.0063   0.0011   0.0114    0.0011    0.0114       NaN          NaN          NaN
+  within_sex_response_male     F      0.0526   0.0502   0.0916    0.0136    0.0550       NaN          NaN          NaN
+   cross_sex_response_male     F      0.0063   0.0011   0.0114    0.0011    0.0114       NaN          NaN          NaN
+  cross_over_within_female     F      0.5060   0.0739   0.8726    0.1394    0.9380       NaN          NaN          NaN
+    cross_over_within_male     F      0.1189   0.0153   0.1732    0.0646    0.2225       NaN          NaN          NaN
+               r_wgmf_diff   M-F      0.1290  -0.0899   0.3300       NaN       NaN       NaN      -0.0721       0.3507
+              prop_SA_diff   M-F     -0.0645  -0.1650   0.0450       NaN       NaN       NaN      -0.1753       0.0360

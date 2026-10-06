@@ -1,0 +1,20 @@
+# Spec-compliance override ONLY (acceptance test A2: sham courted first > 60% in
+# the Khan regime). Not used for scientific claims: the audit (docs/07) found this
+# value is fitted to the spec threshold and inconsistent with the independent
+# Byrne & Rice 2006 calibration (which implies P(sham first) = 0.53 for Khan).
+regime: spec_a2
+modules:
+  choice: true
+parameters:
+  beta0:
+    value: 2.5
+    provenance: "Smallest round value passing the spec A2 threshold (needs > 2.03). Fitted to a threshold; not biological."
+    grade: fitted-to-spec
+  depletion_nondepleted:
+    value: 0.5
+    provenance: "Pre-calibration placeholder used with the spec beta0."
+    grade: ours
+  latency_quality_slope:
+    value: 0.5
+    provenance: "Spec 4.2 placeholder (latency declines with max q); not supported by Byrne & Rice 2006 controls."
+    grade: ours

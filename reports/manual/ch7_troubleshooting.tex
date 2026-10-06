@@ -1,0 +1,65 @@
+\chapter{Troubleshooting protocols}\label{ch:trouble}
+
+\section{General protocol}
+\begin{enumerate}
+\item \textbf{Reproduce at the smallest scale.} Use the quick profile, one replicate, one thread (\code{NUMBA_NUM_THREADS=1}). Numba errors are clearer if you temporarily run the Python function un-jitted (\code{func.py_func(...)}).
+\item \textbf{Check invariants before results.}
+  \begin{itemize}
+  \item allele frequencies within $[0,1]$;
+  \item $V_f$ close to $\lambda^2\times0.02$;
+  \item the number of segregating sites well below the site capacity;
+  \item no NaN in calibrations.
+  \end{itemize}
+\item \textbf{Compare against a known answer:}
+  \begin{itemize}
+  \item a test in \code{tests/};
+  \item the analytic layer;
+  \item the published raw-data recomputation.
+  \end{itemize}
+\item \textbf{When a result looks too good or too bad} ($r=-1.000$ exactly; $V$ in the thousands; a perfect match), suspect a degenerate state or a bug before believing it.
+\item \textbf{Change one thing at a time} and keep the failed output under a new name (e.g.\ \code{hri_runs_lambda4_partial.csv}). Failures are diagnostics.
+\end{enumerate}
+
+\section{Catalogue of problems we met}
+\begin{longtable}{p{3.6cm}p{5.0cm}p{6.6cm}}
+\toprule
+\textbf{Symptom} & \textbf{Cause} & \textbf{Fix}\\\midrule\endhead
+\label{tr:lambda}$\rmf\approx-1$ in most replicates; $V_f$ in the thousands; about 15,000 segregating sites & Rescaling artefact at $\lambda=4$ (and some short-map replicates at $\lambda=2$). Haplotypes split into a female-lethal, male-favoured class carried only through sons (a neo-Y) and its complement. $N V_g$ and the ratchet speed are not rescaling-invariant & Diagnose: 2-means clustering of haplotype loads; between-class share 0.993. Lower $\lambda$; flag replicates with $V_f/\lambda^2>0.1$ as collapsed, report and exclude them; validate the headline at $\lambda=1$\\
+Same collapse in LH regimes with many SA mutations & SA benefits accumulate on non-recombining male-transmitted autosomes; unbounded $\exp(BV)$ fitness & Use SA benefit ratio $b<1$; restrict $f_\mathrm{SA}\le0.2$; report the collapse as a finding\\
+$V$ in the thousands even without linkage & $b=1$ makes additive SA alleles exactly neutral averaged over the sexes; they drift and accumulate & $b=0.5$ (\S5.6)\\
+\label{tr:hemiY}True hemigenome $r=0.997$ (implausible) & Hemigenome sampling included Y slots (empty X) & Sample from males: X = maternal slot, autosome = a random one of two\\
+Paternal autosomes never sampled & Autosome tied to the X slot & Draw the autosome slot independently (clone-generator protocol)\\
+Calibration overflow; Poisson $\lambda$ too large & Unstandardised BVs with $\lambda$-inflated variance & Standardise BVs by competitor SD; bound $\beta\le5$; optimise on the log scale\\
+Recomputed $r=0.382/0.419/0.236$, not 0.3805/0.4027/0.2515 & Arcsine transform applied as the Methods describe (F12) & Untransformed proportions reproduce all 12 values exactly; keep a flag \code{ARCSINE_MALES}\\
+Bootstrap takes about 8\,h & Pandas loop of \code{concat}/\code{groupby} per resample & Vectorised \code{np.bincount} version (45\,s for 10k); verify with the identity resample\\
+Percentile CIs sit below the estimate & Vial resampling attenuates correlations & Also report the basic interval; state that the published CI method is not identified\\
+\label{tr:ne}Neutral $N_e$ test fails (+17\%) & Expectation $e^{-\sigma^2}$ is the large-$N$ limit; at $n=75$ parents per sex the exact value is 0.399, not 0.368 & Monte-Carlo the finite-$N$ expectation; 12 replicates; 3\,SE tolerance\\
+\label{tr:gp}GP emulator ``consistent'' with everything; flat sensitivity & GP learned noise: CV RMSE 0.30 vs replicate SD 0.15; strong between-population variance & Gate the emulator on CV RMSE $<1.5\times$ replicate SD; otherwise report ``not identified'' and use the design table\\
+GP boundary denoiser inflates regions (IoU 0.004) & Zero-variance cells collapse the length scale & Variance floor, length-scale lower bound = grid spacing, tanh response\\
+Design sweep wastes runs & Most of $f_\mathrm{SA}\in[0,0.5]$ is collapsed & Pilot the range; restrict to the informative region\\
+Recombination experiment shows no effect & HRI LD is between tightly linked loci, and $k$ meioses break it only if $kc\gtrsim1$ & Report as a negative result; use magnitude and sign plus $N$-dependence\\
+\label{tr:slim}SLiM fails to build with MSVC & gnulib needs POSIX configure & Use MSYS2/WSL/conda on another machine; keep SLiM scripts; make the cross-check skip gracefully\\
+\label{tr:errno22}\code{OSError: [Errno 22] Invalid argument} saving a PNG & Windows file lock (viewer, preview pane, antivirus) on the target file & Write to a temp file, then \code{os.replace}, retrying with back-off\\
+Long job killed after 2\,h & Agent tool's background limit & Launch detached: \code{Start-Process -WindowStyle Hidden bash chain.sh}\\
+Stopping jobs killed the controlling shell & Kill-by-command-line match also matched the shell running the kill command & Match on PIDs, or on patterns absent from your own command\\
+Two Python processes per job & Windows venv \code{python.exe} is a launcher that spawns the real interpreter & Expected; check parent-child PIDs before assuming duplicates\\
+Edited bash chain while it ran misbehaves & Bash reads scripts incrementally & Never edit a running script; write a new chain\\
+\texttt{\textbackslash n} became literal newlines, or \texttt{\textbackslash b} became a backspace (LaTeX: ``Unicode character U+0008'') in generated files & The shell layer collapsed \texttt{\textbackslash\textbackslash} to \texttt{\textbackslash} inside inline scripts (PowerShell/heredoc escaping) & Write patch scripts to files with an editor tool and run them; scan outputs for control characters\\
+TOML mixture keys are strings & TOML keys are always strings & Convert digit keys to \code{int} on load\\
+\code{NUMBA_NUM_THREADS} ignored & Set after numba was imported & Set the env var in the config module imported first\\
+Figure legend hides data; 13 cycled colours & Too many series; default colour cycle & At most 6 series in fixed colours; legend below the axes; jitter coincident markers\\
+``No state allocated'' test fails although the attribute was deleted & A dataclass field with a default lives on the class, so \code{del obj.attr} leaves it visible & Do not declare optional state as a field; attach it only when the module is on\\
+Predictive p-values never below 0.016 & Monte Carlo floor $1/(R+1)$ & Use the analytic F or $\chi^2$ tail when the null is exact; increase $R$\\
+FDR hides real rejections & Rows that cannot fail (by construction, echoes) dilute the family & Restrict the FDR family to substantive tests\\
+A fitted parameter looks like a prediction & Tuned to a threshold or after viewing the target & Calibrate on an independent study; test that fitting code never reads the target\\
+X-linked invasion condition off by 2 & Scan of Parsons' ``note added in proof'' & Derive it yourself; trust internal consistency over the scan\\\bottomrule
+\end{longtable}
+
+\section{Resource incidents: a checklist before every heavy launch}
+\begin{enumerate}
+\item List Python processes and their parents; identify your own.
+\item Check free RAM. A $\lambda=4$ population set peaked at 4\,GB; $\lambda=2$ LH runs at about 0.3\,GB per process.
+\item Confirm that no other heavy job of yours is running (one at a time).
+\item Launch at below-normal priority with \code{cpu-2} threads.
+\item Set a monitor on the stage log that greps for progress \emph{and} failure signatures (\code{Traceback|Error|exit}).
+\end{enumerate}

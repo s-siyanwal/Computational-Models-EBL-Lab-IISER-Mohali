@@ -1,0 +1,35 @@
+17:02:59  INFO  environment: {'python': '3.14.6', 'platform': 'Windows-10-10.0.19045-SP0', 'numpy': '2.5.3', 'scipy': '1.18.1', 'numba': '0.68.0', 'sympy': '1.14.0', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'profile': 'full', 'master_seed': 20261005, 'cpu_count': 8, 'timestamp': '2026-10-05 17:02:57', 'ibm_backend': 'opencl_backend', 'gpu_device': 'Baffin'}
+17:03:01  INFO  [extended] E1/E2 polymorphism maps (+M1 GP) ...
+17:03:46  INFO    E1/E2 autosomal | additive: {'oracle_area': 0.1865625, 'gp_area': 0.5090625, 'iou_gp': 0.3253944626376898, 'iou_raw': 0.6811475409836065, 'cell_agreement': 1.0, 'n_cells': 144, 'n_decided': 134, 'seconds': 44.4}
+17:05:07  INFO    E1/E2 X-linked | additive: {'oracle_area': 0.1034375, 'gp_area': 0.4753125, 'iou_gp': 0.19176319176319176, 'iou_raw': 0.43007915567282323, 'cell_agreement': 1.0, 'n_cells': 64, 'n_decided': 60, 'seconds': 81.0}
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-08. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+17:05:52  INFO    E1/E2 autosomal | dominance reversal h=0.25: {'oracle_area': 0.7703125, 'gp_area': 0.7365625, 'iou_gp': 0.9557899006286757, 'iou_raw': 0.8880778588807786, 'cell_agreement': 1.0, 'n_cells': 144, 'n_decided': 130, 'seconds': 45.2}
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-08. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.001. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified lower bound 1e-08. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+17:07:10  INFO    E1/E2 X-linked | dominance reversal h=0.25: {'oracle_area': 0.494375, 'gp_area': 0.87390625, 'iou_gp': 0.5515591778880227, 'iou_raw': 0.7219773299748111, 'cell_agreement': 0.9821428571428571, 'n_cells': 64, 'n_decided': 56, 'seconds': 77.8}
+17:07:55  INFO    E1/E2 autosomal | male-benefit recessive (h_f=0.2, h_m=0.8): {'oracle_area': 0.1865625, 'gp_area': 0.17671875, 'iou_gp': 0.8933224755700325, 'iou_raw': 0.52046783625731, 'cell_agreement': 1.0, 'n_cells': 144, 'n_decided': 126, 'seconds': 45.1}
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.001. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+17:09:12  INFO    E1/E2 X-linked | male-benefit recessive (h_f=0.2, h_m=0.8): {'oracle_area': 0.5653125, 'gp_area': 0.8715625, 'iou_gp': 0.6253092965712266, 'iou_raw': 0.8106557377049181, 'cell_agreement': 0.9827586206896551, 'n_cells': 64, 'n_decided': 58, 'seconds': 76.5}
+17:09:13  INFO  [extended] E1/E2 polymorphism maps (+M1 GP) done in 371.7s
+17:09:13  INFO  [extended] E3 Kimura fixation ...
+17:09:30  INFO    E3 N=200 done
+17:10:41  INFO    E3 N=500 done
+17:13:29  INFO    E3 N=800 done
+17:13:31  INFO  [extended] E3 Kimura fixation done in 257.7s
+17:13:31  INFO  [extended] M2 neural emulator ...
+17:17:22  INFO  [extended] M2 neural emulator done in 231.5s
+17:17:22  INFO  [extended] E4 XY linkage ...
+17:18:20  INFO  [extended] E4 XY linkage done in 57.9s
+17:18:20  INFO  [extended] E5 diffusion persistence ...
+17:18:53  INFO  [extended] E5 diffusion persistence done in 32.4s
+17:18:53  INFO  [extended] M3 inverse problem ...
+17:19:28  INFO    M3 N=500 done
+17:20:07  INFO    M3 N=5000 done
+17:20:07  INFO  [extended] M3 inverse problem done in 74.7s
+17:20:07  INFO  all done

@@ -1,0 +1,31 @@
+id,source,location,statistic,value
+CF,Chinmay thesis,p.19 (PDF p.37) Table 3.2,"courts-first binomial p, 16 block x treatment tests","all > 0.05; reported values are the smaller ONE-SIDED tail (min 0.055 block1 IXI, 0.092 block4 UXI); two-sided all >= 0.110"
+CF_share,Chinmay thesis,p.19 Table 3.2,"sham courted first, pooled",240/463 = 0.518 (computed from the table)
+CL_INF,Chinmay thesis,p.21 (PDF p.39) Table 3.3,courtship latency: infection status,"F = 0.125, p = 0.723"
+CL_FEM,Chinmay thesis,p.21 Table 3.3,courtship latency: female genotype,"F = 6.93, p = 0.0087"
+CL_MALE,Chinmay thesis,p.21 Table 3.3,courtship latency: male genotype,"F = 6.49, p = 0.011"
+CL_INT,Chinmay thesis,p.21 Table 3.3,courtship latency: all interactions,p = 0.43-0.94
+CL_means,Chinmay thesis,p.20 Figs 3.2-3.3,courtship latency means,MISSING (figures only)
+CM_means,Chinmay thesis,p.21 Table 3.4,"courts-most (share of courtship on sham), 16 cells","means 0.432-0.637, SD 0.359-0.459; one-sample t vs 0.5 all p >= 0.067"
+CM_ANOVA,Chinmay thesis,p.22 (PDF p.40) Table 3.5,courts-most ANOVA,female genotype p = 0.249; male p = 0.916; interaction p = 0.677
+U_mort,Chinmay thesis,p.23 (PDF p.41),U mortality at OD600 1.5,'around 70-90 %'
+fec_cue,Chinmay thesis,p.24 (PDF p.42),I/U/S females lose no fecundity after P. entomophila,cited to Gupta 2016; not remeasured on choice females
+gupta_fec,Gupta PhD thesis 2016,"p.133, Table 8.1(e) p.135","fecundity, infected vs uninfected (96 h post-infection)","Treatment F = 1.83, p = 0.27; Selection x Treatment p = 0.025 (S infected > S uninfected)"
+gupta_surv,Gupta PhD thesis 2016,p.82; p.95,I vs control survivorship; CFU,"~35% (p.82), ~40% (p.95) higher survival; I females ~30% fewer CFU"
+TEL_sex,Chinmay thesis,p.31 (PDF p.49) Table 4.2,Gender Wald chi2,"108.16, p < 0.0001 (daughters survive better, p.32)"
+TEL_pop,Chinmay thesis,p.31 Table 4.2,Population (stepfather) Wald chi2,"1.02, df 2, p = 0.599"
+TEL_time,Chinmay thesis,p.31 Table 4.2,Time point Wald chi2,"2.75, p = 0.098"
+TEL_3way,Chinmay thesis,p.31 Table 4.2,Population x Time x Gender,"7.93, df 2, p = 0.019"
+TEL_LR,Chinmay thesis,p.31 Table 4.1,log-rank / Wilcoxon per sex x time (8 tests),"6 h daughters: log-rank p = 0.047, Wilcoxon p = 0.020; all other 6 tests p >= 0.14"
+TEL_n,Chinmay thesis,p.29 (PDF p.47),sample sizes; blocks,50 infected + 30 sham per sex x stepfather x treatment; ONE block
+TEL_mech,Chinmay thesis,p.32 (PDF p.50),compartmentalisation,author hypothesis (not measured)
+KHAN_bias,Khan & Prasad 2013,p.1021 Table 5,"mating-bias score (infected / all mated), 4 replicate experiments","0.447, 0.478, 0.469, 0.459 (all 95% CIs < 0.5)"
+KHAN_fec,Khan & Prasad 2013,"p.1019 section 3.1, Fig 1c",reproductive output of infected females,'approximately 40% reduction'
+KHAN_cd,Khan & Prasad 2013,"p.1019 section 3.1, Table 2",copulation duration,not affected by male or female infection
+KHAN_ml,Khan & Prasad 2013,p.1019 section 3.1,"mating latency, infected vs sham females (no-choice)",6.58 vs 6.22 min (p = 0.75); 7.94 vs 7.8 (p = 0.921)
+WF_B,Wittman & Fedorka 2015,J Insect Behav 28:41 Table 1B,"PP vs UU, decapitated, 78 trials","CF 0.58 (P = 0.197); CM 0.64 (P = 0.018, FDR 0.053); LAT n.s."
+WF_A,Wittman & Fedorka 2015,Table 1A,PU vs UU,CF 0.60 (P = 0.093); CM 0.45 (P = 0.399): no choice
+MOR_eggs,Morrow et al. 2003,p.803 Table 1,D. melanogaster egg production vs harm,"F5,144 = 2.66, p = 0.025; wounded laid fewest; control vs injured p = 0.10"
+MOR_remate,Morrow et al. 2003,p.803-804,D. melanogaster remating vs harm,leg-ablated females remated sooner; control vs injured p = 0.59
+CREAN_p2,Crean et al. 2014,Ecol Lett 17:1548,second-male paternity,87% of offspring
+CREAN_size,Crean et al. 2014,Table 1,first-male condition on offspring size,"~0.5 SD, F = 6.49, P = 0.013; second male P = 0.948"

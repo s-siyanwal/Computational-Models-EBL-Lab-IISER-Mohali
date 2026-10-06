@@ -1,0 +1,2 @@
+[maplen/paper] R=0.001 M mu=7e-07 male_rec=True: r_mf mean -0.9340 (se 0.0475), 401s
+[maplen/paper] R=0.01 M mu=7e-07 male_rec=True: r_mf mean -0.9997 (se 0.0001), 338s

@@ -1,0 +1,6 @@
+target,statistics_scored,matches,misses,not_scoreable
+1,21,15,8,"MCMCglmm h2 and r (Table 2B, not re-fitted); daily random-effect variances; LMM p-values"
+2,6,6,0,"trait-level genetic correlations and selection gradients (trait data not deposited; MB gradients garbled, F4)"
+3,0,0,0,"everything: Am Nat 2025 not accessible (HTTP 403, no preprint); no number is quoted"
+4,25,9,1,per-map-length and per-mu values beyond medians read from boxplots
+5,7,5,2,"heatmap cell values (no deposited numbers, F11)"

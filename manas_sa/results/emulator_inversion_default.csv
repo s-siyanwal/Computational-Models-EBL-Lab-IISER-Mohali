@@ -1,0 +1,7 @@
+study,published_r,f_SA_best,f_SA_consistent_min,f_SA_consistent_max,emulator_r_at_shared_regime,note,assay_sd_at_n,between_population_sd,z_vs_shared_regime,P_as_extreme_by_sampling
+"Geeta Arun 2022 (LH, equal SR, 39)",0.4027,0.0,0.0,0.2,0.011663977920015264,consistent = emulator mean within 1.96*sqrt(GP var + 39-line assay var),0.1523661476084774,0.26045892091205314,1.2958852729187538,0.19501501375269958
+"Chippindale 2001 (LHM adult, 40)",-0.3,0.0,0.0,0.2,0.011663977920015264,consistent = emulator mean within 1.96*sqrt(GP var + 39-line assay var),0.1483756591549786,0.26045892091205314,-1.039722525599117,0.29846883220695564
+"Innocenti & Morrow 2010 (LHM, 100)",-0.52,0.0,0.0,0.2,0.011663977920015264,consistent = emulator mean within 1.96*sqrt(GP var + 39-line assay var),0.09112857866465071,0.26045892091205314,-1.9267327615774748,0.054012942773762104
+Collet 2016 LHM-UU (100),-0.41,0.0,0.0,0.2,0.011663977920015264,consistent = emulator mean within 1.96*sqrt(GP var + 39-line assay var),0.09112857866465071,0.26045892091205314,-1.5280963811277781,0.1264886098585208
+Collet 2016 LHM-UCL (113),0.21,0.0,0.0,0.2,0.011663977920015264,consistent = emulator mean within 1.96*sqrt(GP var + 39-line assay var),0.08528540765017179,0.26045892091205314,0.7236784394977119,0.4692631727051537
+"Ruzicka 2019 (LHM, 223)",0.15,0.0,0.0,0.2,0.011663977920015264,consistent = emulator mean within 1.96*sqrt(GP var + 39-line assay var),0.055003169096558856,0.26045892091205314,0.5196630580663837,0.6032984391463299

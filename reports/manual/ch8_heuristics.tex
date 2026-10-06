@@ -1,0 +1,87 @@
+\chapter{Heuristics, nuances, caveats and limits}\label{ch:heur}
+
+\section{Heuristics that worked}
+\begin{enumerate}
+\item \textbf{Reproduce the raw data first.} The arcsine finding (F12) only surfaced because we insisted on 4-decimal agreement. Agreement to 2 decimals hides pipeline differences.
+\item \textbf{Reconstruct under-specified models by elimination.} Enumerate the plausible life cycles and keep the one whose closed form matches the published formula.
+\item \textbf{Re-run authors' code rather than re-derive their figures.} For the modifier paper, an exact compiled re-implementation of their supplement (with quirks) scores their claims; a ``cleaned'' version would not.
+\item \textbf{Calibrate to variances, predict correlations.} This turns the hemiclone emulator into a genuine test: the male across-sex-ratio correlations and the MB$-$FB gap were predicted, not fitted.
+\item \textbf{Run the nulls.} The sex-limited null exposed the deterministic sex-differential LD term ($r\approx-0.05$ even without HRI).
+\item \textbf{Scale to the diffusion variable.} The $Ns$ input made the neural emulator extrapolate; generic inputs did not.
+\item \textbf{Measure $N_e$ from the simulator itself} before using diffusion theory: $N_e/N\approx0.9$ under random survival.
+\item \textbf{Pilot before sweeping.} A 2-point pilot of a design range saves hours, for example by revealing collapse above $f_\mathrm{SA}\approx0.2$.
+\item \textbf{Keep failed runs.} The $\lambda=4$ partial results became the rescaling diagnostic.
+\end{enumerate}
+
+\section{Nuances that change conclusions}
+\begin{itemize}
+\item \textbf{Two different ``$r_\mathrm{mf}$''s.}
+  \begin{itemize}
+  \item The HRI preprint's $\rmf$ correlates breeding values over \emph{pooled female and male genotypes}.
+  \item Hemiclonal $\rwg$ correlates female and male values of the \emph{same haploid genome}.
+  \end{itemize}
+  When males do not recombine, the sexes can differ genetically. Then the pooled estimator reads intersexual differentiation as negative covariance: $-0.94$ vs a hemigenome $r$ of $-0.06$ in collapsed populations. Even in stable LH-like populations, the pooled $r$ was $-0.41\ldots0$ against a hemigenome $r$ of $+0.47\ldots+0.73$.
+\item \textbf{Male recombination matters.}
+  \begin{itemize}
+  \item SLiM's default lets both sexes recombine.
+  \item With $r_m=0$, sex-limited selection creates negative LD along entire chromosomes deterministically, and HRI bias is 1.3--1.5$\times$ stronger at 0.1--1\,M.
+  \end{itemize}
+\item \textbf{Attenuation is enough to make $r$ depend on sex ratio.} Lower genetic signal-to-noise at FB (smaller calibrated $\beta$) lowers $\hat r$ without any change in genetic architecture. The published ordering is consistent with attenuation alone and with a real G$\times$SR; 39 lines cannot tell them apart.
+\item \textbf{The SA proportion is not extra evidence.} For scaled and centred line means, the 45\textdegree\ rotation gives $\mathrm{Var}(w_a)/(\mathrm{Var}(w_a)+\mathrm{Var}(w_c))=(1-r)/2$ exactly. The published SA proportions equal $(1-\rwg)/2$ to 4 decimals. Treat ``higher SA proportion at FB'' as the same observation as ``lower $r$ at FB'', not as independent support (\S\ref{ex:rot}).
+\item \textbf{LD can mask concordance.} In LH-like regimes the indirect term was \emph{negative}: removing LD raised $r$ from $+0.15$ to $+0.24$.
+\item \textbf{Between-population variance dominates.} Replicate populations of one architecture differed by up to 0.9 in $r$ near the collapse boundary. A single population's $r$, which is all any real study measures, is a weak guide to its architecture.
+\item \textbf{The SA benefit ratio is not innocuous.} Additive SA with benefit = cost is neutral on average over the sexes, which is a knife-edge. Results for ``true SA'' regimes depend on $b$ and on the unbounded $\exp(BV)$ fitness.
+\end{itemize}
+
+\section{Audit rules (learned the hard way)}
+\begin{enumerate}
+\item Report effect sizes against a null baseline. ``Within 10\%'' on proportions near 0.5 is passed by the no-effect model.
+\item Tag every comparison with its evidence type: by construction, input echo, fitted, calibrated, existential, or out-of-sample.
+\item Calibrate free sensitivities on independent studies with measured inputs (here Byrne \& Rice 2006), never on the scored target or on thresholds derived from it.
+\item Hold out part of the data whenever you must calibrate on the target study.
+\item Freeze exclusion rules before looking, or report filtered and unfiltered summaries side by side.
+\item Ask of every ``consistent'' verdict how wide the predictive interval was; a wide interval makes the verdict uninformative.
+\end{enumerate}
+
+\section{Caveats}
+\begin{warnbox}[Read before citing any number from this work]
+\begin{itemize}
+\item \textbf{Rescaling.} HRI magnitudes at $\lambda=2$ are about 2$\times$ too strong. Only the $\lambda=1$ runs (0.001, 0.01 and 0.1\,M; 6 replicates each, SE about 0.05) are trusted for magnitude; elsewhere trust sign and ordering only.
+\item \textbf{Architecture is an input, not an estimate.} No paper reports the mutation-class mixture of LH or LH$_\mathrm{M}$. The design table shows which mixtures \emph{could} produce each published $r$, not which one did.
+\item \textbf{Phenomenological sex ratio.} IeSC is represented only as a selection-intensity multiplier. There are no harm, persistence or resistance traits, so trait-level questions (thesis Ch.\ 4, Am Nat 2025) are not identified.
+\item \textbf{No dominance reversal or balancing selection in the \IBM.} SA polymorphism there is maintained only by mutation--selection--drift; balancing selection lives only in the analytic modifier layer.
+\item \textbf{Single autosome + X.} Real hemigenomes span 2 large autosomes plus the X; whole-genome $r$ averages over chromosomes.
+\item \textbf{Emulator.} The GP failed validation, so no inference rests on it.
+\item \textbf{Modifier heatmaps.} The cell values are unpublished; only the quoted percentages and orderings were scored.
+\end{itemize}
+\end{warnbox}
+
+\section{What the models cannot predict}
+\begin{enumerate}
+\item The absolute LH value of $\rwg$, which needs the unknown mixture (L1).
+\item Whether the sex-ratio effect is attenuation or a real G$\times$SR change (L2).
+\item The Am Nat 2025 Robertson covariances (L3; the paper is inaccessible and the trait data are not deposited).
+\item Why the LH and LH$_\mathrm{M}$ estimates differ (L4). The model shows what \emph{could} differ: SA share and history; not sampling, not HRI alone.
+\item Exact HRI magnitudes at map lengths without $\lambda=1$ runs (1 and 10\,M), and anything finer than about $\pm0.1$ anywhere (L5).
+\end{enumerate}
+
+\section{Distinguishing SA from HRI: the final position \claimC}
+\begin{itemize}
+\item \textbf{Recombining hemigenomes in the lab} has no power: HRI LD is between tightly linked loci.
+\item \textbf{Varying $N$} works in direction but needs about 31 replicate populations per $N$ for $|r|\approx0.1$.
+\item \textbf{Practical criterion: magnitude and sign.}
+  \begin{itemize}
+  \item HRI and sex-limited LD give only negative $r$. Population means are $|r|\lesssim0.15$ at 0.1--1\,M, and single populations reach $-0.26$.
+  \item A positive $r$ (LH) cannot be HRI-driven.
+  \item $-0.41$ and $-0.52$ exceed realistic-map HRI.
+  \item Chippindale's $-0.30$, and anything in $[-0.3,0]$, is not identified.
+  \end{itemize}
+\item \textbf{Genomic $r_\mathrm{LE}$} (direct term only, from per-locus effect estimates) separates the regimes perfectly in silico, but needs hundreds of densely genotyped lines.
+\end{itemize}
+
+\section{Open questions for the authors}
+\begin{itemize}
+\item \textbf{Poster:} the intended life cycle; the domain of ``fraction of parameter space''; the initial condition of the ``away from fixed point'' panel; the $r$ used in the perturbation panel.
+\item \textbf{BMC 2022:} the bootstrap CI method, and whether the line-mean statistics used untransformed male proportions (F12).
+\item \textbf{HRI preprint:} the replicate-level values behind Fig.\ 2, and whether the pooled-sex estimator was checked for intersexual differentiation.
+\end{itemize}

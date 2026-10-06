@@ -1,0 +1,6 @@
+16:07:52  INFO  environment: {'python': '3.14.6', 'platform': 'Windows-10-10.0.19045-SP0', 'numpy': '2.5.3', 'scipy': '1.18.1', 'numba': '0.68.0', 'sympy': '1.14.0', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'profile': 'full', 'master_seed': 20261005, 'cpu_count': 8, 'timestamp': '2026-10-05 16:07:52', 'ibm_backend': 'kernels'}
+16:07:53  INFO  [poster] P6 convergence ...
+16:08:12  INFO  [poster] P6 convergence done in 18.7s
+16:08:12  INFO  [curse] C2 twofold rule ...
+16:08:46  INFO  [curse] C2 twofold rule done in 34.1s
+16:08:46  INFO  all done

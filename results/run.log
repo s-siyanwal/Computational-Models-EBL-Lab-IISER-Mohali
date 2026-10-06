@@ -1,0 +1,161 @@
+14:09:15  INFO  environment: {'python': '3.14.6', 'platform': 'Windows-10-10.0.19045-SP0', 'numpy': '2.5.3', 'scipy': '1.18.1', 'numba': '0.68.0', 'sympy': '1.14.0', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'profile': 'full', 'master_seed': 20261005, 'cpu_count': 8, 'timestamp': '2026-10-05 14:09:15'}
+14:09:17  INFO  [poster] P0 one-locus polymorphism ...
+14:10:04  INFO  [poster] P0 one-locus polymorphism done in 47.1s
+14:10:04  INFO  [poster] P1 stability heatmaps ...
+14:10:31  INFO  [poster] P1 stability heatmaps done in 27.5s
+14:10:31  INFO  [poster] P2 (a,r) maps + IBM invasion ...
+14:11:48  INFO    P2 IBM (0.2, 0.2) done (75s)
+14:13:04  INFO    P2 IBM (0.5, 0.5) done (151s)
+14:14:16  INFO    P2 IBM (0.8, 0.2) done (224s)
+14:14:18  INFO  [poster] P2 (a,r) maps + IBM invasion done in 226.4s
+14:14:18  INFO  [poster] P2c IaSC persistence ...
+14:20:22  INFO  [poster] P2c IaSC persistence done in 363.8s
+14:20:22  INFO  [poster] P3 bifurcation ...
+14:38:37  INFO  [poster] P3 bifurcation done in 1095.8s
+14:38:37  INFO  [poster] P4 thresholds ...
+14:47:38  ERROR  [poster] P4 thresholds FAILED: 'yerr' must not contain negative values Traceback (most recent call last):
+  File "C:\Users\Windows\Downloads\antagonistic_alleles_manas\scripts\run_all.py", line 54, in main
+    summary[g][name] = fn()
+                       ~~^^
+  File "C:\Users\Windows\Downloads\antagonistic_alleles_manas\sexconflict\experiments\poster_exp.py", line 378, in thresholds
+    ax.errorbar(d.m0, d.p, yerr=[d.p - d.lo, d.hi - d.p], fmt="o-", color=V.CAT[i], lw=1.4, ms=5,
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                capsize=2, label=f"IBM N={N}")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\matplotlib\_api\deprecation.py", line 477, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\matplotlib\__init__.py", line 1531, in inner
+    return func(
+        ax,
+        *map(cbook.sanitize_sequence, args),
+        **{k: cbook.sanitize_sequence(v) for k, v in kwargs.items()})
+  File "C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\matplotlib\axes\_axes.py", line 4232, in errorbar
+    raise ValueError(
+        f"'{dep_axis}err' must not contain negative values")
+ValueError: 'yerr' must not contain negative values
+
+14:47:38  INFO  [poster] P4 thresholds done in 540.3s
+14:47:38  INFO  [poster] P5 basins ...
+14:59:43  INFO    P5 deterministic basins (0.2, 0.2) done
+15:00:51  INFO    P5 deterministic basins (0.8, 0.8) done
+15:19:34  INFO    P5 deterministic basins (0.5, 0.5) done
+15:24:46  INFO  environment: {'python': '3.14.6', 'platform': 'Windows-10-10.0.19045-SP0', 'numpy': '2.5.3', 'scipy': '1.18.1', 'numba': '0.68.0', 'sympy': '1.14.0', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'profile': 'full', 'master_seed': 20261005, 'cpu_count': 8, 'timestamp': '2026-10-05 15:24:46'}
+15:24:48  INFO  [poster] P4 thresholds ...
+15:32:27  INFO  [poster] P4 thresholds done in 459.0s
+15:32:27  INFO  [poster] P5 basins ...
+15:34:47  INFO    P5 deterministic basins (0.2, 0.2) done
+15:35:04  INFO    P5 deterministic basins (0.8, 0.8) done
+15:38:10  INFO    P5 deterministic basins (0.5, 0.5) done
+15:41:10  INFO    P5 deterministic basins (0.2, 0.8) done
+15:42:34  INFO    P5 deterministic basins (0.8, 0.2) done
+15:42:48  INFO    P5 deterministic basins (0.5, 1.0) done
+15:45:24  INFO    P5 deterministic basins (0.0, 0.5) done
+15:50:03  INFO  [poster] P5 basins done in 1055.9s
+15:50:03  INFO  [poster] P6 convergence ...
+15:50:24  INFO  [poster] P6 convergence done in 21.0s
+15:50:24  INFO  [poster] P7 animation ...
+15:51:43  INFO  [poster] P7 animation done in 79.5s
+15:51:43  INFO  [owen] O1 autosomal invasion ...
+15:56:24  INFO  [owen] O1 autosomal invasion done in 281.2s
+15:56:24  INFO  [owen] O2 Parsons example ...
+15:56:35  INFO  [owen] O2 Parsons example done in 10.2s
+15:56:35  INFO  [owen] O3 X-linked invasion ...
+16:00:29  INFO  [owen] O3 X-linked invasion done in 234.8s
+16:00:29  INFO  [owen] O4 Owen bistability ...
+16:03:11  INFO  [owen] O4 Owen bistability done in 161.7s
+16:03:11  INFO  [curse] C1 strong form ...
+16:03:40  INFO  [curse] C1 strong form done in 29.3s
+16:03:40  INFO  [curse] C2 twofold rule ...
+16:04:06  INFO  [curse] C2 twofold rule done in 25.7s
+16:04:06  INFO  [curse] C3 weak form ...
+16:04:41  INFO  [curse] C3 weak form done in 35.3s
+16:04:41  INFO  [curse] C4 restorer ...
+16:05:25  INFO  [curse] C4 restorer done in 43.6s
+16:05:25  INFO  all done
+16:07:52  INFO  environment: {'python': '3.14.6', 'platform': 'Windows-10-10.0.19045-SP0', 'numpy': '2.5.3', 'scipy': '1.18.1', 'numba': '0.68.0', 'sympy': '1.14.0', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'profile': 'full', 'master_seed': 20261005, 'cpu_count': 8, 'timestamp': '2026-10-05 16:07:52', 'ibm_backend': 'kernels'}
+16:07:53  INFO  [poster] P6 convergence ...
+16:08:12  INFO  [poster] P6 convergence done in 18.7s
+16:08:12  INFO  [curse] C2 twofold rule ...
+16:08:46  INFO  [curse] C2 twofold rule done in 34.1s
+16:08:46  INFO  all done
+16:52:22  INFO  environment: {'python': '3.14.6', 'platform': 'Windows-10-10.0.19045-SP0', 'numpy': '2.5.3', 'scipy': '1.18.1', 'numba': '0.68.0', 'sympy': '1.14.0', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'profile': 'quick', 'master_seed': 20261005, 'cpu_count': 8, 'timestamp': '2026-10-05 16:52:21', 'ibm_backend': 'opencl_backend', 'gpu_device': 'Baffin'}
+16:52:25  INFO  [extended] E1/E2 polymorphism maps (+M1 GP) ...
+16:52:38  INFO    E1/E2 autosomal | additive: {'oracle_area': 0.1865625, 'gp_area': 0.00078125, 'iou_gp': 0.0041876046901172526, 'iou_raw': 0.4765494137353434, 'cell_agreement': 1.0, 'n_cells': 49, 'n_decided': 42, 'seconds': 12.0}
+16:53:01  INFO    E1/E2 X-linked | additive: {'oracle_area': 0.1034375, 'gp_area': 0.00265625, 'iou_gp': 0.0256797583081571, 'iou_raw': 0.42053789731051344, 'cell_agreement': 0.9565217391304348, 'n_cells': 25, 'n_decided': 23, 'seconds': 23.5}
+16:53:14  INFO    E1/E2 autosomal | dominance reversal h=0.25: {'oracle_area': 0.7703125, 'gp_area': 0.98203125, 'iou_gp': 0.7790291878172588, 'iou_raw': 0.8142364631920503, 'cell_agreement': 0.9534883720930233, 'n_cells': 49, 'n_decided': 43, 'seconds': 12.8}
+16:53:24  INFO    E1/E2 X-linked | dominance reversal h=0.25: {'oracle_area': 0.494375, 'gp_area': 0.96046875, 'iou_gp': 0.5090761750405186, 'iou_raw': 0.6373250388802488, 'cell_agreement': 1.0, 'n_cells': 25, 'n_decided': 21, 'seconds': 10.4}
+16:53:36  INFO    E1/E2 autosomal | male-benefit recessive (h_f=0.2, h_m=0.8): {'oracle_area': 0.1865625, 'gp_area': 0.0009375, 'iou_gp': 0.005025125628140704, 'iou_raw': 0.40033500837520936, 'cell_agreement': 0.9318181818181818, 'n_cells': 49, 'n_decided': 44, 'seconds': 12.0}
+16:53:47  INFO    E1/E2 X-linked | male-benefit recessive (h_f=0.2, h_m=0.8): {'oracle_area': 0.5653125, 'gp_area': 0.9665625, 'iou_gp': 0.5795070082165297, 'iou_raw': 0.6879508415709324, 'cell_agreement': 1.0, 'n_cells': 25, 'n_decided': 22, 'seconds': 10.5}
+16:53:48  INFO  [extended] E1/E2 polymorphism maps (+M1 GP) done in 83.3s
+16:53:48  INFO  [extended] E3 Kimura fixation ...
+16:53:58  INFO    E3 N=200 done
+16:54:26  INFO    E3 N=500 done
+16:54:27  INFO  [extended] E3 Kimura fixation done in 38.4s
+16:54:27  INFO  [extended] M2 neural emulator ...
+16:55:02  INFO  [extended] M2 neural emulator done in 35.2s
+16:55:02  INFO  [extended] E4 XY linkage ...
+16:55:11  INFO  [extended] E4 XY linkage done in 9.3s
+16:55:11  INFO  [extended] E5 diffusion persistence ...
+16:55:22  INFO  [extended] E5 diffusion persistence done in 10.9s
+16:55:22  INFO  [extended] M3 inverse problem ...
+16:55:32  INFO    M3 N=500 done
+16:55:43  INFO    M3 N=5000 done
+16:55:44  INFO  [extended] M3 inverse problem done in 21.8s
+16:55:44  INFO  all done
+17:00:32  INFO  environment: {'python': '3.14.6', 'platform': 'Windows-10-10.0.19045-SP0', 'numpy': '2.5.3', 'scipy': '1.18.1', 'numba': '0.68.0', 'sympy': '1.14.0', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'profile': 'quick', 'master_seed': 20261005, 'cpu_count': 8, 'timestamp': '2026-10-05 17:00:30', 'ibm_backend': 'opencl_backend', 'gpu_device': 'Baffin'}
+17:00:34  INFO  [extended] E1/E2 polymorphism maps (+M1 GP) ...
+17:00:46  INFO    E1/E2 autosomal | additive: {'oracle_area': 0.1865625, 'gp_area': 0.14796875, 'iou_gp': 0.770885028949545, 'iou_raw': 0.4765494137353434, 'cell_agreement': 1.0, 'n_cells': 49, 'n_decided': 42, 'seconds': 11.5}
+17:00:57  INFO    E1/E2 X-linked | additive: {'oracle_area': 0.1034375, 'gp_area': 0.5409375, 'iou_gp': 0.16332863187588154, 'iou_raw': 0.42053789731051344, 'cell_agreement': 0.9565217391304348, 'n_cells': 25, 'n_decided': 23, 'seconds': 11.2}
+17:01:09  INFO    E1/E2 autosomal | dominance reversal h=0.25: {'oracle_area': 0.7703125, 'gp_area': 0.96703125, 'iou_gp': 0.7893466366269714, 'iou_raw': 0.8142364631920503, 'cell_agreement': 0.9534883720930233, 'n_cells': 49, 'n_decided': 43, 'seconds': 11.7}
+17:01:19  INFO    E1/E2 X-linked | dominance reversal h=0.25: {'oracle_area': 0.494375, 'gp_area': 0.918125, 'iou_gp': 0.5296108291032149, 'iou_raw': 0.6373250388802488, 'cell_agreement': 1.0, 'n_cells': 25, 'n_decided': 21, 'seconds': 10.5}
+17:01:31  INFO    E1/E2 autosomal | male-benefit recessive (h_f=0.2, h_m=0.8): {'oracle_area': 0.1865625, 'gp_area': 0.513125, 'iou_gp': 0.2867816091954023, 'iou_raw': 0.40033500837520936, 'cell_agreement': 0.9318181818181818, 'n_cells': 49, 'n_decided': 44, 'seconds': 11.6}
+17:01:41  INFO    E1/E2 X-linked | male-benefit recessive (h_f=0.2, h_m=0.8): {'oracle_area': 0.5653125, 'gp_area': 0.77140625, 'iou_gp': 0.6168966168966169, 'iou_raw': 0.6879508415709324, 'cell_agreement': 1.0, 'n_cells': 25, 'n_decided': 22, 'seconds': 10.4}
+17:01:43  INFO  [extended] E1/E2 polymorphism maps (+M1 GP) done in 68.6s
+17:01:43  INFO  [extended] E3 Kimura fixation ...
+17:01:52  INFO    E3 N=200 done
+17:02:19  INFO    E3 N=500 done
+17:02:20  INFO  [extended] E3 Kimura fixation done in 37.3s
+17:02:20  INFO  [extended] E5 diffusion persistence ...
+17:02:31  INFO  [extended] E5 diffusion persistence done in 11.1s
+17:02:31  INFO  all done
+17:02:59  INFO  environment: {'python': '3.14.6', 'platform': 'Windows-10-10.0.19045-SP0', 'numpy': '2.5.3', 'scipy': '1.18.1', 'numba': '0.68.0', 'sympy': '1.14.0', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'profile': 'full', 'master_seed': 20261005, 'cpu_count': 8, 'timestamp': '2026-10-05 17:02:57', 'ibm_backend': 'opencl_backend', 'gpu_device': 'Baffin'}
+17:03:01  INFO  [extended] E1/E2 polymorphism maps (+M1 GP) ...
+17:03:46  INFO    E1/E2 autosomal | additive: {'oracle_area': 0.1865625, 'gp_area': 0.5090625, 'iou_gp': 0.3253944626376898, 'iou_raw': 0.6811475409836065, 'cell_agreement': 1.0, 'n_cells': 144, 'n_decided': 134, 'seconds': 44.4}
+17:05:07  INFO    E1/E2 X-linked | additive: {'oracle_area': 0.1034375, 'gp_area': 0.4753125, 'iou_gp': 0.19176319176319176, 'iou_raw': 0.43007915567282323, 'cell_agreement': 1.0, 'n_cells': 64, 'n_decided': 60, 'seconds': 81.0}
+17:05:52  INFO    E1/E2 autosomal | dominance reversal h=0.25: {'oracle_area': 0.7703125, 'gp_area': 0.7365625, 'iou_gp': 0.9557899006286757, 'iou_raw': 0.8880778588807786, 'cell_agreement': 1.0, 'n_cells': 144, 'n_decided': 130, 'seconds': 45.2}
+17:07:10  INFO    E1/E2 X-linked | dominance reversal h=0.25: {'oracle_area': 0.494375, 'gp_area': 0.87390625, 'iou_gp': 0.5515591778880227, 'iou_raw': 0.7219773299748111, 'cell_agreement': 0.9821428571428571, 'n_cells': 64, 'n_decided': 56, 'seconds': 77.8}
+17:07:55  INFO    E1/E2 autosomal | male-benefit recessive (h_f=0.2, h_m=0.8): {'oracle_area': 0.1865625, 'gp_area': 0.17671875, 'iou_gp': 0.8933224755700325, 'iou_raw': 0.52046783625731, 'cell_agreement': 1.0, 'n_cells': 144, 'n_decided': 126, 'seconds': 45.1}
+17:09:12  INFO    E1/E2 X-linked | male-benefit recessive (h_f=0.2, h_m=0.8): {'oracle_area': 0.5653125, 'gp_area': 0.8715625, 'iou_gp': 0.6253092965712266, 'iou_raw': 0.8106557377049181, 'cell_agreement': 0.9827586206896551, 'n_cells': 64, 'n_decided': 58, 'seconds': 76.5}
+17:09:13  INFO  [extended] E1/E2 polymorphism maps (+M1 GP) done in 371.7s
+17:09:13  INFO  [extended] E3 Kimura fixation ...
+17:09:30  INFO    E3 N=200 done
+17:10:41  INFO    E3 N=500 done
+17:13:29  INFO    E3 N=800 done
+17:13:31  INFO  [extended] E3 Kimura fixation done in 257.7s
+17:13:31  INFO  [extended] M2 neural emulator ...
+17:17:22  INFO  [extended] M2 neural emulator done in 231.5s
+17:17:22  INFO  [extended] E4 XY linkage ...
+17:18:20  INFO  [extended] E4 XY linkage done in 57.9s
+17:18:20  INFO  [extended] E5 diffusion persistence ...
+17:18:53  INFO  [extended] E5 diffusion persistence done in 32.4s
+17:18:53  INFO  [extended] M3 inverse problem ...
+17:19:28  INFO    M3 N=500 done
+17:20:07  INFO    M3 N=5000 done
+17:20:07  INFO  [extended] M3 inverse problem done in 74.7s
+17:20:07  INFO  all done
+17:20:32  INFO  environment: {'python': '3.14.6', 'platform': 'Windows-10-10.0.19045-SP0', 'numpy': '2.5.3', 'scipy': '1.18.1', 'numba': '0.68.0', 'sympy': '1.14.0', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'profile': 'full', 'master_seed': 20261005, 'cpu_count': 8, 'timestamp': '2026-10-05 17:20:32', 'ibm_backend': 'opencl_backend', 'gpu_device': 'Baffin'}
+17:20:35  INFO  [extended] E1/E2 polymorphism maps (+M1 GP) ...
+17:21:20  INFO    E1/E2 autosomal | additive: {'oracle_area': 0.1865625, 'gp_area': 0.16984375, 'iou_gp': 0.8960931005818786, 'iou_raw': 0.6811475409836065, 'cell_agreement': 1.0, 'n_cells': 144, 'n_decided': 134, 'seconds': 45.5}
+17:22:40  INFO    E1/E2 X-linked | additive: {'oracle_area': 0.1034375, 'gp_area': 0.084375, 'iou_gp': 0.7940298507462686, 'iou_raw': 0.43007915567282323, 'cell_agreement': 1.0, 'n_cells': 64, 'n_decided': 60, 'seconds': 79.3}
+17:23:25  INFO    E1/E2 autosomal | dominance reversal h=0.25: {'oracle_area': 0.7703125, 'gp_area': 0.735625, 'iou_gp': 0.9549695740365112, 'iou_raw': 0.8880778588807786, 'cell_agreement': 1.0, 'n_cells': 144, 'n_decided': 130, 'seconds': 45.2}
+17:24:42  INFO    E1/E2 X-linked | dominance reversal h=0.25: {'oracle_area': 0.494375, 'gp_area': 0.4571875, 'iou_gp': 0.9126884422110553, 'iou_raw': 0.7219773299748111, 'cell_agreement': 0.9821428571428571, 'n_cells': 64, 'n_decided': 56, 'seconds': 76.6}
+17:25:26  INFO    E1/E2 autosomal | male-benefit recessive (h_f=0.2, h_m=0.8): {'oracle_area': 0.1865625, 'gp_area': 0.17671875, 'iou_gp': 0.8933224755700325, 'iou_raw': 0.52046783625731, 'cell_agreement': 1.0, 'n_cells': 144, 'n_decided': 126, 'seconds': 44.4}
+17:26:43  INFO    E1/E2 X-linked | male-benefit recessive (h_f=0.2, h_m=0.8): {'oracle_area': 0.5653125, 'gp_area': 0.5228125, 'iou_gp': 0.9237569060773481, 'iou_raw': 0.8106557377049181, 'cell_agreement': 0.9827586206896551, 'n_cells': 64, 'n_decided': 58, 'seconds': 77.0}
+17:26:45  INFO  [extended] E1/E2 polymorphism maps (+M1 GP) done in 369.7s
+17:26:45  INFO  all done
+17:27:02  INFO  environment: {'python': '3.14.6', 'platform': 'Windows-10-10.0.19045-SP0', 'numpy': '2.5.3', 'scipy': '1.18.1', 'numba': '0.68.0', 'sympy': '1.14.0', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'profile': 'full', 'master_seed': 20261005, 'cpu_count': 8, 'timestamp': '2026-10-05 17:27:01', 'ibm_backend': 'opencl_backend', 'gpu_device': 'Baffin'}
+17:27:05  INFO  [extended] E4 XY linkage ...
+17:28:02  INFO  [extended] E4 XY linkage done in 57.4s
+17:28:02  INFO  [extended] E5 diffusion persistence ...
+17:28:34  INFO  [extended] E5 diffusion persistence done in 31.9s
+17:28:34  INFO  all done

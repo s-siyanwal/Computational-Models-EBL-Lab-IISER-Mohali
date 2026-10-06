@@ -1,0 +1,2 @@
+[lambda2] R=0.01 M mu=7e-07 male_rec=True: r_mf mean -0.2028 (se 0.0805), 667s
+[lambda2] R=0.1 M mu=7e-07 male_rec=True: r_mf mean -0.1523 (se 0.0202), 735s

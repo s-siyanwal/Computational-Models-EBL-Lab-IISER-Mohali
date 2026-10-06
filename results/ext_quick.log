@@ -1,0 +1,56 @@
+16:52:22  INFO  environment: {'python': '3.14.6', 'platform': 'Windows-10-10.0.19045-SP0', 'numpy': '2.5.3', 'scipy': '1.18.1', 'numba': '0.68.0', 'sympy': '1.14.0', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'profile': 'quick', 'master_seed': 20261005, 'cpu_count': 8, 'timestamp': '2026-10-05 16:52:21', 'ibm_backend': 'opencl_backend', 'gpu_device': 'Baffin'}
+16:52:25  INFO  [extended] E1/E2 polymorphism maps (+M1 GP) ...
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.001. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 1 of parameter k1__k2__length_scale is close to the specified lower bound 0.001. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+16:52:38  INFO    E1/E2 autosomal | additive: {'oracle_area': 0.1865625, 'gp_area': 0.00078125, 'iou_gp': 0.0041876046901172526, 'iou_raw': 0.4765494137353434, 'cell_agreement': 1.0, 'n_cells': 49, 'n_decided': 42, 'seconds': 12.0}
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.001. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:455: ConvergenceWarning: The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified upper bound 1.0. Increasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.001. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:455: ConvergenceWarning: The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified upper bound 1.0. Increasing the bound and calling fit again may find a better value.
+  warnings.warn(
+16:53:01  INFO    E1/E2 X-linked | additive: {'oracle_area': 0.1034375, 'gp_area': 0.00265625, 'iou_gp': 0.0256797583081571, 'iou_raw': 0.42053789731051344, 'cell_agreement': 0.9565217391304348, 'n_cells': 25, 'n_decided': 23, 'seconds': 23.5}
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.001. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 1 of parameter k1__k2__length_scale is close to the specified lower bound 0.001. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.001. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+16:53:14  INFO    E1/E2 autosomal | dominance reversal h=0.25: {'oracle_area': 0.7703125, 'gp_area': 0.98203125, 'iou_gp': 0.7790291878172588, 'iou_raw': 0.8142364631920503, 'cell_agreement': 0.9534883720930233, 'n_cells': 49, 'n_decided': 43, 'seconds': 12.8}
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.001. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:455: ConvergenceWarning: The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified upper bound 1.0. Increasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.001. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+16:53:24  INFO    E1/E2 X-linked | dominance reversal h=0.25: {'oracle_area': 0.494375, 'gp_area': 0.96046875, 'iou_gp': 0.5090761750405186, 'iou_raw': 0.6373250388802488, 'cell_agreement': 1.0, 'n_cells': 25, 'n_decided': 21, 'seconds': 10.4}
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.001. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+16:53:36  INFO    E1/E2 autosomal | male-benefit recessive (h_f=0.2, h_m=0.8): {'oracle_area': 0.1865625, 'gp_area': 0.0009375, 'iou_gp': 0.005025125628140704, 'iou_raw': 0.40033500837520936, 'cell_agreement': 0.9318181818181818, 'n_cells': 49, 'n_decided': 44, 'seconds': 12.0}
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.001. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:455: ConvergenceWarning: The optimal value found for dimension 0 of parameter k2__noise_level is close to the specified upper bound 1.0. Increasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.001. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+16:53:47  INFO    E1/E2 X-linked | male-benefit recessive (h_f=0.2, h_m=0.8): {'oracle_area': 0.5653125, 'gp_area': 0.9665625, 'iou_gp': 0.5795070082165297, 'iou_raw': 0.6879508415709324, 'cell_agreement': 1.0, 'n_cells': 25, 'n_decided': 22, 'seconds': 10.5}
+16:53:48  INFO  [extended] E1/E2 polymorphism maps (+M1 GP) done in 83.3s
+16:53:48  INFO  [extended] E3 Kimura fixation ...
+16:53:58  INFO    E3 N=200 done
+16:54:26  INFO    E3 N=500 done
+16:54:27  INFO  [extended] E3 Kimura fixation done in 38.4s
+16:54:27  INFO  [extended] M2 neural emulator ...
+16:55:02  INFO  [extended] M2 neural emulator done in 35.2s
+16:55:02  INFO  [extended] E4 XY linkage ...
+16:55:11  INFO  [extended] E4 XY linkage done in 9.3s
+16:55:11  INFO  [extended] E5 diffusion persistence ...
+16:55:22  INFO  [extended] E5 diffusion persistence done in 10.9s
+16:55:22  INFO  [extended] M3 inverse problem ...
+16:55:32  INFO    M3 N=500 done
+16:55:43  INFO    M3 N=5000 done
+16:55:44  INFO  [extended] M3 inverse problem done in 21.8s
+16:55:44  INFO  all done

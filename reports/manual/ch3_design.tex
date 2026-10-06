@@ -1,0 +1,85 @@
+\chapter{Design principles}\label{ch:design}
+
+\section{Two engines that share only \emph{conditions}}
+Every model is implemented twice.
+\begin{enumerate}
+\item A deterministic \textbf{oracle}: the paper's equations (recursions, Jacobians, diffusion), solved exactly or numerically.
+\item A stochastic \textbf{individual-based model (\IBM)}: individuals with genomes, sexes, survival or fecundity draws, parent choice, meiosis and mutation.
+\end{enumerate}
+They share only the \emph{conditions}: fitness tables or per-mutation effects, recombination, $N$, initial genotypes and seeds. The comparison then asks whether the paper's pattern \emph{emerges} from individuals that never see the equations.
+
+\begin{keybox}[Zero-leakage contract (enforce it with a test)]
+\begin{itemize}
+\item The \IBM\ never imports the oracle package, sympy or scipy.
+\item It never evaluates a recursion, an equilibrium, an eigenvalue or an expected frequency. Even the starting polymorphic state is reached by a burn-in, not set to $\pstar$.
+\item Frequencies and LD are only \emph{counted} for the record.
+\item In project 2 the test walks the \IBM\ package's syntax tree and fails if any module imports from \code{iasc.analytic}.
+\end{itemize}
+\end{keybox}
+\begin{lstlisting}
+def test_ibm_does_not_import_analytic_layer():
+    for f in (ROOT / "iasc" / "ibm").glob("*.py"):
+        tree = ast.parse(f.read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom) and node.module:
+                assert "analytic" not in node.module, f"{f.name} imports {node.module}"
+\end{lstlisting}
+
+\section{Calibrate on variances only, predict everything else}
+Where a simulated experiment must mimic noisy measurement (the hemiclone assay), calibrate the free measurement parameters to \emph{variance} targets only: line variances and within-cell CV$^2$. Then the paper's \emph{correlations}, orderings and proportions are genuine out-of-sample predictions. Never calibrate to the statistic you want to explain.
+
+\section{A single source of truth}
+\begin{itemize}
+\item All parameters live in one config file: \code{config.py} in project 1, \code{config/default.toml} in project 2.
+\item Every value carries a provenance tag: \texttt{[paper]}, \texttt{[data]}, \texttt{[bio]} or \texttt{[ours]}.
+\item Paper numbers appear \emph{only} in the comparison script, the raw-data recomputation and the documentation, never in a simulator.
+\end{itemize}
+
+\section{Seeds and reproducibility}
+\begin{itemize}
+\item Derive every seed from one master seed plus the experiment's name or index, so any single experiment reproduces bit-for-bit on its own.
+\item Numba's per-thread RNG must be reseeded inside each replicate (\code{np.random.seed(seed)} inside the jitted function).
+\item Save evolved populations (compressed \code{.npz}: genomes + architecture) so downstream analyses resample the same populations without re-evolving them.
+\end{itemize}
+
+\section{Profiles}
+Every runner accepts \code{--profile quick|default|full}.
+\begin{itemize}
+\item \textbf{quick} is a smoke test: it runs in minutes, and its results are not trustworthy.
+\item \textbf{default} runs in hours on a laptop and reports sign and ordering.
+\item \textbf{full} runs overnight with the published replicate counts and, for project 2, no rescaling.
+\end{itemize}
+State in every result which profile produced it.
+
+\section{Verdict discipline}
+\begin{itemize}
+\item Score model versus paper with fixed words: matches sign / matches ordering / misses magnitude / not identified.
+\item Report uncertainty as a replicate-population range, not just a standard error. Between-population variance is often the largest component.
+\item Never overstate a non-significant trend. If the paper's trend is n.s., the model's job is to say whether a n.s.\ result is the \emph{expected} outcome (a power analysis).
+\item Every designed null (sex-limited only, true SA) must be run and reported, with the words \emph{null holds} or \emph{null fails}.
+\end{itemize}
+
+\section{Machine etiquette (shared machines)}
+The reference laptop also ran another developer's agent (``Grok Bot'') and Jupyter kernels.
+\begin{itemize}
+\item Run heavy jobs at below-normal OS priority with \code{cpu_count - 2} numba threads.
+\item Run \emph{one} heavy job at a time.
+\item Check CPU and RAM periodically (PowerShell \code{Get-Process}, \code{Get-CimInstance Win32_OperatingSystem}).
+\item Never kill processes you did not start.
+\end{itemize}
+\begin{lstlisting}
+os.environ.setdefault("NUMBA_NUM_THREADS", str(max(1, (os.cpu_count() or 2) - 2)))
+
+def below_normal_priority():
+    import psutil
+    psutil.Process().nice(psutil.BELOW_NORMAL_PRIORITY_CLASS if os.name == "nt" else 10)
+\end{lstlisting}
+Set \code{NUMBA_NUM_THREADS} \emph{before} numba is imported. In project 2, \code{iasc/params.py} does this at import time.
+
+\section{Choosing the engine}
+Prefer established simulators (SLiM, msprime, fwdpy11, stdpopsim) where they fit; justify a custom engine. We wrote our own for two reasons:
+\begin{enumerate}
+\item SLiM could not be built on the Windows reference machine. Its gnulib needs a POSIX configure; MSYS2/WSL were unavailable (\S\ref{tr:slim}).
+\item The hemiclone-assay emulation and the exact estimators needed tight coupling to the genomes.
+\end{enumerate}
+SLiM 5.2 scripts for the HRI model are kept in \code{manas_sa/slim/} for cross-checking on a machine with SLiM, and \code{scripts/slim_crosscheck.py} skips if \code{slim} is not on PATH.

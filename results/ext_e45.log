@@ -1,0 +1,6 @@
+17:27:02  INFO  environment: {'python': '3.14.6', 'platform': 'Windows-10-10.0.19045-SP0', 'numpy': '2.5.3', 'scipy': '1.18.1', 'numba': '0.68.0', 'sympy': '1.14.0', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'profile': 'full', 'master_seed': 20261005, 'cpu_count': 8, 'timestamp': '2026-10-05 17:27:01', 'ibm_backend': 'opencl_backend', 'gpu_device': 'Baffin'}
+17:27:05  INFO  [extended] E4 XY linkage ...
+17:28:02  INFO  [extended] E4 XY linkage done in 57.4s
+17:28:02  INFO  [extended] E5 diffusion persistence ...
+17:28:34  INFO  [extended] E5 diffusion persistence done in 31.9s
+17:28:34  INFO  all done

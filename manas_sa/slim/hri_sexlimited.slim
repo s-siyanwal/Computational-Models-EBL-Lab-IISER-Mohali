@@ -1,0 +1,62 @@
+// Purely sex-limited selection + linkage (Geeta Arun 2025, bioRxiv 10.1101/2025.01.08.632022)
+// Written for SLiM 5.2 (API checked against the SLiM 5.2 manual shipped in
+// drosophila_genetics_models_papers_codes/). NOT EXECUTED in this repository
+// (SLiM could not be built on the development machine); run it with
+//   slim -d N=2500 -d GENS=25000 -d MU=7e-7 -d MAPLEN=0.1 -d MALE_REC=1 -d SEED=1 -d OUT="'run.txt'" hri_sexlimited.slim
+// and compare with the numba engine using scripts/slim_crosscheck.py.
+initialize() {
+	if (!exists("N")) defineConstant("N", 2500);
+	if (!exists("GENS")) defineConstant("GENS", 25000);
+	if (!exists("MU")) defineConstant("MU", 7e-7);
+	if (!exists("MAPLEN")) defineConstant("MAPLEN", 0.1);      // Morgans over the whole region
+	if (!exists("MALE_REC")) defineConstant("MALE_REC", 1);    // 1 = paper (both sexes), 0 = Drosophila
+	if (!exists("SEED")) defineConstant("SEED", 1);
+	if (!exists("OUT")) defineConstant("OUT", "hri_out.txt");
+	defineConstant("L", 1000000);
+	setSeed(SEED);
+	initializeSex();
+	initializeMutationRate(MU);
+	// reflected gamma, shape 0.3, scale 0.05  ->  SLiM "g" takes (mean, shape): mean = -0.3*0.05
+	initializeMutationType("m1", 0.5, "g", -0.015, 0.3);   // affects female fitness only
+	initializeMutationType("m2", 0.5, "g", -0.015, 0.3);   // affects male fitness only
+	m1.convertToSubstitution = T;
+	m2.convertToSubstitution = T;
+	initializeGenomicElementType("g1", c(m1, m2), c(1.0, 1.0));
+	initializeGenomicElement(g1, 0, L - 1);
+	rate = MAPLEN / L;
+	if (MALE_REC) {
+		initializeRecombinationRate(rate);
+	} else {
+		initializeRecombinationRate(rate, L - 1, sex="F");
+		initializeRecombinationRate(0.0, L - 1, sex="M");
+	}
+}
+// neutralise SLiM's own fitness effects; fitness is defined below exactly as in the preprint
+mutationEffect(m1) { return 1.0; }
+mutationEffect(m2) { return 1.0; }
+fitnessEffect() {
+	// breeding value = sum of selection coefficients of own-sex mutations on both haplosomes
+	if (individual.sex == "F")
+		bv = sum(individual.haplosomes.mutationsOfType(m1).selectionCoeff);
+	else
+		bv = sum(individual.haplosomes.mutationsOfType(m2).selectionCoeff);
+	return exp(bv + rnorm(1, 0.0, 1.0));
+}
+1 early() { sim.addSubpop("p1", N); }
+GENS late() {
+	// sample 250 females + 250 males (scaled to N) and write their mutation content;
+	// statistics are computed in Python with the same estimator as the numba engine
+	nS = asInteger(round(N / 10));
+	fem = sample(p1.individuals[p1.individuals.sex == "F"], nS);
+	mal = sample(p1.individuals[p1.individuals.sex == "M"], nS);
+	muts = sim.mutations;
+	writeFile(OUT, paste("#mutations id type position s"), append=F);
+	for (m in muts)
+		writeFile(OUT, paste(m.id, m.mutationType.id, m.position, m.selectionCoeff), append=T);
+	writeFile(OUT, "#individuals sex hap1_ids ; hap2_ids", append=T);
+	for (ind in c(fem, mal)) {
+		h = ind.haplosomes;
+		writeFile(OUT, paste(ind.sex, paste(h[0].mutations.id, sep=","), ";", paste(h[1].mutations.id, sep=",")), append=T);
+	}
+	sim.simulationFinished();
+}

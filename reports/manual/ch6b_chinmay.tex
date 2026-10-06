@@ -1,0 +1,95 @@
+\chapter{Extension: male mate choice and telegony (Chinmay 2019)}\label{ch:chinmay}
+
+\section{Problem}
+Temura Chinmay Krishna Yadav's BS--MS thesis (IISER Mohali, April 2019, supervisor N.\,G.\ Prasad) used the IUS experimental-evolution populations to ask two questions:
+\begin{enumerate}
+\item Do sperm-depleted males prefer sham-infected over \emph{P.\ entomophila}-infected (decapitated) females? Measured as courts first (CF), courtship latency (CL) and courts most (CM).
+\item Does a female's first mate (the stepfather) change the infection survival of offspring sired by her second mate (telegony)?
+\end{enumerate}
+Both answers were null. This is \emph{not} a sexually-antagonistic-allele study. The genetic core of Chapter~\ref{ch:build2} cannot emit any of these statistics, and a test (A5) fails if it ever does.
+
+\textbf{Contrast papers}
+\begin{itemize}
+\item Khan \& Prasad 2013 (\emph{Serratia}, intact females): a positive control.
+\item Wittman \& Fedorka 2015 (decapitated females): choice survives decapitation.
+\item Morrow \emph{et al.}\ 2003: a constraint on mate harm.
+\item Crean \emph{et al.}\ 2014: the \emph{Telostylinus} telegony template.
+\item Byrne \& Rice 2006: independent calibration of male choosiness.
+\item Gupta's 2016 PhD thesis: the fecundity and clearance data Chinmay cites.
+\end{itemize}
+
+\section{Three optional modules (all off by default)}
+\begin{description}
+\item[A: quality + choice] (\code{extensions/quality.py}, \code{choice.py})
+  \begin{itemize}
+  \item A female has infection $I$, a genotype-specific clearance and fecundity $F=F_0(1-\kappa I)$. Perceived quality is $q=F/F_0$, or 1 if the cue is off.
+  \item Courtship follows the softmax kernel $P(\text{court }1)=e^{\beta q_1}/(e^{\beta q_1}+e^{\beta q_2})$, with $\beta=\beta_0\times$depletion.
+  \item A minute-by-minute two-choice vial gives CF, CL and CM. A group mating vial reproduces the Khan and Byrne \& Rice assays.
+  \end{itemize}
+\item[B: harm] (\code{harm.py}) Female response to harm $\eta$: remating hazard $\times(1+\rho\eta)$ and egg-laying rate $\times(1-\lambda\eta)$, with $\rho,\lambda\ge0$ (Morrow's signs). A closed-form invasion analysis gives the boundary $m^*(\eta)$ of competitive mating success needed for a harmful mutant to spread.
+\item[C: telegony] (\code{telegony.py})
+  \begin{itemize}
+  \item A compartmentalisation flag decides whether a first-male semen state can reach the ova. It is on for \emph{Drosophila} (author hypothesis); off gives the \emph{Telostylinus} template.
+  \item The non-genetic state exists only when the module is on.
+  \item Mother's curse is never used as a stand-in for telegony.
+  \end{itemize}
+\end{description}
+
+\textbf{Configuration.} Parameters live in \code{config/ius.yaml} and \code{khan.yaml}, each with a provenance and grade. The repository has no pyyaml, so a small YAML-subset loader was written. The statistics (factorial ANOVA, log-rank, Cox Wald) are hand-written and checked against scipy.
+
+\section{Source facts the build depends on}
+\begin{itemize}
+\item \textbf{Thesis Table 3.2.} The p-values are the \emph{smaller one-sided} binomial tail, verified on all 16 rows. Two-sided they are all $\ge0.11$.
+\item \textbf{Gupta 2016 Table 8.1(e).} No infection effect on fecundity ($p=0.27$), but measured at 96\,h on survivors. Chinmay tested choice at 12--14\,h, so $\kappa=0$ is a switch, not a measurement.
+\item \textbf{Khan Table 5.} Bias scores 0.447--0.478; fecundity about 40\% lower in infected females (gives $\kappa_\text{Khan}=0.4$).
+\item \textbf{Byrne \& Rice 2006.} Fecundity 69.30 vs 25.06 ($\Delta q=0.638$). Vials with more large females mated: 22/32 for non-depleted males, 57/72 for depleted males.
+\end{itemize}
+
+\section{Calibration: why the independent route matters}
+The spec froze $\beta_0$ by its A2 threshold (sham courted first in more than 60\%), which gave $\beta_0=2.5$. The audit (Chapter~\ref{ch:audit}) classed this as fitted. Calibrating on Byrne \& Rice alone gives:
+\begin{itemize}
+\item $\beta_\text{depleted}=0.59$ (95\% range 0.30--0.88) and $\beta_\text{non-depleted}=0.32$;
+\item a blind Khan prediction of 0.480 (range 0.449--0.502) against the observed 0.463.
+\end{itemize}
+On the raw scale the error is $+3.7\%$. The no-choice baseline 0.500 is also within 10\%, however, so the informative metric is the effect against 0.5: predicted 0.020, observed 0.037. The calibrated model implies $P(\text{sham first})=0.53$ for Khan, so the spec's A2 threshold is inconsistent with independent data. It is met only by the labelled override \code{config/spec_a2.yaml}.
+
+\section{Results (calibrated defaults)}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.2cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{3.8cm}}\toprule
+Result & Model & Evidence type\\\midrule
+Courts-first null & share 0.50; all 4 blocks n.s.\ in 85\% of studies & by construction ($\kappa=0$)\\
+Latency, courts-most nulls & consistent & by construction\\
+Courts-most SD, held-out blocks & 0.405 vs 0.423 ($-4\%$) & out-of-sample (within study)\\
+Khan bias & 0.475; effect about 2/3 of observed & out-of-sample\\
+A3: Chinmay design with a 40\% cost & detected in 73\% of studies (pooled test) & prediction\\
+Fecundity cost excluded by Chinmay's null & $\kappa\le0.44$ (0.30--0.86) & calibrated\\
+Wittman \& Fedorka CM 0.64 & unreachable (maximum 0.575 at $\kappa=1$) & out-of-sample: misses\\
+Harm-only mutant & lost ($s=-0.17$) & by construction (Morrow's signs)\\
+Harm + mating success & spreads above $m^*(0.5)=0.20$ & boundary result\\
+Stepfather effect & none ($p$ uniform) & by construction\\
+Telegony sex effect & not reproducible from independent data & rejected (H10)\\\bottomrule
+\end{tabularx}
+
+\section{Smallest missing assays}
+\begin{enumerate}
+\item \textbf{Fecundity of the exact choice-vial females}, measured from 12--14\,h after infection.
+  \begin{itemize}
+  \item A cost near 0 supports ``no fecundity difference''.
+  \item A cost of 40\% or more means males are not perceiving it, or are less sensitive than Byrne \& Rice imply.
+  \end{itemize}
+\item \textbf{A replicated telegony block.}
+  \begin{itemize}
+  \item One block detects a stepfather log-hazard shift of $\pm0.2$ with 74\% power.
+  \item Four blocks detect $\pm0.1$ with 80\% power.
+  \item Both figures use a baseline mortality set by us.
+  \end{itemize}
+\end{enumerate}
+
+\section{Building it}
+\begin{lstlisting}[style=sh]
+python scripts/calibrate_byrne_rice.py        # independent beta calibration (Byrne & Rice only)
+python scripts/run_chinmay_calibrated.py      # A3, kappa bound, W&F under calibrated beta
+python scripts/run_chinmay.py                 # outputs/chinmay_comparison.csv (+ evidence_type column)
+python scripts/run_chinmay_power.py           # telegony power, choice bound
+python analysis/hypothesis_tests.py           # outputs/hypothesis_tests.csv
+NUMBA_NUM_THREADS=2 python -m pytest -q tests/   # 29 tests
+\end{lstlisting}

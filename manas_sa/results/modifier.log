@@ -1,0 +1,11 @@
+autosome: 8672 cases x 121 (k1,k2) in 132s
+X: 2572 cases x 121 (k1,k2) in 38s
+                                                     claim                   reported                                  model                    verdict
+                k1=0,k2=1: A2B2 fixed in 95.7% (autosomes)                      0.957                                0.97244 misses magnitude by +0.015
+           k2=1: A2B2 fixed in >85% for any k1 (autosomes)                      >0.85                               0.915821                    matches
+                              resolution increases with k2          monotone increase monotone in 100% of k1 rows (autosome)           matches ordering
+              k1 non-monotonic: hardest at intermediate k1 minimum at intermediate k1             row-mean minimum at k1=0.2           matches ordering
+                   X more conducive than autosomes overall                      X > A           mean frac X 0.492 vs A 0.222           matches ordering
+                           X advantage strongest at low k2    X - A largest at low k2  mean(X-A) low k2 0.070, high k2 0.437             does not match
+at very high k2 autosomes resolve a larger fraction than X            A > X at k2 ~ 1              mean(A-X) at k2=1: -0.016             does not match
+done

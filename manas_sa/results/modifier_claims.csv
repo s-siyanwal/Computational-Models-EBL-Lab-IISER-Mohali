@@ -1,0 +1,8 @@
+claim,reported,model,verdict
+"k1=0,k2=1: A2B2 fixed in 95.7% (autosomes)",0.957,0.972440036900369,misses magnitude by +0.015
+k2=1: A2B2 fixed in >85% for any k1 (autosomes),>0.85,0.9158210332103321,matches
+resolution increases with k2,monotone increase,monotone in 100% of k1 rows (autosome),matches ordering
+k1 non-monotonic: hardest at intermediate k1,minimum at intermediate k1,row-mean minimum at k1=0.2,matches ordering
+X more conducive than autosomes overall,X > A,mean frac X 0.492 vs A 0.222,matches ordering
+for imperfect (low/intermediate k2) modifiers X resolves where autosomes do not,X > A particularly for low k2,"k2 in [0.3,0.6]: A 0.018, X 0.415",matches ordering
+at very high k2 autosomes resolve a larger fraction than X,A > X at k2 ~ 1,mean(A-X) at k2=1: -0.016,does not match

@@ -1,0 +1,43 @@
+# environments, caches, tool state
+.venv/
+.claude/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# third-party code (link-only; see SOURCES.md)
+*.zip
+manas_sa/external/
+
+# LaTeX build products (the compiled manual is reports/manual/manual.pdf)
+reports/manual/build/
+reports/manual/build2/
+*.aux
+*.fdb_latexmk
+*.fls
+*.out
+*.toc
+*.synctex.gz
+
+# stale duplicate copies at the top level
+/08_hypothesis_tests.md
+
+# supplementary media not needed by any script
+*.mp4
+experimental_papers_manas/media-1.docx
+
+# PDFs: only our manual and openly licensed papers are redistributed (see SOURCES.md)
+*.pdf
+!reports/manual/manual.pdf
+!experimental_papers_manas/12862_2019_Article_1574.pdf
+!experimental_papers_manas/12862_2019_1574_MOESM1_ESM.pdf
+!experimental_papers_manas/12862_2019_1574_MOESM2_ESM.pdf
+!experimental_papers_manas/s12862-022-01992-0.pdf
+!experimental_papers_manas/s41598-017-03182-1.pdf
+!experimental_papers_manas/evlett0657.pdf
+!experimental_papers_manas/2022.08.04.502812v1.full.pdf
+!experimental_papers_manas/2023.10.25.564090v1.full.pdf
+!mate_choice_chinmay/ele0017-1545.pdf
+!drosophila_genetics_models_papers_codes/file.pdf
+!drosophila_genetics_models_papers_codes/117176.1.full.pdf

@@ -1,0 +1,23 @@
+rescaled: Rescaled(N=960, n_gen=12500, U_A=1.4, U_X=0.35, R_A=2.0, R_X=1.32, gamma_scale=0.1, lam=2)
+[shared] evolved 6 populations in 484s
+  [shared] pop 0: r_pop=+0.022 r_hemi_true=-0.123  assay r(E)=-0.123
+  [shared] pop 1: r_pop=+0.233 r_hemi_true=+0.095  assay r(E)=+0.135
+  [shared] pop 2: r_pop=+0.166 r_hemi_true=+0.209  assay r(E)=+0.109
+  [shared] pop 3: r_pop=+0.311 r_hemi_true=+0.182  assay r(E)=+0.077
+  [shared] pop 4: r_pop=+0.145 r_hemi_true=+0.219  assay r(E)=+0.137
+  [shared] pop 5: r_pop=+0.244 r_hemi_true=+0.310  assay r(E)=+0.237
+[sexlimited] evolved 6 populations in 529s
+  [sexlimited] pop 0: r_pop=-0.046 r_hemi_true=-0.114  assay r(E)=-0.038
+  [sexlimited] pop 1: r_pop=-0.036 r_hemi_true=-0.038  assay r(E)=-0.050
+  [sexlimited] pop 2: r_pop=-0.006 r_hemi_true=+0.084  assay r(E)=-0.059
+  [sexlimited] pop 3: r_pop=-0.086 r_hemi_true=+0.006  assay r(E)=-0.072
+  [sexlimited] pop 4: r_pop=-0.115 r_hemi_true=-0.188  assay r(E)=-0.131
+  [sexlimited] pop 5: r_pop=-0.073 r_hemi_true=-0.042  assay r(E)=-0.000
+[trueSA] evolved 6 populations in 631s
+  [trueSA] pop 0: r_pop=-1.000 r_hemi_true=-1.000  assay r(E)=-0.774
+  [trueSA] pop 1: r_pop=-1.000 r_hemi_true=-1.000  assay r(E)=-0.757
+  [trueSA] pop 2: r_pop=-1.000 r_hemi_true=-1.000  assay r(E)=-0.733
+  [trueSA] pop 3: r_pop=-1.000 r_hemi_true=-1.000  assay r(E)=-0.762
+  [trueSA] pop 4: r_pop=-1.000 r_hemi_true=-1.000  assay r(E)=-0.751
+  [trueSA] pop 5: r_pop=-0.999 r_hemi_true=-0.999  assay r(E)=-0.735
+done

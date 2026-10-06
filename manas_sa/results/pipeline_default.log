@@ -1,0 +1,13 @@
+Mon Oct  5 22:50:51 IST 2026
+[design] scripts/run_design.py --profile default --points 12 --reps 2
+[design] exit 0 in 5543s
+[emulator] scripts/run_emulator.py --profile default
+[emulator] exit 0 in 37s
+[hri] scripts/run_hri.py --profile default
+[hri] exit 0 in 7959s
+[distinguish] scripts/run_distinguish.py --profile default
+[distinguish] exit 0 in 4507s
+[table] scripts/make_comparison.py
+[table] exit 0 in 7s
+chain exit 0
+Tue Oct  6 04:28:24 IST 2026

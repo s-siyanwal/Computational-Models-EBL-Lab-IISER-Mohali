@@ -1,0 +1,4 @@
+[N625] R=0.1 M mu=7e-07 male_rec=True: r_mf mean -0.1279 (se 0.0593), 583s
+[N1250] R=0.1 M mu=7e-07 male_rec=True: r_mf mean -0.1439 (se 0.0528), 1068s
+wrote C:\Users\Windows\Downloads\antagonistic_alleles_manas\manas_sa\results\ne_check.csv
+ne exit 0

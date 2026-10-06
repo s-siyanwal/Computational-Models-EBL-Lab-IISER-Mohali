@@ -1,0 +1,155 @@
+\chapter{Background: biology and theory}\label{ch:background}
+
+\section{Sexual conflict in one page}
+Males and females share almost their whole genome but are selected differently.
+\begin{itemize}
+\item \textbf{Intralocus sexual conflict (IaSC).} An allele raises fitness in one sex and lowers it in the other: a \emph{sexually antagonistic} (SA) allele. Selection pulls the shared trait in opposite directions, and the population carries a ``gender load''. IaSC can be resolved by the evolution of sex-specific expression, which is the subject of the modifier models.
+\item \textbf{Interlocus sexual conflict (IeSC).} Different loci in the two sexes underlie traits that interact, for example male persistence and harm against female resistance. The result is an arms race, not a shared-trait tug of war.
+\item \textbf{The intersexual genetic correlation for fitness} ($r_{\mathrm{mf}}$) summarises the net outcome across the genome:
+  \begin{itemize}
+  \item $r_{\mathrm{mf}}<0$ means genotypes good for one sex tend to be bad for the other, which is the signature usually attributed to SA variation;
+  \item $r_{\mathrm{mf}}>0$ means shared, sexually concordant (SC) variation dominates, e.g.\ deleterious mutations bad for both sexes.
+  \end{itemize}
+\end{itemize}
+
+Mutation classes used throughout this manual, as per-copy effects $(e_f,e_m)$ of a derived allele on log fitness:
+\begin{center}\begin{tabular}{lll}\toprule
+Class & $(e_f,e_m)$ & Contribution to $\mathrm{Cov}(BV_f,BV_m)$\\\midrule
+female-limited & $(-s,0)$ & none directly\\
+male-limited & $(0,-s)$ & none directly\\
+concordant (SC) & $(-s,-s)$ & positive\\
+antagonistic (SA) & $(-s,+b s)$ or $(+bs,-s)$ & negative\\\bottomrule\end{tabular}\end{center}
+
+\section{\emph{Drosophila melanogaster} genetics you must model}
+\begin{itemize}
+\item \textbf{XX/XY.} Males are hemizygous for the X, so an X-linked allele is fully expressed in males. The Y carries no relevant fitness loci in our models.
+\item \textbf{No crossing over in males.} Male meiosis is achiasmate. Autosomes pass from father to offspring as intact chromosomes. Many standard simulators (SLiM by default) let both sexes recombine, which matters (\S\ref{sec:sexdiffLD}).
+\item \textbf{Female recombination.} The genetic map is roughly 1--1.5\,M per major autosome arm pair (chromosome 2 or 3) and about 0.66\,M for the X, with large variation along chromosomes (Comeron \emph{et al.}\ 2012). Gene conversion adds short-range exchange, which is negligible for map bins $\gg$1\,kb.
+\item \textbf{Laboratory populations.}
+  \begin{itemize}
+  \item LH$_\mathrm{M}$ is a large outbred population of about 1,800 adults, maintained since the 1990s (Rice lab). It is the source of the classic hemiclonal $r_{\mathrm{mf}}$ estimates.
+  \item LH is a descendant population maintained at IISER Mohali: 60 vials $\times$ 16 pairs, 1,920 adults, more than 500 generations apart from LH$_\mathrm{M}$. Manas's study was done in LH.
+  \item LHst carries a recessive scarlet eye marker and is used as the standard competitor.
+  \end{itemize}
+\end{itemize}
+
+\section{Hemiclonal analysis}\label{sec:hemiclone}
+Hemiclonal analysis (Rice 1996; Abbott \& Morrow 2011) expresses the \emph{same} haploid genome in many individuals of both sexes.
+\begin{enumerate}
+\item A male from the base population is mated to \emph{clone-generator} females. These carry a compound X (two X chromosomes fused), a Y, and a translocation of chromosomes 2 and 3.
+\item Because males do not recombine, each sperm carries one intact haploid set: the father's X (which came from his mother) and one of his two copies of each major autosome. This set is the \emph{hemigenome}.
+\item The clone-generator background lets the hemigenome be propagated intact through males for many generations. The small dot chromosome 4 is excluded.
+\item Crossing hemiclone males to base-population females produces focal females (hemigenome + random haplotype) and focal males. Focal males carry the hemigenome autosomes, a random autosome set and the hemigenome X, hemizygous.
+\item Fitness assays of many lines $\times$ both sexes give line means. Their correlation across lines is a genetic correlation, because only the hemigenome differs systematically between lines.
+\end{enumerate}
+
+\begin{warnbox}[Modelling consequences]
+\begin{itemize}
+\item In a simulation, sample hemigenomes from \emph{males}: X from his maternal slot, autosome from a random one of his two slots. Sampling ``any haplotype'' includes Y slots and paternal autosome linkage incorrectly (\S\ref{tr:hemiY}).
+\item The focal male's X is hemizygous, so X-linked effects count once in males and twice in a homozygous female. Here the focal female is heterozygous: hemigenome X + random X.
+\end{itemize}
+\end{warnbox}
+
+\section{Single-locus theory of sex-differential selection}
+\subsection{Parsons (1961): invasion}
+Let females have viabilities $(a_1,h_1,b_1)$ for $AA,Aa,aa$ and males $(a_2,h_2,b_2)$. Allele frequencies in eggs and sperm, $p_1,p_2$, evolve as
+\begin{equation}
+p_i'=\frac{a_ip_1p_2+\tfrac12 h_i(p_1q_2+p_2q_1)}{a_ip_1p_2+h_i(p_1q_2+p_2q_1)+b_iq_1q_2}.
+\end{equation}
+Linearising at $p=0$ gives a $2\times2$ matrix with dominant root $\lambda=\tfrac12(h_1/b_1+h_2/b_2)$. So A invades iff
+\begin{equation}h_1b_2+h_2b_1>2b_1b_2.\label{eq:parsons}\end{equation}
+\textbf{X-linked} (males $p_2'=a_2p_1/(a_2p_1+b_2q_1)$). The characteristic equation is $\lambda^2-\frac{h_1}{2b_1}\lambda-\frac{h_1a_2}{2b_1b_2}=0$, so A invades iff $h_1(a_2+b_2)>2b_1b_2$.
+
+\subsection{Protected polymorphism: Kidwell, Rice, Fry}
+Let $A_1$ be male-beneficial. Male fitnesses are $(1,1-h_ms_m,1-s_m)$ and female fitnesses $(1-s_f,1-h_fs_f,1)$. Applying (\ref{eq:parsons}) at both boundaries gives
+\begin{align}
+\text{autosomal (Fry 2010, eq.\ 3): } &\frac{h_f}{1-h_m+h_fs_f}<\frac{s_m}{s_f}<\frac{1-h_f}{h_m(1-s_f)},\label{eq:fry}\\
+\text{X-linked (Rice 1984): } &\frac{2h_f}{1+h_fs_f}<\frac{s_m}{s_f}<\frac{2(1-h_f)}{1-h_fs_f}.
+\end{align}
+The additive case gives Kidwell's wedge, $1/(1+s_f)<s_m/s_f<1/(1-s_f)$, which is narrow for weak selection. Balanced SA polymorphism therefore needs strong selection or dominance reversal ($h<\tfrac12$ for the beneficial effect in each sex).
+
+\subsection{Owen (1953): two stable equilibria}
+For some viability sets, sex-differential selection produces two stable interior equilibria. Equilibria are found by solving the female equation for $u_2(u_1)$ and root-bracketing the male residual, with $u=p/q$.
+
+\section{Two-locus theory and modifiers}
+\subsection{The poster model (haploid, two-locus)}
+Locus A is sexually antagonistic and locus M modifies its expression in females. The full reconstruction is in \S\ref{sec:poster}. The key analytic result:
+\begin{itemize}
+\item the one-locus SA polymorphism sits at $\pstar=\tfrac12+\tfrac12(1/b-1/a)$;
+\item the modifier invades iff the spectral radius of a $2\times2$ block of the Jacobian exceeds 1;
+\item low recombination favours resolution, because recombination moves the modifier onto the background where it costs fitness.
+\end{itemize}
+
+\subsection{Imperfect modifiers (target 5; Connallon \& Clark 2010 recursions)}
+The model is diploid, autosomal or X-linked, with sex-specific recombination $r_f,r_m$. The SA locus has dominance reversal $h$. Modifier B$_2$ scales the female expression of $A_1$ by $k_1$ and of $A_2$ by $k_2$. Resolution means A$_2$B$_2$ fixes within 3,000 generations. A ``perfect'' modifier ($k_1=0,k_2=1$) silences the female-harmful allele in females and keeps the female-beneficial one.
+
+\subsection{Mother's curse}
+Mitochondria are transmitted only by mothers, so a mito variant that harms males but is neutral or beneficial in females spreads; selection in males is blind. Formalised (\S\ref{sec:curse}):
+\begin{itemize}
+\item a rare mito variant grows by $1+s_f$, independent of $s_m$;
+\item a nuclear analogue would need $w_f>2$ if males were sterile (the ``twofold rule'', a special case of (\ref{eq:parsons}));
+\item nuclear restorers that rescue males can then invade.
+\end{itemize}
+
+\section{Drift and diffusion}
+\begin{itemize}
+\item \textbf{Kimura (1962):} $u(p)=\dfrac{1-e^{-4Nsp}}{1-e^{-4Ns}}$ with $s=\bar s=(s_f+s_m)/2$.
+\item \textbf{General diffusion:} $u(p_0)=\int_0^{p_0}\psi\big/\int_0^1\psi$, with $\psi(y)=\exp(-\int_0^y 2M/V)$, drift $M(p)$ from the full recursion and $V=pq/2N$.
+  \begin{itemize}
+  \item Expanding the SA recursion gives $\Delta p\approx pq[\bar s-p(s_f^2+s_m^2)]$.
+  \item The second-order term is what makes Kimura's sex-averaged formula fail under strong antagonism.
+  \end{itemize}
+\item \textbf{Mean absorption time:} solve $\tfrac12 VT''+MT'=-1$ (backward Kolmogorov).
+\end{itemize}
+
+\section{Multilocus quantitative genetics of fitness}\label{sec:robertson}
+\subsection{Breeding values and the covariance decomposition}
+With $L$ loci, let $\alpha_{f,i},\alpha_{m,i}$ be the average effects of allele $i$ on female and male fitness. Let $\mathbf{L}$ be the genotype (co)variance matrix: diagonal $p_iq_i/2$, off-diagonal $D_{ij}$ (genotype-state scale). Then
+\begin{equation}
+V_f=\boldsymbol\alpha_f^\top\mathbf L\boldsymbol\alpha_f,\quad V_m=\boldsymbol\alpha_m^\top\mathbf L\boldsymbol\alpha_m,\quad
+\mathrm{COV}=\underbrace{\sum_i \frac{p_iq_i}{2}\alpha_{f,i}\alpha_{m,i}}_{\text{direct (pleiotropy)}}+\underbrace{\sum_{i\ne j}D_{ij}\alpha_{f,i}\alpha_{m,j}}_{\text{indirect (LD)}},
+\end{equation}
+and $\rmf=\mathrm{COV}/\sqrt{V_fV_m}$. In code, $\mathrm{COV}$ equals $\mathrm{Cov}(BV_f,BV_m)$ over sampled genotypes, which is exactly how we compute it.
+
+\begin{keybox}[The central point of the HRI preprint (target 4)]
+With \emph{purely sex-limited} selection, no locus affects both sexes, so the direct term is exactly 0. A negative $\rmf$ can still arise through the indirect term if female-beneficial and male-beneficial alleles are in negative LD. Hill--Robertson interference generates exactly that: selection at linked loci in a finite population builds repulsion LD between beneficial alleles. A negative $r_{\mathrm{mf}}$ is therefore not proof of SA alleles.
+\end{keybox}
+
+\subsection{Sex-specific Fundamental Theorem (Robertson covariances)}
+The predicted change in mean relative fitness of sex $k$ is
+\begin{equation}
+\Delta\bar w_k=\tfrac12\big(V_k+\mathrm{COV}_{fm}\big),
+\end{equation}
+\begin{itemize}
+\item the first term is \emph{within-sex} selection;
+\item the second is the \emph{cross-sex} response.
+\end{itemize}
+The Robertson--Price identity states the response of any trait as its additive genetic covariance with relative fitness. The Am Nat 2025 paper applies this to the traits of the thesis; we can only apply it to fitness itself (\S\ref{sec:res-robertson}).
+
+\subsection{Deterministic sex-differential LD (derived here, \claimC)}\label{sec:sexdiffLD}
+This mechanism is independent of drift, and we found it while building the analytic layer.
+
+Suppose sex-limited selection makes the egg pool and sperm pool differ in allele frequency: by $\Delta_A$ at a female-limited locus and $\Delta_B$ at a male-limited locus. Each pool is at linkage equilibrium. Pooling eggs and sperm in zygotes, then meiosis with crossover rate $r$, creates
+\begin{equation}
+D'=\tfrac14(1-2r)\Delta_A\Delta_B.
+\end{equation}
+This is negative for female-beneficial $\times$ male-beneficial alleles, because $\Delta_A$ and $\Delta_B$ have opposite signs. Balancing creation against decay gives the steady state
+\begin{equation}
+D^*\approx\frac{(1-2\bar r)\Delta_A\Delta_B}{4\bar r},\qquad \bar r=\tfrac12(r_f+r_m).
+\end{equation}
+\begin{itemize}
+\item \textbf{Drosophila case:} $r_m=0$. Then $\bar r\le\frac14$ even between loci at opposite chromosome ends ($r_f=\frac12$), so this negative LD persists \emph{along the whole chromosome}.
+\item \textbf{Scale:} it is $O(s^2)$, but it does not depend on $N$.
+\item \textbf{Check:} the exact two-locus recursion gives $D=-4.4\times10^{-4}$ ($r_f=0.1,r_m=0$), $-6.3\times10^{-5}$ ($r_f=\tfrac12,r_m=0$) and $0$ ($r_f=r_m=\tfrac12$).
+\end{itemize}
+This term explains why the sex-limited null in our Drosophila-like populations is slightly negative ($r\approx-0.05$).
+
+\section{Population rescaling}\label{sec:rescale}
+Simulating $N=2{,}500$ for 25,000 generations with tens of thousands of loci is expensive. The standard trick (used for SLiM models) maps $N\to N/\lambda$, $U,R,s\to\lambda U,\lambda R,\lambda s$, and generations $\to/\lambda$. This preserves $NU$, $NR$ and $Ns$, the diffusion-scale parameters.
+\begin{warnbox}[What rescaling does \emph{not} preserve]
+\begin{itemize}
+\item The genetic variance in log fitness scales as $\lambda^2$: $V_f\approx0.02$ ($\lambda=1$), 0.09 ($\lambda=2$), 0.42 ($\lambda=4$), 3.4 ($\lambda=10$). Selection on the breeding value therefore becomes increasingly truncation-like relative to the environmental noise.
+\item The speed of Muller's ratchet, $\propto N e^{-U/s}$, is not invariant.
+\end{itemize}
+At $\lambda=4$ populations collapsed into female-lethal, male-favoured haplotype classes ($\rmf\approx-1$). Always measure the $\lambda$-sensitivity of your headline statistic; never assume invariance (\S\ref{tr:lambda}).
+\end{warnbox}

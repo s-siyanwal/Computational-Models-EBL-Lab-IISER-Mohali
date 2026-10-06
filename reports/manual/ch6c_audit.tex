@@ -1,0 +1,65 @@
+\chapter{Audit: leakage, circularity, triviality, and hypothesis tests}\label{ch:audit}
+A match between model and paper means little if the model was given the answer. This chapter classifies every comparison by how its result was obtained, records the fixes made, and applies formal tests of whether the model predicts or explains each result.
+
+\section{Evidence types}
+\begin{description}
+\item[By construction:] the assumptions guarantee the result. Example: $\kappa=0$ makes courtship choice exactly 50/50.
+\item[Input echo:] a value is taken from the target and compared with itself. Example: the sign of the telegony sex effect.
+\item[Fitted:] tuned to the target, or to a threshold derived from it. Example: the spec $\beta_0$.
+\item[Calibrated:] partly uses the scored data. Example: the variance calibration of the hemiclone assay.
+\item[Existential:] true for chosen parameter values. Example: a harm-plus-competitiveness mutant spreading.
+\item[Out-of-sample:] no target information is used. Example: Khan's bias predicted from Byrne \& Rice.
+\end{description}
+
+\section{Main findings and fixes}
+\begin{longtable}{p{4.6cm}p{5.2cm}p{5.4cm}}\toprule
+Finding & Diagnosis & Fix / status\\\midrule\endhead
+Courtship and telegony nulls & by construction ($\kappa=0$; stepfather effect $=0$) & labelled ``consistent, not evidence''\\
+$\beta_0$ chosen to pass A2, then moved after seeing Khan & fitted; data peeking & calibrated on Byrne \& Rice only; spec value moved to a compliance override\\
+Courts-most spread calibrated on the scored table & calibration leakage & calibrate on blocks 1--2, test on 3--4 ($-4\%$)\\
+``Fecundity cost $<10\%$'' bound & circular (used the spec $\beta$) & withdrawn; calibrated bound $\kappa\le0.44$\\
+Telegony sex effect & sign taken from the target & not scored; the independent test rejects it\\
+Sex-ratio ordering (Manas) & echo: data-only attenuation gives E $>$ M $>$ F & labelled; test H13 added\\
+SA proportion & identity $(1-r)/2$ & labelled\\
+LH $+0.45$ & selected from 12 design points & labelled fitted; prior-predictive test H15\\
+HRI collapse filter & defined post hoc & validated: 0/12 collapse at $\lambda=1$ at 0.001 and 0.01\,M (H18); $\lambda=1$ values now headline\\
+Raw-scale ``within 10\%'' & the no-effect baseline also passes & effect sizes reported against the baseline\\\bottomrule
+\end{longtable}
+
+\section{Can magnitudes be brought within 10\%?}
+Only one sign-matched quantity has a legitimate route: Khan's bias, through independent calibration. It is within 4\% on the raw scale, but that criterion is uninformative near 0.5. On the effect scale the prediction is about half to two-thirds of the observed effect, with the observation inside the predictive interval.
+\begin{itemize}
+\item Wittman \& Fedorka: no fecundity cost reaches CM 0.64.
+\item Telegony sex effect: cannot be predicted without fitting to the target.
+\item Latency genotype effects: not identified.
+\end{itemize}
+Forcing any of these within 10\% would mean fitting the scored data.
+
+\section{Hypothesis tests}
+\begin{itemize}
+\item \textbf{Methods.} Predictive p-values from 300 replicate simulations, using the analytic F and $\chi^2$ tails where the null is exact. Likelihood ratios between competing hypotheses. Benjamini--Hochberg FDR over the substantive tests only. An informativeness column for each test.
+\item \textbf{Files.} Results are in \code{outputs/hypothesis_tests.csv}; the narrative is in \code{docs/08_hypothesis_tests.md}.
+\end{itemize}
+
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{3.6cm}}\toprule
+Test & Result & Verdict\\\midrule
+Chinmay courts-first: $\kappa=0$ vs $\kappa=0.4$ & LR $=3.4$ & no cost favoured, moderately\\
+Khan: calibrated vs no-choice vs spec $\beta$ & LR 2.8 and 6.8 & weak evidence for the calibrated model\\
+Khan between-vial SD implied by its CIs & 0.029 vs model 0.111 ($q=0.045$) & \textbf{rejected}: assay mechanics\\
+Telegony sex $\chi^2=108$ with independent HR $=1$ & $p=2.5\times10^{-25}$ & \textbf{rejected}\\
+Latency genotype effects & $p=0.009$, 0.011 ($q=0.07$) & tension (no mechanism)\\
+Female across-SR correlations (Manas) & $p=0.017$ ($q=0.09$) & tension (no G$\times$SR)\\
+Attenuation-only sex-ratio pattern (Manas) & disattenuated $r$ 0.47 / 0.48 / 0.35, $p\approx0.3$ & not rejected; low power\\
+Manas $r_{w,g,mf}$ under the shared regime & $p$ 0.08--0.34 & consistent but uninformative\\
+HRI mean at 0.1\,M ($\lambda=1$) & $p=0.44$ & consistent; underpowered ($n=6$)\\
+HRI at 0.001 / 0.01\,M ($\lambda=1$, no filter) & $-0.184$ / $-0.071$ vs $-0.115$ / $-0.125$; $p=0.25$ / 0.42 & consistent; collapse filter justified\\
+Khan under the spec-frozen $\beta$ & 0.413 vs 0.463, $p=0.028$ ($q=0.13$) & tension: spec $\beta$ too strong\\
+Courts-most held-out SD & $p=0.08$ & consistent\\\bottomrule
+\end{tabularx}
+
+\textbf{Bottom line.}
+\begin{itemize}
+\item Where the model makes genuine out-of-sample predictions, the data agree in direction, with weak to moderate evidence.
+\item Where the data contain structure the model lacks, it is rejected or in tension: assay dispersion, the sex effect on survival, genotype effects, and female genotype $\times$ sex-ratio interaction.
+\item Many ``matches'' carry no information, because they are guaranteed by construction or because the model's predictive interval is very wide.
+\end{itemize}

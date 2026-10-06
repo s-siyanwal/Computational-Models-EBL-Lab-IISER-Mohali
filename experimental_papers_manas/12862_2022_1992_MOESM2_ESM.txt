@@ -1,0 +1,54 @@
+﻿
+Explanation for data in Supplementary Information II
+
+#############################################################################################################################################################################################################################
+
+This file ("Supplementary Information II.xlsx") was generated in 2018-2019 by Manas Geeta Arun.
+
+
+GENERAL INFORMATION
+
+1. Title of Dataset: "Investigating the interaction between inter-locus and intra-locus sexual conflict using hemiclonal analysis in Drosophila melanogaster"
+
+2. Author Information
+	A. Principal Investigator Contact Information
+		Name: Prof. N. G. Prasad
+		Institution: Indian Institute of Science Education and Research, Mohali
+		Address: IISER Mohali, Sector 81, Knowledge City, SAS Nagar, Punjab - 140306, India.
+		Email: prasad@iisermohali.ac.in
+
+	B. Associate or Co-investigator Contact Information
+		Name: Manas Geeta Arun
+		Institution: Indian Institute of Science Education and Research, Mohali
+		Address: IISER Mohali, Sector 81, Knowledge City, SAS Nagar, Punjab - 140306, India.
+		Email: manassamant2000@gmail.com
+
+
+3. Duration of data collection: 2018-2019
+
+4. Geographic location of data collection: Mohali, Punjab, India 
+
+5. Information about funding sources that supported the collection of the data: IISER Mohali, Govt. of India.
+
+
+############################################################################################################################################################################################################################
+
+DATA-SPECIFIC INFORMATION FOR "Raw_data.xlsx"
+
+
+1. Number of variables: 5
+
+2. Number of cases/rows: 2539
+
+3. Variable List: 
+
+Sex ("Female" or "Male")
+Sex Ratio (The sex-ratio regime under which fitness measurement was made; "M" (male biased; 24 males: 8 females per vial); "E" (equal; 16 males: 16 females per vial); "F" (female biased; 8 males: 24 females per vial)
+Day (Fitness assays were performed across six separate days; "Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6")
+Hemigenome line (Identity of the hemigenome line; "1" through "43", except families "5", "19", "29" and "30", which were lost in an accident)
+Fitness (female fitness: number of eggs laid by 2 females after competition for limiting amounts of live yeast; male fitness: proportion of progeny sired by focal males in a competitive fertilization experiment)
+
+
+###########################################################################################################################################################################################################################
+
+

@@ -1,0 +1,14 @@
+[maplen/paper] R=0.001 M mu=7e-07 male_rec=True: r_mf mean -0.7544 (se 0.1564), 632s
+[maplen/paper] R=0.01 M mu=7e-07 male_rec=True: r_mf mean -0.2944 (se 0.1466), 620s
+[maplen/paper] R=0.1 M mu=7e-07 male_rec=True: r_mf mean -0.0863 (se 0.0397), 565s
+[maplen/paper] R=1.0 M mu=7e-07 male_rec=True: r_mf mean -0.0385 (se 0.0203), 547s
+[maplen/paper] R=10.0 M mu=7e-07 male_rec=True: r_mf mean +0.0029 (se 0.0281), 703s
+[maplen/drosophila] R=0.001 M mu=7e-07 male_rec=False: r_mf mean -0.6363 (se 0.1862), 677s
+[maplen/drosophila] R=0.01 M mu=7e-07 male_rec=False: r_mf mean -0.3384 (se 0.2106), 609s
+[maplen/drosophila] R=0.1 M mu=7e-07 male_rec=False: r_mf mean -0.1328 (se 0.0466), 579s
+[maplen/drosophila] R=1.0 M mu=7e-07 male_rec=False: r_mf mean -0.0489 (se 0.0359), 527s
+[maplen/drosophila] R=10.0 M mu=7e-07 male_rec=False: r_mf mean +0.0170 (se 0.0388), 554s
+[mu_sweep/paper] R=0.1 M mu=5e-07 male_rec=True: r_mf mean -0.0536 (se 0.0477), 462s
+[mu_sweep/paper] R=0.1 M mu=9e-07 male_rec=True: r_mf mean -0.1491 (se 0.0324), 660s
+[mu_sweep/paper] R=0.1 M mu=1.3e-06 male_rec=True: r_mf mean -0.1832 (se 0.0350), 821s
+wrote C:\Users\Windows\Downloads\antagonistic_alleles_manas\manas_sa\results\hri_runs_default.csv

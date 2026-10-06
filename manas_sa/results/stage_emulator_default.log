@@ -1,0 +1,26 @@
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.01. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.01. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.01. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.01. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.01. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.01. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.01. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\sklearn\gaussian_process\kernels.py:445: ConvergenceWarning: The optimal value found for dimension 0 of parameter k1__k2__length_scale is close to the specified lower bound 0.01. Decreasing the bound and calling fit again may find a better value.
+  warnings.warn(
+     target  GP_cv_rmse  GBM_cv_rmse  replicate_sd  S1_f_SA  S1_sc_share  S1_log10_R
+r_hemi_true       0.379        0.381         0.174    0.005        0.005       0.005
+  r_assay_E       0.296        0.288         0.151    0.005        0.005       0.005
+                             study  published_r  f_SA_best  f_SA_consistent_min  f_SA_consistent_max  emulator_r_at_shared_regime                                                                    note  assay_sd_at_n  between_population_sd  z_vs_shared_regime  P_as_extreme_by_sampling
+Geeta Arun 2022 (LH, equal SR, 39)        0.403        0.0                  0.0                  0.2                        0.012 consistent = emulator mean within 1.96*sqrt(GP var + 39-line assay var)          0.152                   0.26               1.296                     0.195
+  Chippindale 2001 (LHM adult, 40)       -0.300        0.0                  0.0                  0.2                        0.012 consistent = emulator mean within 1.96*sqrt(GP var + 39-line assay var)          0.148                   0.26              -1.040                     0.298
+Innocenti & Morrow 2010 (LHM, 100)       -0.520        0.0                  0.0                  0.2                        0.012 consistent = emulator mean within 1.96*sqrt(GP var + 39-line assay var)          0.091                   0.26              -1.927                     0.054
+          Collet 2016 LHM-UU (100)       -0.410        0.0                  0.0                  0.2                        0.012 consistent = emulator mean within 1.96*sqrt(GP var + 39-line assay var)          0.091                   0.26              -1.528                     0.126
+         Collet 2016 LHM-UCL (113)        0.210        0.0                  0.0                  0.2                        0.012 consistent = emulator mean within 1.96*sqrt(GP var + 39-line assay var)          0.085                   0.26               0.724                     0.469
+           Ruzicka 2019 (LHM, 223)        0.150        0.0                  0.0                  0.2                        0.012 consistent = emulator mean within 1.96*sqrt(GP var + 39-line assay var)          0.055                   0.26               0.520                     0.603

@@ -1,0 +1,244 @@
+\chapter{Worked examples}\label{ch:examples}
+Each concept used in the project, worked through with small numbers you can check by hand. All numbers were verified with code. Toy values that are not from a real run are marked \emph{(toy)}.
+
+%=====================================================================
+\section{Problem statements}
+Each target is posed as a well-defined problem: inputs, the question, the output and how it is scored.
+
+\begin{longtable}{p{2.6cm}p{12.6cm}}\toprule
+\textbf{Target} & \textbf{Problem statement}\\\midrule\endhead
+1 (BMC 2022) & \emph{Input:} 39 hemigenomes, fitness assays at 3 sex ratios. \emph{Question:} what genetic architecture and measurement process yield $\rwg=+0.38/+0.40/+0.25$, with a n.s.\ MB$-$FB difference? \emph{Output:} simulated $\rwg$ from emulated assays. \emph{Score:} sign, ordering and magnitude against Table 2A; out-of-sample checks on the across-SR correlations.\\
+2--3 (Robertson) & \emph{Question:} how much of each sex's predicted response to selection comes from within-sex versus cross-sex covariance? \emph{Output:} the cross/within covariance ratio of relative fitness. \emph{Score:} direction only. Trait level is not identified.\\
+4 (HRI) & \emph{Input:} purely sex-limited deleterious mutations, $N=2{,}500$, 1\,Mb. \emph{Question:} does linkage alone produce $\rmf<0$, and how does it scale with map length and $\mu$? \emph{Score:} sign, trend, $V$, interference, magnitude at $\lambda=1$.\\
+5 (modifiers) & \emph{Input:} the authors' recursions and grid. \emph{Question:} what fraction of parameter space resolves IaSC for each $(k_1,k_2)$, on autosomes vs X? \emph{Score:} quoted percentages and orderings.\\
+Contrast set & \emph{Question:} which assumption, if changed, moves $r$ from $+0.4$ (LH) to $-0.3\ldots-0.5$ (LH$_\mathrm{M}$)? \emph{Candidates:} SA share, history, sampling, HRI, fitness measure.\\
+SA vs HRI & \emph{Question:} what is the smallest experiment that tells pleiotropic SA from linkage-driven negative $r$?\\\bottomrule
+\end{longtable}
+
+%=====================================================================
+\section{Genetics}
+\subsection{Making a hemiclone}
+\begin{enumerate}
+\item A population male has two sets of autosomes, one from his mother ($A_\mathrm{mat}$) and one from his father ($A_\mathrm{pat}$), and one X (from his mother).
+\item He is mated to a clone-generator female. Each sperm carries his X plus \emph{either} $A_\mathrm{mat}$ \emph{or} $A_\mathrm{pat}$, intact, because males do not recombine.
+\item That sperm's haploid set is the hemigenome, e.g.\ $\{X_\mathrm{mat}, A_\mathrm{pat}\}$.
+\item Focal female = hemigenome + a random LH haplotype (two X's: one from the hemigenome, one random).
+\item Focal male = hemigenome autosomes + random autosomes, plus \emph{only} the hemigenome X.
+\end{enumerate}
+\textbf{Consequence (toy).} A hemigenome X mutation with per-copy female effect $-0.04$ and male effect $-0.04$ costs a focal female $-0.04$, since she has one copy. A focal male also pays $-0.04$, but it is his \emph{only} X, so a recessive X allele is fully exposed in males.
+
+\subsection{Recombination in a female, none in a male}
+Haldane's map function gives the probability of an odd number of crossovers between two sites $d$ Morgans apart:
+\[
+c=\tfrac12(1-e^{-2d}):\qquad d=0.1\,\mathrm{M}\Rightarrow c=0.0906;\qquad d=0.5\,\mathrm{M}\Rightarrow c=0.316.
+\]
+In a \emph{Drosophila} male, $c=0$ for every pair of autosomal sites, so a father passes each autosome on unchanged.
+
+%=====================================================================
+\section{Mathematical models}
+\subsection{Parsons' invasion condition}
+\emph{(toy)} Allele A helps females and hurts males. Female viabilities ($AA,Aa,aa$) are $(1.2,1.1,1.0)$; male viabilities are $(0.8,0.95,1.0)$. The leading root is
+\[
+\lambda=\tfrac12\Big(\frac{h_1}{b_1}+\frac{h_2}{b_2}\Big)=\tfrac12(1.1+0.95)=1.025>1,
+\]
+so A invades. Equivalently, $h_1b_2+h_2b_1=2.05>2b_1b_2=2$. The female gain (+10\% in heterozygotes) outweighs the male loss ($-5\%$).
+
+\subsection{Kidwell's wedge: when does antagonism keep both alleles?}
+With additive effects and $s_f=0.1$, the polymorphism is protected iff
+\[
+\frac{s_f}{1+s_f}=0.0909<s_m<\frac{s_f}{1-s_f}=0.1111.
+\]
+So $s_m=0.10$ maintains both alleles, but $s_m=0.08$ or $0.12$ does not. Balanced SA polymorphism is fragile when selection is weak.
+
+\subsection{The poster's one-locus equilibrium}
+$\pstar=\tfrac12+\tfrac12(1/b-1/a)$.
+\begin{itemize}
+\item $a=b=0.2$ gives $\pstar=0.5$.
+\item $a=0.22$, $b=0.2$ gives $\pstar=0.727$: a stronger male benefit raises the male-beneficial allele.
+\item An interior $\pstar$ needs $a\in(1/6,\,1/4)$ when $b=0.2$.
+\end{itemize}
+
+\subsection{Sex-differential LD (no drift needed)}
+Selection leaves eggs with 2 points more of the female-beneficial allele at locus A ($\Delta_A=+0.02$). Sperm have 2 points more of the male-beneficial allele at locus B ($\Delta_B=-0.02$, written as egg minus sperm).
+\begin{itemize}
+\item One round of mating and meiosis with $r=0.1$ gives $D'=\tfrac14(0.8)(0.02)(-0.02)=-8\times10^{-5}$.
+\item Steady state: $D^*\approx(1-2\bar r)\Delta_A\Delta_B/(4\bar r)$.
+  \begin{itemize}
+  \item Loci at opposite ends of a chromosome in \emph{Drosophila}: $r_f=0.5$, $r_m=0$, so $\bar r=0.25$ and $D^*=-0.0002$.
+  \item Closely linked: $\bar r=0.05$ gives $D^*=-0.0018$.
+  \item If both sexes recombined freely, $\bar r=0.5$ and $D^*=0$.
+  \end{itemize}
+\end{itemize}
+
+\subsection{The covariance decomposition: three toy genomes}
+All loci have allele frequency $p=0.1$, so each diagonal element of $\mathbf L$ is $pq/2=0.045$.
+\begin{enumerate}
+\item \textbf{No antagonism, only linkage.} Locus 1 is female-limited ($\alpha_f=-0.1$) and locus 2 male-limited ($\alpha_m=-0.1$), in negative LD $D=-0.005$.
+  \begin{itemize}
+  \item Direct term $=0$; indirect term $=D\,\alpha_{f1}\alpha_{m2}=-5\times10^{-5}$.
+  \item $V_f=V_m=0.045\times0.01=4.5\times10^{-4}$.
+  \item So $r=-0.111$: \textbf{negative $r$ without any SA allele}. This is the HRI preprint's point.
+  \end{itemize}
+\item \textbf{One antagonistic locus.} $\alpha_f=-0.1$, $\alpha_m=+0.05$.
+  \begin{itemize}
+  \item $\mathrm{COV}=0.045\times(-0.005)=-2.25\times10^{-4}$, $V_f=4.5\times10^{-4}$, $V_m=1.125\times10^{-4}$.
+  \item So $r=-1$. A single SA locus alone gives perfect negative correlation.
+  \end{itemize}
+\item \textbf{The same SA locus plus one concordant locus} ($\alpha_f=\alpha_m=-0.1$).
+  \begin{itemize}
+  \item $\mathrm{COV}=-2.25\times10^{-4}+4.5\times10^{-4}=2.25\times10^{-4}$.
+  \item $V_f=9\times10^{-4}$, $V_m=5.625\times10^{-4}$.
+  \item So $r=+0.316$. \textbf{Shared deleterious variation can outweigh antagonism.} That is the regime the model needs for LH.
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Robertson / sex-specific FTNS}
+With the recomputed MB values, female line variance $V_f=0.0545$, male $V_m=0.3265$ and cross-sex covariance $C=0.049$:
+\begin{itemize}
+\item female response $=\tfrac12(0.0545+0.049)=0.052$, of which the cross-sex share is $0.049/0.1035=47\%$;
+\item male response $=\tfrac12(0.3265+0.049)=0.188$, with a cross-sex share of only 13\%.
+\end{itemize}
+Females gain about half their fitness response through genes selected in males; males respond mostly to within-male selection.
+
+\subsection{Kimura's fixation probability}
+$N=500$, $s=0.01$, $p_0=0.05$, so $4Nsp_0=1$:
+\[
+u=\frac{1-e^{-1}}{1-e^{-20}}=0.632.
+\]
+Under strong antagonism ($s_f\ne s_m$) the sex-averaged $s$ is not enough. The full diffusion with $M(p)$ from the sex-specific recursion is needed (RMSE 0.083 $\to$ 0.013 against the \IBM).
+
+\subsection{Mother's curse: the twofold rule}
+A nuclear allele that sterilises males ($w_m=0$) and gives heterozygous females $w_f=2.1$ has $\lambda=\tfrac12(2.1+0)=1.05$, so it barely invades. A mitochondrial variant with the same effects invades at rate $1+s_f$, whatever it does to males.
+
+\subsection{Imperfect modifiers}
+A modifier allele B$_2$ multiplies the female expression of A$_1$ by $k_1$ and of A$_2$ by $k_2$.
+\begin{itemize}
+\item \textbf{Perfect} ($k_1=0,k_2=1$): it removes the harmful allele's effect in females and keeps the beneficial one. It resolves the conflict in 95.7\% (paper) or 97.2\% (re-run) of parameter space.
+\item \textbf{Imperfect} (e.g.\ $k_1=0.2,k_2=0.5$): it silences part of both. Resolution is then much rarer on autosomes (1.8\% for $k_2$ in 0.3--0.6) than on the X (41.5\%).
+\end{itemize}
+
+%=====================================================================
+\section{Simulation (the individual-based model)}
+\subsection{One generation by hand \emph{(toy)}}
+$N=4$: two females F1, F2 and two males M1, M2. Breeding values on log fitness: F1 $-0.10$, F2 $-0.30$, M1 $0.00$, M2 $-0.20$. Noise draws: $+0.2$, $-0.1$, $0.0$, $+0.3$.
+\begin{enumerate}
+\item \textbf{Absolute fitness} $w=e^{BV+\varepsilon}$: F1 $e^{0.1}=1.105$, F2 $e^{-0.4}=0.670$, M1 $1.000$, M2 $e^{0.1}=1.105$.
+\item \textbf{Parent probabilities.} Mothers: F1 $1.105/1.775=0.62$, F2 $0.38$. Fathers: M1 $0.475$, M2 $0.525$. Note that M2 has the worse genes but better luck.
+\item \textbf{Drawing a parent} uses the cumulative sums $[1.105,\,1.775]$. Draw $u\sim U(0,1.775)$; $u\le1.105$ picks F1. Binary search makes this $O(\log N)$.
+\item \textbf{Gametes.}
+  \begin{itemize}
+  \item The mother's autosome gets Poisson($R$) crossovers. With $R=1$\,M and one crossover at map position 0.42, sites left of 0.42 come from one of her haplotypes and the rest from the other.
+  \item The father's autosome is copied intact.
+  \item Daughters get his X; sons get the Y.
+  \end{itemize}
+\item \textbf{Mutation.} Poisson($U$) new derived sites per gamete; a site that is already derived stays derived (finite sites).
+\end{enumerate}
+
+\subsection{Genomes as bits}
+A haplotype is an array of 64-bit words, one bit per site. A word with sites 3 and 7 derived is $2^3+2^7=136$ (\texttt{0b10001000}).
+\begin{itemize}
+\item \texttt{ctz(136)}$=3$, so add effect $e_3$. Then $136\ \&\ 135=128$ clears that bit.
+\item \texttt{ctz(128)}$=7$, so add $e_7$. Then $128\ \&\ 127=0$ and the word is done.
+\item The breeding value is $e_3+e_7$, found after visiting only the set bits.
+\end{itemize}
+
+\subsection{Hemizygous breeding value \emph{(toy)}}
+A male carries X sites with male effects $-0.03$ and $-0.02$ on his maternal X; his paternal slot is the Y. His X contribution is $-0.05$, counted once. A female carrying the same X plus another X with a $-0.01$ site has an X contribution of $-0.06$.
+
+\subsection{Rescaling by $\lambda$}
+\begin{center}\begin{tabular}{lccccccc}\toprule
+$\lambda$ & $N$ & generations & $U$/genome & $R$ (M) & mean $s$ & $N\!\cdot\!U$ & expected $V_g$\\\midrule
+1 & 2,500 & 25,000 & 0.7 & 0.1 & 0.015 & 1,750 & 0.02\\
+2 & 1,250 & 12,500 & 1.4 & 0.2 & 0.030 & 1,750 & 0.08\\
+4 & 625 & 6,250 & 2.8 & 0.4 & 0.060 & 1,750 & 0.32\\\bottomrule
+\end{tabular}\end{center}
+$NU$, $NR$ and $Ns$ are preserved, but $V_g$ grows as $\lambda^2$ (measured: 0.018, 0.09 and 0.42). That is why $\lambda=4$ collapsed.
+
+\subsection{Collapse: what it looks like}
+Signs of collapse:
+\begin{itemize}
+\item $V_f$ jumps from about 0.1 to the thousands;
+\item about 15,000 sites segregate instead of about 4,000;
+\item $r=-1.000$;
+\item 2-means clustering of haplotype loads finds two classes (frequencies 0.25 and 0.75) holding 99.3\% of the load variance.
+\end{itemize}
+The 0.25 class is female-lethal and male-favoured and is carried only through sons. Rule: flag any replicate with $V_f/\lambda^2>0.1$.
+
+%=====================================================================
+\section{Emulation of the hemiclone experiment}
+\subsection{One vial of each sex \emph{(toy)}}
+Breeding values are standardised by the population SD.
+\begin{itemize}
+\item \textbf{Female vial.} A line with standardised $g=+1$ and calibrated $\beta_f=0.25$: each focal female lays on average $25\,e^{0.25}=32.1$ eggs instead of 25, before vial and day noise.
+\item \textbf{Male vial} (equal sex ratio: 16 males, 4 focal). Focal $g=+1$ with $\beta_m=0.82$ gives weight $e^{0.82}=2.27$ each; the 12 average competitors have weight 1 each. The focal share is $4(2.27)/(4(2.27)+12)=0.43$, against 0.25 for an average line. Each of 7 scored females has Poisson(20) offspring, split binomially with $p=0.43$.
+\end{itemize}
+
+\subsection{Calibration}
+For males at the equal sex ratio, the raw-data targets are a line variance of relative fitness of 0.1674 and a within-cell CV$^2$ of 0.607. Least squares on log-ratios finds $\beta_m=0.82$ and noise SD $1.53$ that reproduce both. These $(\beta,\sigma)$ values, frozen, are the ``instrument''. $\rwg$ was never used.
+
+%=====================================================================
+\section{Statistics and estimators}
+\subsection{$\rwg$ and the SA proportion from six lines \emph{(toy)}}
+\begin{center}\begin{tabular}{lcccccc}\toprule
+Line & 1 & 2 & 3 & 4 & 5 & 6\\\midrule
+female (eggs / day mean) & 1.10 & 0.95 & 1.05 & 0.80 & 1.20 & 0.90\\
+male (share / day mean) & 0.30 & 0.20 & 0.35 & 0.15 & 0.25 & 0.25\\\bottomrule
+\end{tabular}\end{center}
+\begin{enumerate}
+\item Scale and centre each sex to mean 0 and SD 1.
+\item Pearson $r=0.634$.
+\item \label{ex:rot}Rotate by 45\textdegree: $w_c=(z_f+z_m)/\sqrt2$, $w_a=(z_m-z_f)/\sqrt2$. The SA proportion is $\mathrm{Var}(w_a)/(\mathrm{Var}(w_a)+\mathrm{Var}(w_c))=0.183$.
+\end{enumerate}
+\begin{keybox}[An identity worth knowing]
+For standardised data, $\mathrm{Var}(w_c)=1+r$ and $\mathrm{Var}(w_a)=1-r$, so the SA proportion is exactly $(1-r)/2$. Check: $(1-0.634)/2=0.183$. The paper's values follow too: $(1-0.3805)/2=0.3097$, $(1-0.4027)/2=0.2986$, $(1-0.2515)/2=0.3742$, all exactly as published. The SA proportion is a re-expression of $r$, not independent evidence.
+\end{keybox}
+
+\subsection{Why the bootstrap had to be vectorised}
+2,539 vials sit in about 470 cells. Resampling vials within cells, then recomputing everything, 10,000 times in a pandas loop took about 8\,h. In numpy:
+\begin{enumerate}
+\item sort by cell;
+\item draw \texttt{src = start[cell] + floor(u*size[cell])};
+\item compute cell means with \texttt{np.bincount}.
+\end{enumerate}
+That runs in 45\,s. The check is that the ``identity'' resample (\texttt{src = arange}) reproduces the point estimates to $10^{-15}$.
+
+\subsection{Percentile vs basic intervals}
+If bootstrap estimates of $r$ have quantiles $q_{2.5}=0.20$ and $q_{97.5}=0.45$ around $\hat r=0.38$:
+\begin{itemize}
+\item the percentile CI is [0.20, 0.45];
+\item the basic CI is $[2(0.38)-0.45,\ 2(0.38)-0.20]=[0.31,0.56]$.
+\end{itemize}
+Vial resampling biases $r$ downwards, so the basic interval re-centres it.
+
+\subsection{Power and sample size}
+To detect a shift $\Delta$ between two groups, each with replicate SD $\sigma$, with 80\% power at $\alpha=0.05$:
+\[
+n\approx\frac{2(1.96+0.84)^2\sigma^2}{\Delta^2}=\frac{2(7.84)(0.125^2)}{0.09^2}\approx31 \text{ populations per group}.
+\]
+This is the $N$-dependence test.
+
+%=====================================================================
+\section{Algorithms}
+\begin{description}
+\item[Parent draw.] Binary search on the cumulative fitness array (above).
+\item[Crossover placement.] Draw $k\sim$ Poisson($R$) uniform positions, binary-search each into a site index, sort, and copy alternating segments with bit masks.
+\item[Latin hypercube design.] For 12 points in 3 dimensions, each dimension is cut into 12 strata and each stratum is used exactly once. Even coverage needs only 12 runs.
+\item[Grouped cross-validation.] Hold out \emph{whole} design points: both replicate populations of a point leave together. Holding out single replicates would let the GP ``predict'' a population from its twin.
+\item[Gating the emulator.] Accept only if the CV RMSE is below $1.5\times$ the replicate SD. Ours: $0.30$ vs $0.15$, so rejected.
+\item[Line bootstrap for power.] Within each simulated assay, resample the 39 lines with replacement 400 times, recompute $r(\mathrm{MB})-r(\mathrm{FB})$, and ask whether the 95\% CI excludes 0. Repeat over 150 assays to get the power.
+\item[Linkage equilibrium by permutation.] Shuffle each column (site) of the hemigenome bit matrix independently. Frequencies are kept and all LD is destroyed, so the remaining $r$ is the direct (pleiotropic) part only.
+\item[LD decay under lab recombination.] After $k=16$ generations, $D$ is multiplied by $(1-c)^{16}$: 0.984 for $c=0.001$, 0.851 for $c=0.01$, 0.185 for $c=0.1$. HRI LD lives at small $c$, so it barely decays.
+\item[Exact finite-$N$ target for tests.] For 75 parents per sex with lognormal($\sigma=1$) fitness, a Monte Carlo of $(1/n)/\mathbb E[\sum p_i^2]$ gives $N_e/N=0.399$, not the large-$N$ $e^{-1}=0.368$.
+\end{description}
+
+%=====================================================================
+\section{Machine learning (analysis only)}
+\begin{itemize}
+\item \textbf{GP denoiser} (project 1).
+  \begin{itemize}
+  \item The response is $\tanh(\tfrac12\log\text{ratio})$, bounded in $(-1,1)$, so one extreme cell cannot dominate.
+  \item A variance floor stops cells with no sampling variance from collapsing the length scale. Without it the IoU was 0.004; with it, 0.79--0.96.
+  \end{itemize}
+\item \textbf{Scaling variables beat raw inputs.} An MLP trained on $(\log N,s)$ failed to extrapolate to $N=800$. Trained on $Ns$ it gave RMSE 0.010 against Kimura, because fixation depends on $N$ and $s$ only through $Ns$.
+\item \textbf{GP emulator} (project 2): inputs $(f_\mathrm{SA}$, concordant share, $\log_{10}R)$; output the 39-line assay $r$. It failed its gate. The between-population scatter (SD 0.15, and up to 0.9 near collapse) is larger than any smooth trend that 24 populations can resolve.
+\end{itemize}

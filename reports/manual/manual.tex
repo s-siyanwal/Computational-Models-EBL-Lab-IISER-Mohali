@@ -1,0 +1,123 @@
+\documentclass[11pt,a4paper]{report}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,longtable}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage[most]{tcolorbox}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,citecolor=blue!50!black]{hyperref}
+
+\graphicspath{{../../results/figures/}{../../manas_sa/results/}}
+\setlist{itemsep=2pt,topsep=4pt}
+\setlength{\emergencystretch}{3em}
+\setlength{\parskip}{3pt}
+
+% ---------- code listings ----------
+\definecolor{codebg}{HTML}{F6F6F3}
+\definecolor{codekw}{HTML}{1F5FA6}
+\definecolor{codecm}{HTML}{6B6A66}
+\definecolor{codestr}{HTML}{A3461C}
+\lstdefinestyle{py}{language=Python,basicstyle=\ttfamily\footnotesize,backgroundcolor=\color{codebg},
+  keywordstyle=\color{codekw}\bfseries,commentstyle=\color{codecm}\itshape,stringstyle=\color{codestr},
+  frame=single,rulecolor=\color{black!15},breaklines=true,columns=fullflexible,keepspaces=true,
+  showstringspaces=false,xleftmargin=4pt,xrightmargin=4pt,aboveskip=6pt,belowskip=6pt}
+\lstdefinestyle{sh}{basicstyle=\ttfamily\footnotesize,backgroundcolor=\color{codebg},frame=single,
+  rulecolor=\color{black!15},breaklines=true,columns=fullflexible,keepspaces=true,showstringspaces=false}
+\lstset{style=py}
+
+% ---------- boxes ----------
+\newtcolorbox{keybox}[1][]{colback=blue!3,colframe=blue!45!black,boxrule=0.6pt,arc=2pt,
+  left=6pt,right=6pt,top=4pt,bottom=4pt,fonttitle=\bfseries\small,title=#1}
+\newtcolorbox{warnbox}[1][Caveat]{colback=orange!5,colframe=orange!60!black,boxrule=0.6pt,arc=2pt,
+  left=6pt,right=6pt,top=4pt,bottom=4pt,fonttitle=\bfseries\small,title=#1}
+\newtcolorbox{stepbox}[1][]{colback=green!3,colframe=green!35!black,boxrule=0.6pt,arc=2pt,
+  left=6pt,right=6pt,top=4pt,bottom=4pt,fonttitle=\bfseries\small,title=#1}
+
+\newcommand{\IBM}{\textsc{ibm}}
+\newcommand{\rmf}{r_{\mathrm{mf},W}}
+\newcommand{\rwg}{r_{w,g,\mathrm{mf}}}
+\newcommand{\pstar}{p^{*}}
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\male}{\,M}
+\newcommand{\female}{\,F}
+\newcommand{\claimA}{\textbf{[A]}}
+\newcommand{\claimB}{\textbf{[B]}}
+\newcommand{\claimC}{\textbf{[C]}}
+
+\title{\textbf{Simulating sexual conflict in \emph{Drosophila}}\\[6pt]
+\Large Report and build manual\\[4pt]
+\large Deterministic theory, individual-based emulation and a hybrid simulator\\
+for the sexual-antagonism results of Manas Geeta Arun (M.\,A.\ Samant)}
+\author{Project folder \texttt{antagonistic\_alleles\_manas}\\
+(packages \texttt{sexconflict/} and \texttt{manas\_sa/})}
+\date{6 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document is both a \emph{report} and a \emph{manual}. A reader with basic population genetics and Python should be able to rebuild every model, simulator, test and figure from scratch, and to understand why each design choice was made.
+
+The work was done in two projects.
+\begin{enumerate}
+\item \textbf{\texttt{sexconflict/}} reconstructs three sources and confronts each with a zero-leakage individual-based model (\IBM), built only from biological primitives:
+  \begin{itemize}
+  \item an IISER Mohali poster on modifiers that resolve intralocus sexual conflict;
+  \item Parsons (1961) and Owen (1953) on sex-differential selection;
+  \item the ``mother's curse'' (Havird \emph{et al.}\ 2019).
+  \end{itemize}
+  It adds classical sexual-antagonism and diffusion results, an OpenCL GPU backend and an analysis-only ML layer.
+\item \textbf{\texttt{manas\_sa/}} is a hybrid analytical / individual-based / emulator model of five sexual-antagonism results by Manas Geeta Arun:
+  \begin{itemize}
+  \item the hemiclonal sex-ratio study (BMC Ecol Evol 2022);
+  \item his thesis;
+  \item the Am Nat 2025 Robertson-covariance paper, which was inaccessible;
+  \item the Hill--Robertson preprint (bioRxiv 2025);
+  \item the imperfect-modifier preprint (bioRxiv 2023).
+  \end{itemize}
+  The contrast studies of the LHM population are reconciled, not fitted.
+\end{enumerate}
+
+\noindent The manual covers:
+\begin{itemize}
+\item a plain-language summary of what was done and how well the model explains each paper;
+\item an extension to Chinmay's 2019 thesis on male mate choice and telegony, with three optional behavioural and non-genetic modules;
+\item an audit of leakage, circularity and triviality, plus formal hypothesis tests of whether the model predicts each result;
+\item worked examples, with small checkable numbers, of every mathematical model, genetic mechanism, simulation step, emulation step, statistic and algorithm;
+\item the background biology and theory, with derivations;
+\item the extracted source data and their flaws;
+\item the design rules: zero leakage, claim types and verdict words;
+\item step-by-step build instructions with working code;
+\item the complete results;
+\item a troubleshooting protocol for every failure we met;
+\item heuristics, nuances and caveats, and the limits of what can be inferred.
+\end{itemize}
+Every claim is tagged \claimA{} (reported in a paper), \claimB{} (reproduced here) or \claimC{} (our extrapolation).
+\end{abstract}
+
+\tableofcontents
+
+\input{ch0_howto}
+\input{ch0b_summary}
+\input{ch1_background}
+\input{ch1b_examples}
+\input{ch2_sources}
+\input{ch3_design}
+\input{ch4_build_sexconflict}
+\input{ch5_build_manas}
+\input{ch6_results}
+\input{ch6b_chinmay}
+\input{ch6c_audit}
+\input{ch7_troubleshooting}
+\input{ch8_heuristics}
+\appendix
+\input{appendix}
+\input{references}
+\end{document}

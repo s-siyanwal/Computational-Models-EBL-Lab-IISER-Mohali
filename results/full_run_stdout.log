@@ -1,0 +1,43 @@
+14:09:15  INFO  environment: {'python': '3.14.6', 'platform': 'Windows-10-10.0.19045-SP0', 'numpy': '2.5.3', 'scipy': '1.18.1', 'numba': '0.68.0', 'sympy': '1.14.0', 'matplotlib': '3.11.2', 'pandas': '3.0.6', 'profile': 'full', 'master_seed': 20261005, 'cpu_count': 8, 'timestamp': '2026-10-05 14:09:15'}
+14:09:17  INFO  [poster] P0 one-locus polymorphism ...
+14:10:04  INFO  [poster] P0 one-locus polymorphism done in 47.1s
+14:10:04  INFO  [poster] P1 stability heatmaps ...
+14:10:31  INFO  [poster] P1 stability heatmaps done in 27.5s
+14:10:31  INFO  [poster] P2 (a,r) maps + IBM invasion ...
+14:11:48  INFO    P2 IBM (0.2, 0.2) done (75s)
+14:13:04  INFO    P2 IBM (0.5, 0.5) done (151s)
+14:14:16  INFO    P2 IBM (0.8, 0.2) done (224s)
+14:14:18  INFO  [poster] P2 (a,r) maps + IBM invasion done in 226.4s
+14:14:18  INFO  [poster] P2c IaSC persistence ...
+14:20:22  INFO  [poster] P2c IaSC persistence done in 363.8s
+14:20:22  INFO  [poster] P3 bifurcation ...
+14:38:37  INFO  [poster] P3 bifurcation done in 1095.8s
+14:38:37  INFO  [poster] P4 thresholds ...
+C:\Users\Windows\Downloads\antagonistic_alleles_manas\sexconflict\analysis\stats.py:65: RuntimeWarning: overflow encountered in exp
+  p = 1 / (1 + np.exp(-(x - x50) / np.exp(ls)))
+14:47:38  ERROR  [poster] P4 thresholds FAILED: 'yerr' must not contain negative values Traceback (most recent call last):
+  File "C:\Users\Windows\Downloads\antagonistic_alleles_manas\scripts\run_all.py", line 54, in main
+    summary[g][name] = fn()
+                       ~~^^
+  File "C:\Users\Windows\Downloads\antagonistic_alleles_manas\sexconflict\experiments\poster_exp.py", line 378, in thresholds
+    ax.errorbar(d.m0, d.p, yerr=[d.p - d.lo, d.hi - d.p], fmt="o-", color=V.CAT[i], lw=1.4, ms=5,
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                capsize=2, label=f"IBM N={N}")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\matplotlib\_api\deprecation.py", line 477, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\matplotlib\__init__.py", line 1531, in inner
+    return func(
+        ax,
+        *map(cbook.sanitize_sequence, args),
+        **{k: cbook.sanitize_sequence(v) for k, v in kwargs.items()})
+  File "C:\Users\Windows\Downloads\antagonistic_alleles_manas\.venv\Lib\site-packages\matplotlib\axes\_axes.py", line 4232, in errorbar
+    raise ValueError(
+        f"'{dep_axis}err' must not contain negative values")
+ValueError: 'yerr' must not contain negative values
+
+14:47:38  INFO  [poster] P4 thresholds done in 540.3s
+14:47:38  INFO  [poster] P5 basins ...
+14:59:43  INFO    P5 deterministic basins (0.2, 0.2) done
+15:00:51  INFO    P5 deterministic basins (0.8, 0.8) done
+15:19:34  INFO    P5 deterministic basins (0.5, 0.5) done
