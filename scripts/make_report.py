@@ -39,8 +39,12 @@ def main():
     w("## 1. Poster: two-locus haploid model of IaSC resolution (Samant et al.)\n")
     p0 = P.get("P0 one-locus polymorphism", {})
     w("### 1.1 The IaSC polymorphism (panel A)\n")
-    w(f"* p* = ½ + ½(1/b − 1/a) is confirmed by iterating the recursion (max deviation "
-      f"{f(p0.get('iterate_vs_formula'), 1)} — machine precision).")
+    # scientific notation: the stored deviation is ~1e-5, which a fixed-point
+    # format with one decimal used to print as "0.0" ("machine precision")
+    dev = p0.get("iterate_vs_formula")
+    w(f"* p* = ½ + ½(1/b − 1/a) is confirmed by iterating the recursion for 20,000 generations (max deviation "
+      f"{float(dev):.1e} inside the polymorphism range)." if dev is not None else
+      "* p* = ½ + ½(1/b − 1/a): iteration check not in this run.")
     rm = p0.get("rmse_by_N", {})
     w(f"* IBM time-averaged A1 frequency vs p*: RMSE " + ", ".join(f"N={k}: {f(v)}" for k, v in rm.items()) +
       f"; max |error| at the largest N = {f(p0.get('max_abs_err_largeN'))}.")

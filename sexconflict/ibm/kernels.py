@@ -14,7 +14,8 @@ Each generation is built only from biological events on individuals:
   -> each offspring picks a random surviving mother and father
   -> gametes formed by Mendelian segregation (+ crossover) -> offspring.
 Frequencies are only *measured* (counted) for the record; they never feed back
-into the dynamics. `tests/test_leakage.py` enforces the import rule.
+into the dynamics. `tests/test_smoke.py::test_ibm_never_imports_the_paper_maths`
+enforces the import rule.
 """
 from __future__ import annotations
 

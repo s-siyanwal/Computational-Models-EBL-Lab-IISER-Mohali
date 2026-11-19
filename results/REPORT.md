@@ -8,7 +8,7 @@ Lines in figures are the deterministic oracle (the papers' equations). Dots, ban
 
 ### 1.1 The IaSC polymorphism (panel A)
 
-* p* = ½ + ½(1/b − 1/a) is confirmed by iterating the recursion (max deviation 0.0 — machine precision).
+* p* = ½ + ½(1/b − 1/a) is confirmed by iterating the recursion for 20,000 generations (max deviation 6.9e-06 inside the polymorphism range).
 * IBM time-averaged A1 frequency vs p*: RMSE N=500: 0.125, N=5000: 0.016; max |error| at the largest N = 0.033.
 
 ![](figures/P0_one_locus.png)
