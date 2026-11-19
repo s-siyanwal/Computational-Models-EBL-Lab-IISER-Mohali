@@ -1,31 +1,332 @@
-# Computational models: sexual conflict in *Drosophila* (EBL lab, IISER Mohali)
+# Computational models of sexually antagonistic selection in *Drosophila* (EBL Lab, IISER Mohali)
 
-Simulation, emulation and statistical tests of published sexual-conflict results from the Evolutionary Biology
-Lab (N.G. Prasad), IISER Mohali.
+[![tests](https://github.com/s-siyanwal/Computational-Models-EBL-Lab-IISER-Mohali/actions/workflows/tests.yml/badge.svg)](https://github.com/s-siyanwal/Computational-Models-EBL-Lab-IISER-Mohali/actions/workflows/tests.yml)
+
+Simulation, emulation and statistical tests of sexual-conflict theory and of published results on sexually
+antagonistic selection from the Evolutionary Biology Laboratory (EBL) of Dr. N. G. Prasad, IISER Mohali.
+
+<!-- TODO(author): add one sentence on your own role in the 2019 EBL work (position, dates).
+     The repository does not record it, so it was left out rather than guessed. -->
+
+**Sexually antagonistic (SA) selection**, also called intralocus sexual conflict (IaSC), happens when an allele
+that raises fitness in one sex lowers it in the other. The repository asks two questions about it:
+
+1. **Project 1 ([`sexconflict/`](sexconflict/)).** Do populations of simulated individuals reproduce what the
+   classical deterministic models of sexual conflict predict? The populations are built only from biological
+   events (survival, mating, Mendelian inheritance) and never see the equations.
+2. **Project 2 ([`manas_sa/`](manas_sa/)).** Can a *Drosophila*-specific simulator of genomes, together with an
+   emulation of the lab's hemiclone fitness assay, explain the EBL's measurements of the intersexual genetic
+   correlation for fitness, and the different values other labs report?
 
 | Where | What |
 |---|---|
-| [`reports/manual/manual.pdf`](reports/manual/manual.pdf) | **Start here.** Report and build manual (LaTeX sources alongside): summary, worked examples, theory, build steps, results, audit, hypothesis tests, troubleshooting |
-| [`sexconflict/`](sexconflict/), `scripts/`, `tests/`, `results/` | Project 1: poster two-locus model, Parsons/Owen, mother's curse. Deterministic oracle vs zero-leakage IBM (this README, below) |
-| [`manas_sa/`](manas_sa/) | Project 2: hybrid analytic / IBM / emulator model of Manas Geeta Arun's sexual-antagonism results, plus the optional Chinmay (2019) mate-choice, harm and telegony modules ([`manas_sa/README.md`](manas_sa/README.md)) |
+| [`reports/manual/manual.pdf`](reports/manual/manual.pdf) | **Full report and build manual** (LaTeX sources alongside): summary, worked examples, theory, build steps, results, audit, hypothesis tests, troubleshooting |
+| [`results/REPORT.md`](results/REPORT.md) | Project 1 results, auto-generated from the stored run in `results/summary.json` |
+| [`manas_sa/README.md`](manas_sa/README.md) | Project 2 overview, plus the optional Chinmay (2019) mate-choice, harm and telegony modules |
 | [`manas_sa/docs/07_leakage_audit.md`](manas_sa/docs/07_leakage_audit.md), [`08_hypothesis_tests.md`](manas_sa/docs/08_hypothesis_tests.md) | Leakage and circularity audit; formal tests of whether the model predicts each result |
-| [`manas_sa/docs/09_coupling.md`](manas_sa/docs/09_coupling.md) | Coupled model: evolved IUS genotypes (genetic layer) feed the courtship assays (assay layer) in one direction; `outputs/coupled_comparison.csv` |
-| [`manas_sa/docs/10_plain_language_summary.md`](manas_sa/docs/10_plain_language_summary.md) | **Plain-language summary** of the hypothesis tests and the coupled model |
+| [`manas_sa/docs/09_coupling.md`](manas_sa/docs/09_coupling.md) | Coupled model: evolved IUS genotypes (genetic layer) feed the courtship assays (assay layer) in one direction |
+| [`manas_sa/docs/10_plain_language_summary.md`](manas_sa/docs/10_plain_language_summary.md) | Plain-language summary of the hypothesis tests and the coupled model |
 | [`SOURCES.md`](SOURCES.md) | **Credits and licences** for every paper, dataset and tool used. Only openly licensed papers are redistributed |
-
-Quick start: `python -m venv .venv`, then `pip install -r requirements.txt`, then `python -m pytest -q tests manas_sa/tests`.
-
-Several source PDFs named in the tables below (the poster, Parsons, Havird, Morrow) are copyrighted and **not
-included**. See [`SOURCES.md`](SOURCES.md) for links.
 
 ---
 
-## Project 1. Antagonistic alleles: deterministic models vs. individual-based emulation
+## What was modelled
 
-This project rebuilds the models behind the documents in this folder. For each one it asks whether a population of
+### Project 1: classical sexual-conflict theory vs. individual-based emulation
+
+| Model | Source | Question |
+|---|---|---|
+| Two-locus haploid model of IaSC resolution by an expression modifier | Poster by Samant, Moitra, Sinha & Prasad, IISER Mohali (unpublished; not redistributed) | When does a modifier allele M1, which changes how the conflict allele is expressed in females, invade and resolve the conflict? |
+| One-locus sex-differential viability, autosomal and X-linked | Parsons (1961); Owen (1953) | When does a new allele invade? When are there two stable equilibria? |
+| "Mother's curse": male-harming mitochondrial variants | Havird *et al.* (2019) review, formalised here as a cytonuclear model | Does maternal inheritance make spread independent of the harm to males? |
+| Protected SA polymorphism (autosome vs X), linkage to the sex-determining region, fixation probabilities, persistence under drift | Kidwell *et al.* (1977); Rice (1984, 1987); Fry (2010); Kimura (1962) | Where can SA polymorphism persist, and how do drift and linkage change the classical answers? |
+
+### Project 2: EBL experiments on sexual antagonism
+
+Five results of Manas Geeta Arun (also M. A. Samant) and colleagues ([`manas_sa/README.md`](manas_sa/README.md)):
+
+1. Geeta Arun *et al.* 2022, *BMC Ecol Evol* 22:38. The intersexual genetic correlation for fitness
+   (r<sub>w,g,mf</sub>) of 39 LH hemigenomes at three adult sex ratios. The data were collected in 2018–2019, per
+   the dataset's own README
+   ([`12862_2022_1992_MOESM2_ESM.txt`](experimental_papers_manas/12862_2022_1992_MOESM2_ESM.txt)).
+2. Samant 2022, PhD thesis (IISER Mohali), Ch. 4: line variances and cross-sex trait–fitness covariances.
+3. Geeta Arun *et al.* 2025, *Am Nat* (Robertson covariances): the paper was **not accessible** and is not assessed.
+4. Geeta Arun 2025, bioRxiv ("Tie that binds"): a negative r<sub>mf,W</sub> produced by purely sex-limited
+   selection plus linkage (Hill–Robertson interference, HRI).
+5. Singh, Jain, Geeta Arun & Prasad 2023, bioRxiv: imperfect modifiers resolving sexual conflict, autosome vs X.
+
+An optional extension models Temura Chinmay Krishna Yadav's BS–MS thesis (IISER Mohali, April 2019, supervisor
+N. G. Prasad) on male mate choice and telegony. It is not an SA-allele study; see
+[`manas_sa/docs/06_chinmay_extensions.md`](manas_sa/docs/06_chinmay_extensions.md).
+
+---
+
+## How the models work
+
+### Project 1: two engines that share only the conditions
+
+Each model is built twice:
+
+- a **deterministic oracle** ([`sexconflict/deterministic/`](sexconflict/deterministic/)): the papers' recursions,
+  with symbolic Jacobians (sympy), equilibria and invasion conditions;
+- a **zero-leakage individual-based model (IBM)** ([`sexconflict/ibm/`](sexconflict/ibm/), numba-parallel). Its
+  only inputs are a viability table, a crossover probability, an inheritance mode, N and the founders' genotypes.
+
+Each IBM generation is built from events on individuals:
+
+1. sex by a fair coin;
+2. survival with probability equal to viability ÷ the sex's maximum viability;
+3. each offspring picks a random surviving mother and father;
+4. gametes by Mendelian segregation, with a crossover between loci with probability r;
+5. maternal mitochondria; males pass on a Y, not an X.
+
+Frequencies are only counted for the record. The test
+`tests/test_smoke.py::test_ibm_never_imports_the_paper_maths` fails if any IBM module imports the oracle, `sympy`
+or `scipy`. The two engines are then compared with Wilson intervals, KS tests, RMSE and logistic fits
+([`sexconflict/analysis/stats.py`](sexconflict/analysis/stats.py)). The design diagram, mathematics and algorithms
+are in [Technical details (Project 1)](#technical-details-project-1) below.
+
+### Project 2: analytic layer, *Drosophila* IBM, assay emulator
+
+- **Analytic layer** (`manas_sa/iasc/analytic/`): exact two-sex, two-locus recursions with sex-specific
+  recombination, and the authors' modifier recursion (target 5).
+- **IBM** (`manas_sa/iasc/ibm/`): a numba bitset Wright–Fisher simulator with *Drosophila* transmission: XX/XY,
+  no crossing over in males, female crossing over, X hemizygosity in males. Mutations are sex-limited,
+  sexually concordant or sexually antagonistic.
+- **Hemiclone assay emulator**: samples hemigenomes the way the lab's clone-generator crosses do, expresses them in
+  males and females, and computes the papers' own statistics on the simulated data.
+- **Emulator** (`manas_sa/iasc/emulator/`): a Gaussian-process surrogate for sensitivity analysis and inversion.
+  According to `manas_sa/README.md`, it failed validation and is not used for inference.
+
+The assay noise is calibrated to the variances in the raw data only. A test checks that the IBM never imports the
+analytic layer. The repository's own audit ([`manas_sa/docs/07_leakage_audit.md`](manas_sa/docs/07_leakage_audit.md))
+separates genuine predictions from fits and from results that hold by construction.
+
+---
+
+## Key figures
+
+All figures are committed outputs of the stored runs; captions summarise [`results/REPORT.md`](results/REPORT.md)
+and [`manas_sa/README.md`](manas_sa/README.md).
+
+**Poster model: where the conflict persists.** Fraction of the (a, r) parameter space in which the IaSC fixed
+point is stable (a rare modifier cannot invade), as a function of the modifier's effects k1 and k2. These are the
+poster's heatmaps, reconstructed from the model.
+
+![P1 stability heatmaps](results/figures/P1_stability_heatmaps.png)
+
+**Bistability: a finite modifier dose is needed.** Left: the oracle's minimum initial M1 frequency for resolution.
+Middle and right: in the IBM the threshold becomes a sigmoid that sharpens as N grows (N = 500, 2000, 6000).
+
+![P4 thresholds](results/figures/P4_thresholds.png)
+
+**Modifier invasion, IBM vs oracle.** Populations first reach their own IaSC state; then 2% of individuals become
+M1.
+
+![P2b IBM invasion vs oracle boundary](results/figures/P2b_invasion_ibm_vs_boundary.png)
+
+**Owen-type bistability.** Flow field, the three interior equilibria, and IBM basins.
+
+![O4 Owen phase portrait](results/figures/O4_owen_phase_portrait.png)
+
+**Where SA polymorphism is protected.** Autosomal vs X-linked, for three dominance scenarios: oracle region vs
+the boundary a Gaussian-process denoiser recovers from IBM outcomes alone.
+
+![E1/E2 polymorphism maps](results/figures/E1_E2_polymorphism_maps.png)
+
+**Project 2: linkage alone can make r<sub>mf,W</sub> negative.** r<sub>mf,W</sub> against the map length of the
+simulated region, with and without male crossing over, next to medians read from the preprint's Fig. 2.
+
+![r_mf,W vs recombination](manas_sa/results/fig_r_vs_recombination.png)
+
+More figures: [`results/figures/`](results/figures/), the animations in
+[`results/animations/`](results/animations/), and [`manas_sa/results/`](manas_sa/results/).
+
+---
+
+## Results
+
+Only numbers that appear in the committed outputs are quoted; the source of each is given.
+
+### Project 1 ([`results/REPORT.md`](results/REPORT.md), generated from `results/summary.json`)
+
+- **One-locus polymorphism.** Iterating the recursion for 20,000 generations confirms the poster's
+  p\* = ½ + ½(1/b − 1/a) (max deviation 6.9×10⁻⁶). The IBM's time-averaged A1 frequency has RMSE 0.125 against p\*
+  at N = 500 and 0.016 at N = 5000.
+- **Modifier invasion.** In 105 parameter cells, IBM verdicts were 71 spreads, 27 declines and 7 unresolved. Among
+  decided cells, the direction agrees with the oracle trajectory in 99% and with the linear-stability sign in 95%.
+  The one disagreeing cell has λ = 0.9978, close to neutrality.
+- **Bifurcation thresholds.** For the six modifiers that invade, the reconstruction's thresholds lie about
+  0.001–0.002 above the values read off the poster's plot. The seventh, (k1, k2) = (0, 0.5), never invades in either.
+- **Bistability in finite populations.** The oracle threshold dose is 0.415 at a = 0.19 and 0.109 at a = 0.205. The
+  IBM transition width shrinks from 0.160 to 0.044 and from 0.104 to 0.035 between N = 500 and N = 6000. Its
+  midpoint is within 0.03 of the oracle threshold at N = 2000 and N = 6000.
+- **Parsons/Owen.** The IBM agrees with the autosomal (eq. 2.5) and X-linked (eq. 3.6) invasion conditions in 100%
+  of decided cells. For the Owen-type parameter set, the oracle finds three interior equilibria (stable, unstable,
+  stable), and IBM basin agreement is 100%.
+- **Mother's curse.** KS tests detect no effect of the male cost on the spread of a female-beneficial mitochondrial
+  variant (p = 0.56–0.90). IBM direction verdicts agree with the oracle's twofold rule in 94% of decided cases.
+- **Drift theory.** For strongly antagonistic selection, Kimura's sex-averaged fixation formula misses the IBM
+  (RMSE 0.083, 0% of points within 2 SE). A diffusion built from the full sex-specific recursion fits it
+  (RMSE 0.013, 86% within 2 SE).
+
+### Project 2 ([`manas_sa/results/`](manas_sa/results/))
+
+- **Target 1 recomputed from the authors' raw data** ([`bmc2022_recomputed.csv`](manas_sa/results/bmc2022_recomputed.csv)).
+  All 12 published line-mean statistics agree with the published 4-decimal values to within 1×10⁻⁴. These include
+  r<sub>w,g,mf</sub> = 0.3805 / 0.4027 / 0.2515 at male-biased / equal / female-biased sex ratios.
+  `manas_sa/docs/01_source_map.md` (flag F12) notes that the match needs untransformed male proportions, although
+  the paper's Methods describe an arcsine transform.
+- **Target 5 (modifiers)**, re-running the authors' recursion grid
+  ([`modifier_claims.csv`](manas_sa/results/modifier_claims.csv)). Of 7 published claims, 5 match in value or
+  ordering. One misses in magnitude: with a perfect modifier on autosomes, 97.2% of runs fix A2B2 vs a reported
+  95.7%. One does not match: autosomes resolving more than the X at very high k2.
+- **Target 4 (HRI).** r<sub>mf,W</sub> is negative at the shortest map length and close to zero at 10 Morgans in
+  both model variants (figure above). It rises monotonically with map length when both sexes recombine (the
+  preprint's setting); without male crossing over the trend is noisier.
+- **What the audit says.** The manual's plain-language summary (`reports/manual/ch0b_summary.tex`), which draws on
+  the audit in `docs/07`, classifies several apparent matches as fits or as holding by construction. Examples: the simulated LH correlation comes from an architecture
+  selected in a sweep, and the "SA proportion" equals (1 − r)/2 for standardised line means. See
+  [`manas_sa/docs/04_comparison.md`](manas_sa/docs/04_comparison.md) for the full comparison table.
+
+---
+
+## Reproduce
+
+Tested with **Python 3.14.6**. The stored results were produced on Windows 10. The steps below were also checked
+on Linux x86-64.
+
+```bash
+python -m venv .venv
+```
+
+```bash
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+```
+
+```bash
+pip install -r requirements.txt
+```
+
+**1. Test suites of both projects.** In a fresh environment on a 4-core Linux container this took about 80
+seconds: 123 passed, 1 skipped. The skipped test is `tests/test_gpu.py`, which skips without an OpenCL GPU. The
+suites include unit tests of the core functions (`tests/test_core_units.py`,
+`manas_sa/tests/test_iasc_units.py`). They check exact identities and compare against independent references such
+as scipy and finite differences.
+
+```bash
+python -m pytest -q tests manas_sa/tests
+```
+
+**2. Quick reproduction check** (seconds; writes nothing under `results/`).
+[`scripts/reproduce.py`](scripts/reproduce.py) recomputes oracle results (P0, P1, O2, O4) and runs 31 checks
+against `results/summary.json`, plus one check that `results/REPORT.md` regenerates byte-for-byte. With `--ibm` it also
+re-runs the P0 individual-based populations at N = 500 with the stored seeds. On Linux with the CPU backend, that
+RMSE matched the stored value to 12 significant digits.
+
+`--p4` replays the stored P4 bistability experiment at N = 500 on the CPU kernels with the stored seeds, and compares
+the number of resolved populations in each of its 20 cells with `results/data/poster_threshold_ibm.parquet` (about
+20 seconds). `--p4-all` replays all 60 stored cells (N = 500, 2000 and 6000; about 1.5 minutes on 4 cores). On Linux
+all 60 cells were identical. P4 is the only experiment that stops runs early once the modifier is lost or fixed, so
+this also shows that the forward-fill fix in this repository's history leaves the stored results unchanged.
+
+```bash
+python scripts/reproduce.py --ibm --p4
+```
+
+The same checks with figures, plus the full P1 heatmap (b = 0.2) and the 12 target-1 statistics recomputed from the
+raw data, are in [`notebooks/reproduce.ipynb`](notebooks/reproduce.ipynb). It is committed with its executed
+outputs and runs in about 20 seconds:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+```bash
+jupyter execute notebooks/reproduce.ipynb
+```
+
+[GitHub Actions](.github/workflows/tests.yml) runs the test suites, `reproduce.py --ibm --p4`, the notebook and the
+Project 2 table rebuild (step 3) on every pull request. It then checks that no committed file changed.
+
+**3. Rebuild the reports from the stored results.** Project 1's report takes seconds. Project 2's comparison table
+takes about 3 seconds; it rebuilt `comparison_table.csv` and `coverage.csv` byte-identically on Linux. It also
+redraws four figures in `manas_sa/results/`, whose bytes differ between platforms.
+
+```bash
+python scripts/make_report.py
+```
+
+```bash
+cd manas_sa && python scripts/make_comparison.py
+```
+
+**4. Full re-run** (slow). The stored Project 1 run's steps add up to about 87 minutes on the author's 8-CPU
+machine (`results/summary.json`). Project 2's default profile takes several hours (`manas_sa/README.md`).
+
+> **Note:** `scripts/run_all.py` writes into `results/` and overwrites the committed outputs, with
+> `--profile quick` too. Restore them with `git restore results/`.
+
+```bash
+python scripts/run_all.py --profile full
+```
+
+```bash
+cd manas_sa && python scripts/run_all.py --profile default
+```
+
+Options, the GPU backend and machine-sharing settings are in [How to run (details)](#4-how-to-run-details).
+
+---
+
+## Repository layout
+
+```
+sexconflict/            Project 1 package
+  config.py             single source of truth: viability tables, N, r, profiles, seeds
+  deterministic/        the papers' maths (oracle): poster_model, owen_parsons, mothers_curse, sa_classics
+  ibm/                  zero-leakage individual-based model: numba kernels, optional OpenCL backend, runners
+  analysis/             comparison statistics; ML helpers (GP denoiser)
+  experiments/          one module per suite: poster, owen, curse, extended
+scripts/                run_all.py (full pipeline), make_report.py, reproduce.py (quick check)
+notebooks/              reproduce.ipynb: reproduction walkthrough with executed outputs
+tests/                  zero-leakage, theory, IBM and unit tests (Project 1)
+.github/workflows/      CI: tests, reproduction check, notebook, Project 2 table rebuild
+results/                stored full run: REPORT.md, summary.json, figures/, animations/, data/
+manas_sa/               Project 2 (see manas_sa/README.md): iasc/, extensions/, analysis/, scripts/, docs/, results/
+reports/                LaTeX manual (compiled: reports/manual/manual.pdf) and two shorter LaTeX reports
+experimental_papers_manas/, drosophila_genetics_models_papers_codes/
+                        openly licensed papers and supplementary data used as inputs (SOURCES.md)
+```
+
+## Limitations
+
+- **The poster's life cycle is inferred.** The poster does not state it; the reconstruction reproduces its p\*
+  formula and invasion thresholds. The open questions for the authors are listed in
+  [`results/REPORT.md`](results/REPORT.md) §5.
+- **Missing sources.** Several source PDFs (the poster, Parsons, Havird, Morrow) are copyrighted and not included;
+  see [`SOURCES.md`](SOURCES.md) for links.
+- **Limits of Project 2,** as stated in `manas_sa/README.md` ("Not identified") and its docs:
+  - the *Am Nat* 2025 paper was not accessible;
+  - large population sizes are emulated by rescaling (`manas_sa/docs/03_parameters.md`);
+  - the model cannot identify the LH population's true mutational architecture or say whether the sex-ratio
+    effect is attenuation or a real genotype × sex-ratio change; see also
+    [`manas_sa/docs/05_limits_and_distinguishing_experiment.md`](manas_sa/docs/05_limits_and_distinguishing_experiment.md).
+
+## Credits and licence
+
+All credit for the experiments, data and original theory belongs to the authors cited in
+[`SOURCES.md`](SOURCES.md). The MIT licence in [`LICENSE`](LICENSE) covers this repository's own code,
+documentation and generated results. Third-party papers and data keep their own licences.
+
+---
+
+## Technical details (Project 1)
+
+This part rebuilds the models behind the documents listed below. For each one it asks whether a population of
 simulated organisms, built only from biological primitives, produces the patterns the mathematics predicts.
 
-| Source in folder | What it contains | What we built |
+| Source document | What it contains | What we built |
 |---|---|---|
 | `Poster_Manas.pdf`: Samant, Moitra, Sinha & Prasad (IISER Mohali), *A two-locus haploid model for the resolution of intra-locus sexual conflict* | 3-D iterative map, linear stability, bifurcation and basin analyses | **Full reconstruction** of every panel, plus an IBM counterpart for each |
 | `Parsons(1961).pdf` (same file as `P.A. Parsons.pdf`): *Initial progress of new genes with viability differences between sexes and with sex linkage* | Latent-root invasion conditions (2.5), (2.6), (3.6), (4.1) | Oracle + IBM for the autosomal and X-linked cases; Owen's (1953) two stable equilibria |
@@ -33,12 +334,12 @@ simulated organisms, built only from biological primitives, produces the pattern
 | `Morrow et al (2002) Behavioural Ecology.pdf` | Insect harm experiments (ANOVA) | No model to simulate; used as biological context only |
 | `Simulating Population Genetics Models.txt` | An earlier prompt plus an AI blueprint for Owen/Mandel (1971) | Design principles adopted (zero leakage, smoke tests, KS/RMSE, phase portraits); its Mandel cubic is **verified** numerically |
 
+The PDFs in this table are not included (copyright); see [`SOURCES.md`](SOURCES.md).
+
 Results: [`results/REPORT.md`](results/REPORT.md) (auto-generated), figures in `results/figures/`, GIFs in
 `results/animations/`, data in `results/data/` (Parquet / npz), run metadata in `results/summary.json`.
 
----
-
-## 1. Design: two engines that share only conditions
+### 1. Design: two engines that share only conditions
 
 ```mermaid
 flowchart LR
@@ -74,9 +375,9 @@ flowchart LR
   5. Mitochondria come from the mother; males pass on a Y, not an X.
 - Frequencies are only *counted* for the record.
 
-## 2. Mathematics
+### 2. Mathematics
 
-### 2.1 Poster model (two-locus, haploid selection, dioecious, random mating)
+#### 2.1 Poster model (two-locus, haploid selection, dioecious, random mating)
 
 Haplotypes x = (x11, x12, x21, x22) = (A1M1, A1M2, A2M1, A2M2). Their fitnesses:
 
@@ -103,7 +404,7 @@ Here f_{A_i} and m_{M_j} are the allele marginals after selection.
 - p\* is interior iff **−1 < 1/b − 1/a < 1**, i.e. a ∈ (b/(1+b), b/(1−b)). For b = 0.2 that is a ∈ (1/6, 1/4),
   the poster's a-axis.
 - The restoring eigenvalue dp'/dp at p\* lies in [0.992, 0.99997] for b = 0.2. The polymorphism is stable, but
-  only weakly, especially near the edges. Section 4 shows why this matters.
+  only weakly, especially near the edges. Section 4 of the report shows why this matters.
 
 **Invasion of the modifier.** The face x11 = x21 = 0 is invariant, so at the IaSC point (0, p\*, 0) the
 Jacobian is block-triangular:
@@ -134,7 +435,7 @@ What this explains:
 - the minimum M1 dose, found by bisection;
 - the basins, from Dirichlet(1,1,1,1) initial conditions.
 
-### 2.2 Parsons (1961) / Owen (1953)
+#### 2.2 Parsons (1961) / Owen (1953)
 
 **Autosomal.** Females have viabilities (a1, h1, b1) for AA, Aa, aa; males have (a2, h2, b2).
 - Recursion: p_i' = [a_i p1p2 + ½h_i(p1q2+p2q1)] / [a_i p1p2 + h_i(p1q2+p2q1) + b_i q1q2].
@@ -153,7 +454,7 @@ What this explains:
 with u = p/q. The cubic attributed to Mandel (1971) in the AI blueprint gives the same equilibria in all
 4,000 random parameter sets tested.
 
-### 2.3 Mother's curse (Havird et al. 2019), formalised
+#### 2.3 Mother's curse (Havird et al. 2019), formalised
 
 The state is the zygote distribution Z[c, g], where c is the mito type (maternal) and g ∈ {0, 1, 2} is the
 number of copies of a nuclear restorer R.
@@ -168,7 +469,7 @@ Derived predictions:
   it is a special case of Parsons' eq. 2.5.
 - **Weak form.** With s_f = 0 the variant is neutral, so P(fix) = initial frequency for every s_m.
 
-### 2.4 Extended suite: classical sexual-antagonism theory and drift theory (`deterministic/sa_classics.py`)
+#### 2.4 Extended suite: classical sexual-antagonism theory and drift theory (`deterministic/sa_classics.py`)
 
 | ID | Proven result tested | Oracle | IBM |
 |---|---|---|---|
@@ -200,7 +501,7 @@ X-linked males: A1 → 1, A2 → 1 − s_m.
 - **Tuner (E5).** The IBM's effective size, measured from its own one-step fluctuations, is fed into the diffusion
   theory.
 
-## 3. Algorithms (per experiment)
+### 3. Algorithms (per experiment)
 
 | ID | Oracle | IBM | Comparison |
 |---|---|---|---|
@@ -218,32 +519,43 @@ X-linked males: A1 → 1, A2 → 1 − s_m.
 | O4 | flow field (streamplot), equilibria, basins | grid of starts + animation | basin agreement |
 | C1–C4 | cytonuclear recursion | IBM with maternal mito | endpoint KS, threshold, P(fix), arms race |
 
-## 4. How to run
+### 4. How to run (details)
+
+Commands are shown with `python` from an activated virtual environment (see [Reproduce](#reproduce)).
 
 ```bash
-python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt
-.venv/Scripts/python -m pytest -q tests
-.venv/Scripts/python scripts/run_all.py --profile full
-.venv/Scripts/python scripts/make_report.py
+python -m pytest -q tests
 ```
 
-- On Linux/macOS, use `.venv/bin/python`.
+```bash
+python scripts/run_all.py --profile full
+```
+
+```bash
+python scripts/make_report.py
+```
+
 - `--profile quick` runs everything in a few minutes for smoke testing; `--only poster,owen,curse` selects suites.
 - `--steps P4,P5,O` reruns only the steps whose id starts with one of those prefixes; earlier results in
   `summary.json` are kept.
 - **Machine sharing.** Runs default to `cpu_count − 2` numba threads at below-normal priority, so other work on
   the machine stays responsive. Override with the `SC_THREADS` environment variable.
 
-### GPU backend (optional, AMD/any OpenCL GPU)
+#### GPU backend (optional, AMD/any OpenCL GPU)
 
 ```bash
-.venv/Scripts/python -m pip install -r requirements-gpu.txt
-.venv/Scripts/python scripts/run_all.py --profile full --backend opencl
-.venv/Scripts/python -m pytest -q tests/test_gpu.py
+pip install -r requirements-gpu.txt
 ```
 
-**What's available on this machine**
+```bash
+python scripts/run_all.py --profile full --backend opencl
+```
+
+```bash
+python -m pytest -q tests/test_gpu.py
+```
+
+**What was available on the author's machine**
 - ROCm/HIP, CuPy, JAX-GPU and CUDA are not available: AMD's Windows ROCm does not support the Radeon RX 560X
   (Polaris).
 - **OpenCL works** with both GPUs: the RX 560X ("Baffin", 16 compute units, 4 GB) and the Vega 8 iGPU.
@@ -258,7 +570,7 @@ python -m venv .venv
 - Select the device with `SC_GPU_DEVICE=Baffin` (default: the GPU with the most compute units).
 - The X-linked kernel stays on the CPU.
 
-**Measured throughput (individual-generations per second)**
+**Measured throughput on the author's machine (individual-generations per second)**
 
 | | Throughput |
 |---|---|

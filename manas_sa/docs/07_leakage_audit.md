@@ -69,7 +69,7 @@
 | HRI magnitudes at λ = 2 | **post-hoc exclusion rule** | The collapse filter (V_f/λ² > 0.1) was defined after seeing collapsed replicates. It moved 0.001 M from −0.75 (all replicates) to −0.26. It is justified only by λ = 1 having no collapse, and λ = 1 was checked **at 0.1 M only**. The 0.001 M and 0.01 M magnitudes are therefore unvalidated. **Resolved in §7.5:** λ = 1 runs at both map lengths show 0/12 collapses. |
 | λ choice | partly outcome-driven | λ = 4 was rejected after it gave r ≈ −1 (a degenerate state, but also a mismatch). The λ = 1 check at 0.1 M is clean. |
 | SA benefit ratio 0.5; f_SA ≤ 0.2 | post-hoc model restrictions | Introduced after runaway and collapse. They were not tuned to a target value, but they shape every SA-regime result. |
-| Modifier claims (6 of 7) | **re-execution of the authors' code** | Reproduces their computation by construction. Discrepancies (+1.5%, the one failed claim) are the informative part. |
+| Modifier claims (5 of 7 match; 1 misses magnitude; 1 does not match) | **re-execution of the authors' code** | Reproduces their computation by construction. Discrepancies (+1.5% on the perfect-modifier rate, the one failed claim) are the informative part. |
 | Distinguishing-experiment conclusions | in-silico, assumption-driven | Results follow from the IBM's LD structure. Power numbers use a baseline mortality we set ourselves. |
 
 ## 7.4 Rules adopted going forward

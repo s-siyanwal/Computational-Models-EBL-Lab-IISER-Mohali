@@ -39,7 +39,9 @@ Verdict words are restricted to *matches sign / matches ordering / misses magnit
    - Near the boundary, replicate populations of one architecture differ by up to 0.9 in r.
    - Sampling SD at 40–223 lines (0.14–0.05) and linkage/HRI (population means −0.04 to −0.13 at 0.1–1 M; single populations down to −0.26) cannot bridge +0.4 to −0.5.
 4. **Target 4 (HRI) sign and trend reproduced (B).** r_mf,W is negative and weakens monotonically with map length. At the preprint's own N (λ = 1) at 0.1 M: r = −0.042 ± 0.041, V_f = 0.018 (paper −0.078, V ≈ 0.02).
-5. **Target 5 reproduced by re-running the authors' code (B).** 6 of 7 claims match (perfect modifier 97.2% vs 95.7%). The "autosomes beat the X at very high k₂" claim does not.
+5. **Target 5 re-run with the authors' code (B).** 5 of 7 claims match in value or ordering (`results/modifier_claims.csv`).
+   - One misses in magnitude: with a perfect modifier on autosomes, 97.2% of runs fix A2B2 vs 95.7% reported (+0.015).
+   - The "autosomes beat the X at very high k₂" claim does not match.
 6. **The intuitive SA-vs-HRI test fails (C).** Recombining hemigenomes for up to 16 generations does not break HRI-type LD: power ≤ 0.18. The proposed discriminator is the N-dependence of r instead (docs/05).
 7. **Methodological caution (C).** Without male recombination, SA or sex-limited variation can produce female-detrimental haplotype classes carried only by males. A pooled-sex genotype estimator of r_mf,W then reads intersexual differentiation as a negative genetic correlation: −0.94 vs a hemigenome r of −0.06 in such populations.
 8. **Not identified:**
