@@ -36,8 +36,8 @@ jobs:
       - name: Test suites (both projects)
         run: python -m pytest -q tests manas_sa/tests
 
-      - name: Reproduction check against the stored results
-        run: python scripts/reproduce.py --ibm
+      - name: Reproduction check against the stored results (incl. P4 replay at N = 500)
+        run: python scripts/reproduce.py --ibm --p4
 
       - name: Execute the reproduction notebook
         run: jupyter execute notebooks/reproduce.ipynb

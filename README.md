@@ -224,8 +224,14 @@ against `results/summary.json`, plus one check that `results/REPORT.md` regenera
 re-runs the P0 individual-based populations at N = 500 with the stored seeds. On Linux with the CPU backend, that
 RMSE matched the stored value to 12 significant digits.
 
+`--p4` replays the stored P4 bistability experiment at N = 500 on the CPU kernels with the stored seeds, and compares
+the number of resolved populations in each of its 20 cells with `results/data/poster_threshold_ibm.parquet` (about
+20 seconds). `--p4-all` replays all 60 stored cells (N = 500, 2000 and 6000; about 1.5 minutes on 4 cores). On Linux
+all 60 cells were identical. P4 is the only experiment that stops runs early once the modifier is lost or fixed, so
+this also shows that the forward-fill fix in this repository's history leaves the stored results unchanged.
+
 ```bash
-python scripts/reproduce.py --ibm
+python scripts/reproduce.py --ibm --p4
 ```
 
 The same checks with figures, plus the full P1 heatmap (b = 0.2) and the 12 target-1 statistics recomputed from the
@@ -240,7 +246,7 @@ pip install -r requirements-dev.txt
 jupyter execute notebooks/reproduce.ipynb
 ```
 
-[GitHub Actions](.github/workflows/tests.yml) runs the test suites, `reproduce.py --ibm`, the notebook and the
+[GitHub Actions](.github/workflows/tests.yml) runs the test suites, `reproduce.py --ibm --p4`, the notebook and the
 Project 2 table rebuild (step 3) on every pull request. It then checks that no committed file changed.
 
 **3. Rebuild the reports from the stored results.** Project 1's report takes seconds. Project 2's comparison table

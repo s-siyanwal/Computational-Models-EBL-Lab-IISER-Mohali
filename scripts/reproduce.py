@@ -21,7 +21,15 @@ stored value. This is informational, not pass/fail: the stored run does not
 record which IBM backend (numba CPU or OpenCL GPU) produced the poster suite,
 and the two backends are statistically, not bit-for-bit, equivalent.
 
-usage:  python scripts/reproduce.py [--ibm]
+Optional (--p4, strict): check that every stored P4 cell started with
+0 < M1 founder copies < N, then replay the stored P4 IBM at N = 500 on the CPU
+kernels with the stored seeds and compare the number of resolved populations
+in each of its 20 (a, dose) cells with results/data/poster_threshold_ibm.parquet
+(--p4-all: all three stored sizes, N = 500, 2000 and 6000, i.e. all 60 cells).
+P4 is the only caller of run_haploid(stop_on_m_absorb=True), so this checks
+that the generation-0 forward-fill fix leaves the stored results unchanged.
+
+usage:  python scripts/reproduce.py [--ibm] [--p4 | --p4-all]
 exit status 0 if every check passes, 1 otherwise.
 """
 from __future__ import annotations
@@ -151,9 +159,48 @@ def ibm_p0(S, N=500):
     print("        Informational only: see the module docstring.")
 
 
+def p4_checks(ck, Ns=(500,)):
+    """Replay the stored P4 IBM (poster_exp.py::thresholds) for the given N with the
+    current kernels and the stored seeds, and compare the number of resolved
+    populations per (a, dose) with results/data/poster_threshold_ibm.parquet.
+    The modifier draws share one random generator across all (a, N) blocks, so
+    every burn-in and draw is replayed in the original order; only the target
+    sizes are simulated. P4 is the only caller of run_haploid(stop_on_m_absorb=True)."""
+    import pandas as pd
+    os.environ["SC_BACKEND"] = "cpu"          # exact comparison: numba CPU kernels
+    from sexconflict.ibm import runners as R
+    P = C.POSTER
+    b, r = P.b_strong, P.r_bif
+    stored = pd.read_parquet(os.path.join(RES, "data", "poster_threshold_ibm.parquet"))
+    copies = np.rint(stored.m0 * stored.N).astype(int)
+    ck.equal(f"P4 all {len(stored)} stored cells: 0 < M1 founder copies < N",
+             bool(np.all((copies > 0) & (copies < stored.N))), True)
+    rng = np.random.default_rng(C.seed_for("poster/thr-rng"))
+    got, want = [], []
+    for a in P.thr_a:
+        w = C.validate_viability(C.poster_viability(a, b, *P.thr_k))
+        for n_pop in P.thr_N:
+            nA1 = R.ibm_iasc_burn_in(n_pop, w, P.thr_reps, C.seed_for("poster/" + f"tburn{a}{n_pop}"))
+            for m0 in P.thr_m0:
+                init = R.introduce_modifier(nA1, n_pop, int(round(m0 * n_pop)), rng)
+                if n_pop not in Ns:
+                    continue
+                out = R.run_haploid(init, w, r, P.thr_gens, P.thr_reps,
+                                    C.seed_for("poster/" + f"thr{a}{n_pop}{m0}"), stop_on_m_absorb=True)
+                got.append(int(np.sum(out["pM1"][:, -1] > 0.5)))
+                row = stored[(stored.a == a) & (stored.N == n_pop) & (stored.m0 == m0)]
+                want.append(int(row.k.iloc[0]))
+    same = sum(g == s for g, s in zip(got, want))
+    label = ", ".join(map(str, Ns))
+    ck.equal(f"P4 IBM N={label}: cells with identical resolved count", f"{same}/{len(want)}",
+             f"{len(want)}/{len(want)}")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--ibm", action="store_true", help="also re-run the P0 IBM at N=500 (informational)")
+    ap.add_argument("--p4", action="store_true", help="also replay the stored P4 IBM at N=500 (strict, CPU)")
+    ap.add_argument("--p4-all", action="store_true", help="replay every stored P4 block, N=500/2000/6000 (slow)")
     args = ap.parse_args()
     with open(os.path.join(RES, "summary.json"), encoding="utf-8") as fh:
         S = json.load(fh)
@@ -161,6 +208,10 @@ def main():
     poster_checks(ck, S)
     owen_checks(ck, S)
     report_check(ck)
+    if args.p4_all:
+        p4_checks(ck, C.POSTER.thr_N)
+    elif args.p4:
+        p4_checks(ck)
     ok = ck.report()
     if args.ibm:
         ibm_p0(S)
