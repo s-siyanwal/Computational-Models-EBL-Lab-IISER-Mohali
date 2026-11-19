@@ -1,0 +1,55 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"     # the stored results were produced with Python 3.14.6
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+
+      - name: Install pinned dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Test suites (both projects)
+        run: python -m pytest -q tests manas_sa/tests
+
+      - name: Reproduction check against the stored results
+        run: python scripts/reproduce.py --ibm
+
+      - name: Execute the reproduction notebook
+        run: jupyter execute notebooks/reproduce.ipynb
+
+      - name: Project 2 comparison table rebuilds byte-identically
+        working-directory: manas_sa
+        run: |
+          python scripts/make_comparison.py > /dev/null
+          git diff --exit-code -- results/comparison_table.csv results/coverage.csv
+          git checkout -- results    # the redrawn figures differ by platform font rendering
+
+      - name: Committed files untouched
+        run: |
+          git status --porcelain
+          test -z "$(git status --porcelain)"

@@ -73,6 +73,7 @@ def _haploid_one(A, M, n_gen, wtab, r, stop_on_m_absorb, rec):
     A2 = np.empty_like(A)
     M2 = np.empty_like(M)
     last = n_gen
+    absorbed = False
     for g in range(n_gen + 1):
         # --- measurement only: count offspring haplotypes
         for k in range(4):
@@ -85,6 +86,7 @@ def _haploid_one(A, M, n_gen, wtab, r, stop_on_m_absorb, rec):
             m1 = rec[g, 0] + rec[g, 2]
             if m1 == 0 or m1 == N:
                 last = g
+                absorbed = True
                 break
         # --- biology
         _assign_sex(sex)
@@ -107,8 +109,10 @@ def _haploid_one(A, M, n_gen, wtab, r, stop_on_m_absorb, rec):
             M2[j] = M[q] if np.random.random() < r else M[p]
         A[:] = A2
         M[:] = M2
-    # forward-fill if stopped early (state is absorbed for the M locus)
-    if last > 0 and last < n_gen:
+    # forward-fill if stopped early because the M locus is absorbed (lost or
+    # fixed). This includes g == 0 (founders with no M1, or only M1), which
+    # the earlier guard `last > 0` skipped, leaving all later rows as zeros.
+    if absorbed:
         for g in range(last + 1, n_gen + 1):
             for k in range(4):
                 rec[g, k] = rec[last, k]
