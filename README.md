@@ -1,5 +1,7 @@
 # Computational models of sexually antagonistic selection in *Drosophila* (EBL Lab, IISER Mohali)
 
+[![tests](https://github.com/s-siyanwal/Computational-Models-EBL-Lab-IISER-Mohali/actions/workflows/tests.yml/badge.svg)](https://github.com/s-siyanwal/Computational-Models-EBL-Lab-IISER-Mohali/actions/workflows/tests.yml)
+
 Simulation, emulation and statistical tests of sexual-conflict theory and of published results on sexually
 antagonistic selection from the Evolutionary Biology Laboratory (EBL) of Dr. N. G. Prasad, IISER Mohali.
 
@@ -206,8 +208,11 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-**1. Test suites of both projects.** On a 4-core Linux container this took about 1.5 minutes: 68 passed, 1
-skipped. The skipped test is `tests/test_gpu.py`, which skips without an OpenCL GPU.
+**1. Test suites of both projects.** In a fresh environment on a 4-core Linux container this took about 80
+seconds: 123 passed, 1 skipped. The skipped test is `tests/test_gpu.py`, which skips without an OpenCL GPU. The
+suites include unit tests of the core functions (`tests/test_core_units.py`,
+`manas_sa/tests/test_iasc_units.py`). They check exact identities and compare against independent references such
+as scipy and finite differences.
 
 ```bash
 python -m pytest -q tests manas_sa/tests
@@ -222,6 +227,21 @@ RMSE matched the stored value to 12 significant digits.
 ```bash
 python scripts/reproduce.py --ibm
 ```
+
+The same checks with figures, plus the full P1 heatmap (b = 0.2) and the 12 target-1 statistics recomputed from the
+raw data, are in [`notebooks/reproduce.ipynb`](notebooks/reproduce.ipynb). It is committed with its executed
+outputs and runs in about 20 seconds:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+```bash
+jupyter execute notebooks/reproduce.ipynb
+```
+
+[GitHub Actions](.github/workflows/tests.yml) runs the test suites, `reproduce.py --ibm`, the notebook and the
+Project 2 table rebuild (step 3) on every pull request. It then checks that no committed file changed.
 
 **3. Rebuild the reports from the stored results.** Project 1's report takes seconds. Project 2's comparison table
 takes about 3 seconds; it rebuilt `comparison_table.csv` and `coverage.csv` byte-identically on Linux. It also
@@ -263,7 +283,9 @@ sexconflict/            Project 1 package
   analysis/             comparison statistics; ML helpers (GP denoiser)
   experiments/          one module per suite: poster, owen, curse, extended
 scripts/                run_all.py (full pipeline), make_report.py, reproduce.py (quick check)
-tests/                  zero-leakage, theory and IBM tests (Project 1)
+notebooks/              reproduce.ipynb: reproduction walkthrough with executed outputs
+tests/                  zero-leakage, theory, IBM and unit tests (Project 1)
+.github/workflows/      CI: tests, reproduction check, notebook, Project 2 table rebuild
 results/                stored full run: REPORT.md, summary.json, figures/, animations/, data/
 manas_sa/               Project 2 (see manas_sa/README.md): iasc/, extensions/, analysis/, scripts/, docs/, results/
 reports/                LaTeX manual (compiled: reports/manual/manual.pdf) and two shorter LaTeX reports
